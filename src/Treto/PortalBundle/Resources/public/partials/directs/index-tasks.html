@@ -1,0 +1,61 @@
+<div class ="styledModal rekt">
+  <div class="modal-body">
+    <div ng-if="$root.expiredPopup.NotAccepted.length>0" class="martop10">
+      <strong>У вас есть непринятые просьбы:</strong><br/>
+      <div ng-repeat="task in $root.expiredPopup.NotAccepted">
+        <i class="material-icons blood-red text-s16" style="vertical-align: sub;">assignment_late</i>
+        <a ui-sref="body.discus({ id: task.unid, type:'' })"
+           class="blood-red"
+           log-click="Напоминание о просрочках::Ссылка на непринятую просьбу из всплывающего окна <Напоминание о просрочках>">
+          {{::task.subject}}
+        </a>
+      </div>
+    </div>
+    <div ng-if="$root.expiredPopup.Expired.length>0" class="martop10">
+      <strong>У вас есть просроченные просьбы:</strong><br/>
+      <div ng-repeat="task in $root.expiredPopup.Expired">
+        <i class="material-icons blood-red text-s16" style="vertical-align: sub;">assignment_late</i>
+        <a ui-sref="body.discus({ id: task.unid, type:'' })"
+           class="blood-red"
+           log-click="Напоминание о просрочках::Ссылка на просроченную просьбу из всплывающего окна <Напоминание о просрочках>">
+          {{::task.subject}}
+        </a>
+      </div>
+    </div>
+    <div ng-if="$root.expiredPopup.EscalatedOnce.length>0" class="martop10">
+      <strong>Просьбы:</strong><br/>
+      <div ng-repeat="task in $root.expiredPopup.EscalatedOnce">
+        <i class="material-icons blood-red text-s16" style="vertical-align: sub;">assignment_late</i>
+        <a ui-sref="body.discus({ id: task.unid, type:'' })"
+           class="blood-red"
+           log-click="Напоминание о просрочках::Ссылка на просроченную просьбу, которая высветилась у руководителя, из всплывающего окна <Напоминание о просрочках>">
+          {{::task.subject}}
+        </a>
+      </div>
+      <div>Просрочились, остались без вашего внимания и теперь будут проблемами вашего руководителя ({{::($root.users[$root.expiredPopup.EscalatedOnceBoss].name || $root.expiredPopup.EscalatedOnceBoss)}}).</div>
+    </div>
+    <div ng-if="$root.expiredPopup.EscalatedTwice.length>0" class="martop10">
+      <strong>Просьбы:</strong><br/>
+      <div ng-repeat="task in $root.expiredPopup.EscalatedTwice">
+        <i class="material-icons blood-red text-s16" style="vertical-align: sub;">assignment_late</i>
+        <a ui-sref="body.discus({ id: task.unid, type:'' })"
+           class="blood-red"
+           log-click="Напоминание о просрочках::Ссылка на просроченную просьбу, которая высветилась у руководителя и тоже была просрочена, из всплывающего окна <Напоминание о просрочках>">
+          {{::task.subject}}
+        </a>
+      </div>
+      <div>Просрочены, остались без вашего внимания, стали проблемой вашего руководителя 
+      ({{::($root.users[$root.expiredPopup.EscalatedOnceBoss].name || $root.expiredPopup.EscalatedOnceBoss)}}), также проигнорировавшего и теперь ими должен заниматься 
+       {{::($root.users[$root.expiredPopup.EscalatedTwiceBoss].name || $root.expiredPopup.EscalatedTwiceBoss)}}. 
+      Не забудьте вовремя получить зарплату! </div>
+    </div>
+    
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary"
+            ng-click="$root.expiredPopup.ok()"
+            log-click="Напоминание о просрочках::Кнопка <Прочитал, мне все равно> во всплывающем окне <Напоминание о просрочках>">
+      ПРОЧИТАЛ(А). МНЕ ВСЕ РАВНО
+    </button>
+  </div>
+</div>

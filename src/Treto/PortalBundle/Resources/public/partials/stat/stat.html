@@ -1,0 +1,65 @@
+<title>Статистика</title>
+<div ng-if="denied" class="access-denied text-center">
+    <img src="/public/images/access_denied.png"/>
+</div>
+<section id="stat" ng-if="!denied">
+    <md-tabs md-border-bottom>
+      <md-tab label="Сводка"
+              md-active="$state.params.tab==='main'"
+              md-on-select="$state.go('body.stat', { tab: 'main' })"></md-tab>
+      <md-tab label="Болтуны / Молчуны"
+              md-active="$state.params.tab==='messages'"
+              md-on-select="$state.go('body.stat', { tab: 'messages' })"></md-tab>
+      <md-tab label="Топ за неделю"
+              md-active="['popular-themes', 'my-popular-themes'].indexOf($state.params.tab) > -1"
+              md-on-select="['popular-themes', 'my-popular-themes'].indexOf($state.params.tab) > -1 ? '' : $state.go('body.stat', { tab: 'popular-themes' })"></md-tab>
+      <md-tab label="Лайк / Нелайк"
+              md-active="['likes', 'dislikes'].indexOf($state.params.tab) > -1"
+              md-on-select="['likes', 'dislikes'].indexOf($state.params.tab) > -1 ? '' : $state.go('body.stat', { tab: 'likes' })"></md-tab>
+      <md-tab label="Клики"
+              md-active="$state.params.tab==='click'"
+              md-on-select="$state.go('body.stat', { tab: 'click' })"></md-tab>
+    </md-tabs>
+
+  <div ng-if="stat.queryCounter" class="full-page-container text-center">
+    <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+  </div>
+
+  <section id="main-stat" ng-cloak
+           class="full-page-container"
+           ng-if="$state.params.tab==='main'"
+           ng-show="!stat.queryCounter">
+    <main-stat all-stat></main-stat>
+  </section>
+
+  <section id="messages-stat" ng-cloak
+           ng-if="$state.params.tab==='messages'"
+           ng-show="!stat.queryCounter"
+           ng-controller="messagesStatCtrl"
+           ng-include="'/bundles/tretoportal/partials/stat/messagesStat.html'">
+  </section>
+
+  <section id="messages-stat" ng-cloak
+           ng-if="['popular-themes', 'my-popular-themes'].indexOf($state.params.tab) > -1"
+           ng-show="!stat.queryCounter"
+           ng-controller="popularThemesStatCtrl"
+           ng-include="'/bundles/tretoportal/partials/stat/popularThemesStat.html'">
+  </section>
+
+  <section id="messages-stat" ng-cloak
+           ng-if="['likes', 'dislikes'].indexOf($state.params.tab) > -1"
+           ng-show="!stat.queryCounter"
+           ng-controller="likeStatCtrl"
+           ng-include="'/bundles/tretoportal/partials/stat/likeStat.html'">
+  </section>
+
+  <section id="click-stat" ng-cloak
+           ng-if="$state.params.tab==='click'"
+           ng-show="!stat.queryCounter"
+           ng-controller="clickStatCtrl"
+           ng-include="'/bundles/tretoportal/partials/stat/clickStat.html'">
+  </section>
+
+</section>
+
+<div ng-if="discus.displayParticipants" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-group-participants.html'"></div>

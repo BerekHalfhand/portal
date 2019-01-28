@@ -1,0 +1,12 @@
+<div class="edit-doc center" ng-controller="modalEditContact" ctrl-enter="contact.ContactName?ok():false">
+  <div class="container text-s12 panel marbot0 pad0force" style="position: relative;">
+      <button type="button" class="close pull-right marright5"
+        ng-click="close()"
+        style="position: absolute;top: 0;right: 0;z-index: 1001"
+        title="Закрыть"
+        log-click="Контакты::Кнопка <Закрыть> в окне редактирования организации">
+        &times;
+    </button>
+    <div ng-include="'/bundles/tretoportal/partials/editOrganizationTempl.html'"></div>
+</div>
+</div>

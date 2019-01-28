@@ -1,0 +1,72 @@
+<title>Критерии</title>
+<div class="container martop10">
+  <div class="row">
+    <div class="col-lg-24 bgwhite shadow">
+      <div ui-view="criterion">
+        <div class="martop10">
+          <a href ui-sref="body.criterions.criterionCreate"
+             class="green"
+             ng-show="criterion"
+             log-click="Банк вопросов::Кнопка <Новый критерий> на странице банк вопросов">Новый критерий</a>
+          <a href ui-sref="body.criterions.questionaryCreate"
+             class="green marleft5"
+             ng-show="criterion"
+             ng-class="{disabled:selectCriterions.length == 0}"
+             log-click="Банк вопросов::Кнопка <Черновик опросника> на странице банк вопросов">Черновик опросника</a>
+          <a href class="green marleft5"
+             ng-show="criterion"
+             ng-click="criterion=!criterion"
+             log-click="Банк вопросов::Кнопка <Опросники> на странице банк вопросов">Опросники</a>
+          <a href class="green"
+             ng-show="!criterion"
+             ng-click="criterion=!criterion"
+             log-click="Банк вопросов::Кнопка <Критерии> на странице банк вопросов">Критерии</a>
+        </div>
+        
+        <div class="row" ng-show="criterion">
+          <div class="col-lg-24">
+            <h3>Критерии</h3>
+            <table class="table table-striped">
+              <th></th>
+              <th>Название</th>
+              <th>Описание</th>
+              <tr ng-repeat="crit in criterionsAry() | orderBy:'name' ">
+                <td>
+                  <md-checkbox
+                    id="input_{{crit.unid}}"
+                    ng-click="addCriterion(crit.unid)"
+                    log-click="Банк вопросов::Галка критерия в таблице критериев на странице банк вопросов">
+                  </md-checkbox>
+                </td>
+                <td>
+                  <a href ui-sref="body.criterions.criterion({unid: crit.unid})"
+                     ng-bind="crit.name"
+                     log-click="Банк вопросов::Ссылка на критерий в таблице критериев на странице банк вопросов">
+                  </a>
+                </td>
+                <td ng-bind="crit.Description"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="row" ng-show="!criterion">
+          <div class="col-lg-24">
+            <h3>Опросники</h3>
+            <table class="table table-striped">
+              <th>Название</th>
+              <tr ng-repeat="quest in questionariesAry() | orderBy:'name' ">
+                <td>
+                  <a href ui-sref="body.criterions.questionary({unid: quest.unid})"
+                     ng-bind="quest.name"
+                     log-click="Банк вопросов::Ссылка на опросник в таблице опросников на странице банк вопросов"></a>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

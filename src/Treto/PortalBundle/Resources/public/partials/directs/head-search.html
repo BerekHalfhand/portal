@@ -1,0 +1,145 @@
+<article class="search-menu-wrap"  ng-click="$event.stopPropagation();">
+    <div class="search-block" ng-class="{active: $root.show.inputSearch}">
+        <div class="search-open-button"
+             ng-click="searchOpen();"
+             log-click="Поиск::Кнопка <Поиск> в главном меню">
+            <md-icon class="material-icons">search</md-icon>
+        </div>
+        <div id="searchPanel" ng-if="$root.show.inputSearch" ng-keydown="$event.which === 13 && (goSearch())" ng-controller="serpCtrl">
+            <md-icon ng-click="searchClose();"
+                     class="material-icons search-input-ic"
+                     log-click="Поиск::Кнопка <Закрыть поиск> в главном меню">
+                cancel
+            </md-icon>
+            <input type="text"
+                   ng-model="q.query"
+                   ng-focus="$root.show.Search = false"
+                   placeholder="Поиск"
+                   uib-typeahead="var.name as var.name for var in getAutoCompleteList($viewValue)"
+                   id="searchField"
+                   typeahead-min-length = "3"
+                   typeahead-focus-first="false"
+                   typeahead-on-select = "onSelect($item, $model, $label, $event)"
+                   onclick="this.select()"
+                   log-click="Поиск::Поле <Поиск> в главном меню"/> <!-- temporary -->
+            <div class="close-text material-icons"
+                ng-if="!$root.show.Search && $root.show.inputSearch"
+                ng-click="showSearchParameters(); hideDropDown();"
+                log-click="Поиск::Кнопка <Раскрыть панель фильтров> в главном меню"
+                title="Настройка поиска">
+                arrow_drop_down
+            </div>
+            <md-button class="icon-btn search-button" title="Искать" aria-label="Искать"
+                       id="searchMainButton"
+                       ng-click="goSearch()"
+                       log-click="Поиск::Кнопка <Найти> в главном меню">
+                НАЙТИ
+            </md-button>
+
+            <div id="searchParameters" ng-if="$root.show.Search" class="panel col-sm-23">
+                <div class="row">
+                    <div class="col-md-24">
+                        <div class="checkbox-autor">
+                            <md-checkbox aria-label="checked"
+                                         ng-init="checkMyOn=q.params.Author.$in[0]===user.username;"
+                                         ng-checked="checkMyOn"
+                                         ng-click="author=[];checkMyOn=!checkMyOn;checkMyOn?FullSearch.addAuthor(user.portalData, q):FullSearch.addAuthor(false, q);"
+                                         log-click="Поиск::Галка <Мои> в главном меню">
+                            Мои</md-checkbox>
+                        </div>
+                        <div class="input-autor" >
+
+                            <add-participants ngmodel="author"
+                                              ng-hide="checkMyOn"
+                                              multiple="false"
+                                              placeholder="'Автор'"
+                                              addhandler="addAuthor(item)" removehandler="addAuthor(item)" style="height: 30px;"
+                                              typeaheadexpr="'user.name for user in $root.usersAllArrLastThreeYears | filter:$viewValue'"
+                                              hideallinfo="true">
+                            </add-participants>
+
+                            <span ng-show="checkMyOn" style="line-height: 30px;" class="participant-element">
+                                <span>{{::(user.portalData.LastName+' '+user.portalData.name)}}</span>
+                            </span>
+                        </div>
+                    </div>
+                    <!--         <div class="col-sm-8" style="padding: 0 5px 0 5px;">
+                              <div class="btn-group" uib-dropdown>
+                                <button type="button" class="btn btn-default dropdown-toggle width100per no-border text-left" data-toggle="dropdown" uib-dropdown-toggle>
+                                  <span id="tag_span">{{searchIn.label}}</span> <span class="caret"></span>
+                                </button>
+                                  <ul class="dropdown-menu">
+                                    <li ng-repeat="option in searchInOptions">
+                                      <a href ng-click="$parent.$parent.searchIn = option; FullSearch.searchIn(searchIn.value, q); closeDropdown();">{{ option.label }}</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              <div class="divider"></div>
+                            </div> -->
+                    <div class="col-md-24" style="padding: 5px 5px 0 5px;">
+
+                        <div class="select-block">
+                            <md-card-content>
+                                <div layout="row" layout-align="space-between center">
+                                    <span class="sorting_title">Сортировать по:</span>
+                                    <md-select ng-model="q.sort"
+                                               class="sorting-select"
+                                               class="md-no-underline"
+                                               aria-label="select"
+                                               log-click="Поиск::Меню <Сортировать по> в главном меню">
+                                        <md-option value="{{name.value}}" ng-model="q.sort" ng-repeat="name in sortByOptions">{{name.label}}</md-option>
+                                    </md-select>
+                                </div>
+                            </md-card-content>
+                        </div>
+
+
+
+
+                        <!-- <div class="btn-group" uib-dropdown>
+                          <button type="button" class="btn btn-default dropdown-toggle width100per no-border text-left" data-toggle="dropdown" uib-dropdown-toggle>
+                            <span id="tag_span">{{sortBy.label}}</span> <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li ng-repeat="option in sortByOptions">
+                              <a href ng-click="$parent.$parent.sortBy = option; q.sort=sortBy.value; closeDropdown();">{{ option.label }}</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="divider"></div>
+                      </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-24 grey search-check text-s11 martop10">
+                            <md-checkbox aria-label="checked"
+                                         ng-init="iPart=q.mypart||false;"
+                                         ng-click="iPart=!iPart;q.mypart=iPart;"
+                                         ng-checked="iPart"
+                                         log-click="Поиск::Галка <Я участник> в главном меню">
+                                Я участник
+                            </md-checkbox>
+                            <md-checkbox ng-click="q.insub=!q.insub;"
+                                         ng-checked="q.insub"
+                                         log-click="Поиск::Галка <Только в заголовке> в главном меню">
+                                Только в заголовке
+                            </md-checkbox>
+                            <md-checkbox aria-label="checked"
+                                         ng-init="inContacts=q.collections==='Contacts';"
+                                         ng-checked="inContacts"
+                                         ng-click="inContacts=!inContacts;inContacts?q.collections='Contacts':q.collections='Portal,Contacts';"
+                                         log-click="Поиск::Галка <В контактах> в главном меню">
+                                В контактах
+                            </md-checkbox>
+                            <md-checkbox aria-label="checked"
+                                         ng-click="q.strict=!q.strict;"
+                                         ng-checked="q.strict"
+                                         log-click="Поиск::Галка <Строгий поиск> в главном меню">
+                                Строгий поиск
+                            </md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>

@@ -1,0 +1,323 @@
+<title ng-if="!theUser">Загрузка...</title>
+<title ng-if="theUser">Редактирование: {{theUser.portalData.FullNameInRus}}</title>
+<section class="user-container mar4 panel no-border" ng-if="theUser && (user.username == theUser.username || role('PM'))">
+  <header ng-include="'/bundles/tretouser/partials/profile/edit-header.html'"></header>
+  <input type="text" style="display:none"><!--A trick to mislead browser's attempts to autofill password field-->
+  <input type="password" style="display:none">
+  <section class="container-fluid">
+    <article class="row">
+      <div class="col-lg-12 col-xs-24">
+        <div class="martop20 text-s14" style="margin-left: 10px;">
+          <a href ng-click="pwd.show = !pwd.show" class="blue"
+             log-click="Профиль пользователя::Кнопка <Сменить пароль> в профиле пользователя">
+            СМЕНИТЬ ПАРОЛЬ
+          </a>
+        </div>
+        <involvement ng-if="$root.users" username="theUser.username" profile-mode></involvement>
+        <div ng-if="pwd.show" ng-include="'/bundles/tretouser/partials/profile/change-password.html'"></div>
+        <div class="marleft10 martop10 text-s16">Контакты</div>
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="work-address" class="input-group-addon no-border no-background text-s12 padleft0">Рабочий адрес:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithWorkAddress[0]"
+                     id="work-address"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Рабочий адрес> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.AddressToSite"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте рабочий адрес> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="work-phone" class="input-group-addon no-border no-background text-s12 padleft0">Рабочий телефон:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithWorkFhone[0]"
+                     id="work-phone"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Рабочий телефон> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.WorkPhoneToSite"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте рабочий телефон> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="home-phone" class="input-group-addon no-border no-background text-s12 padleft0">Домашний телефон:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithWorkFhone[1]"
+                     id="home-phone"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Домашний телефон> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.HomePhoneToSite"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте домашний телефон> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="primary-mobile" class="input-group-addon no-border no-background text-s12 padleft0">Основной мобильный телефон:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithMobileFhone[0]"
+                     id="primary-mobile"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Основной мобильный телефон> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.MobileFhoneToSite"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте основной мобильный телефон> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="add-mobile-1" class="input-group-addon no-border no-background text-s12 padleft0">Дополнительный мобильный телефон:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithMobileFhone_1[0]"
+                     id="add-mobile-1"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Дополнительный мобильный телефон> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.MobilePhoneToSite_1"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте дополнительный мобильный телефон> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+            <div class="input-group">
+              <label for="add-mobile-2" class="input-group-addon no-border no-background text-s12 padleft0">Дополнительный мобильный телефон:</label>
+              <input type="text"
+                     ng-model="theUser.portalData.ContactWithMobileFhone_2[0]"
+                     id="add-mobile-2"
+                     class="form-control text-s12 no-border"
+                     log-click="Профиль пользователя::Поле <Дополнительный мобильный телефон> в профиле пользователя"/>
+            </div>
+          </div>
+          <div class="col-lg-7 col-xs-7 sidepad5">
+            <md-checkbox ng-model="theUser.portalData.MobilePhoneToSite_2"
+                         ng-true-value="'1'"
+                         ng-false-value="'0'"
+                         log-click="Профиль пользователя::Галка <Показывать на сайте дополнительный мобильный телефон> в профиле пользователя">
+              Показывать на сайте
+            </md-checkbox>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-16 col-xs-16 underlined marleft25 padleft0">
+              <div class="input-group">
+                <label for="email" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">E-Mail:</label>
+                <input type="text"
+                       ng-model="theUser.portalData.Email"
+                       id="email"
+                       class="form-control text-s12 no-border"
+                       log-click="Профиль пользователя::Поле <E-Mail> в профиле пользователя"/>
+              </div>
+            </div>
+            <div class="col-lg-7 col-xs-7 sidepad5">
+              <md-checkbox ng-model="theUser.portalData.EmailToSite"
+                           ng-true-value="'1'"
+                           ng-false-value="'0'"
+                           log-click="Профиль пользователя::Галка <Показывать на сайте E-Mail> в профиле пользователя">
+                Показывать на сайте
+              </md-checkbox>
+            </div>
+          </div>
+      <div class="col-lg-12 col-xs-24">
+        <div class="text-s16 marbot10 martop20">Настройки</div>
+        <div>
+          <md-checkbox ng-model="theUser.settings.soundNotify"
+                       log-click="Профиль пользователя::Галка <Звуковое оповещение о появлении новых сообщений> в профиле пользователя">
+            Звуковое оповещение о появлении новых сообщений
+          </md-checkbox>
+        </div>
+        <div>
+          <md-checkbox ng-model="theUser.settings.notifHistory"
+                       title="При отмеченном чекбоксе в посещениях будут отображаться все попавшие в информатор темы. При не отмеченном - только те, в которые был заход или какое-то действие из информатора."
+                       log-click="Профиль пользователя::Галка <В посещениях показывать все темы из информатора> в профиле пользователя">
+            В посещениях показывать все темы из информатора
+          </md-checkbox>
+        </div>
+      </div>
+
+    </article>
+    
+    <article class="row martop20">
+      <div class="col-lg-11 underlined marleft25 marright25 padleft0">
+        <div class="input-group">
+          <label for="icq" class="input-group-addon no-border no-background text-s12 padleft0">ICQ:</label>
+          <input type="text"
+                 ng-model="theUser.portalData.ICQ"
+                 id="icq"
+                 class="form-control text-s12 no-border"
+                 log-click="Профиль пользователя::Поле <ICQ> в профиле пользователя"/>
+        </div>
+      </div>
+      <div class="col-lg-11 underlined marleft25 padleft0">
+        <div class="input-group">
+          <label for="skype" class="input-group-addon no-border no-background text-s12 padleft0">Skype:</label>
+          <input type="text"
+                 ng-model="theUser.portalData.Skype"
+                 id="skype"
+                 class="form-control text-s12 no-border"
+                 log-click="Профиль пользователя::Поле <Skype> в профиле пользователя"/>
+        </div>
+      </div>
+    </article>
+    <article class="row">
+      <div class="input-group col-lg-23 underlined marleft25 padleft0">
+        <label for="foreign_pass" class="input-group-addon no-border no-background text-s12 padleft0">Загран. паспорт:</label>
+        <input type="text"
+               ng-model="theUser.portalData.ForeignPassport"
+               id="foreign_pass"
+               class="form-control text-s12 no-border"
+               log-click="Профиль пользователя::Поле <Загран. паспорт> в профиле пользователя"/>
+      </div>
+      <div class="help-block col-lg-23 marleft25 padleft0">(surname, given names, номер, д. в., срок действия)</div>
+    </article>
+    
+    <article class="row">
+      <div class="col-lg-12">
+        <div class="marleft10 martop10 text-s16">Краткое резюме</div>
+        <div class="row">
+          <div class="col-lg-6 martop10"><span class="marleft10">Дата рождения</span></div>
+          <div class="col-lg-10">
+                  <p class="p-underlined bgr-calendar">
+                    <new-datepicker date-min-limit="1900/01/01">
+                      <input prevent-keyboard-input
+                             ng-model="DtBirth"
+                             type="text"
+                             ng-init="DtBirth=(theUser.portalData.Birthday ? $root.convertStrToLocaleDate(theUser.portalData.Birthday) : null)"
+                             ng-change="theUser.portalData.Birthday=DtBirth ? $root.convertObjDateToStr(DtBirth) : ''; DtBirth=DtBirth ? $root.localizeDate(DtBirth) : '';"
+                             log-click="Профиль пользователя::Выбор даты <Дата рождения> в профиле пользователя"/>
+                    </new-datepicker>
+                  </p>
+          </div>
+        </div>
+        <textarea class="overflow-auto textarea-border marleft10 martop10 form-control"
+                  name="about"
+                  rows="10"
+                  wrap="soft"
+                  ng-model="theUser.portalData.About"
+                  log-click="Профиль пользователя::Поле <Дополнительно> в профиле пользователя"></textarea>
+      </div>
+    </article>
+    <article class="row">
+      <hr class="divider-profile marleft20">
+      <div class="col-lg-12">
+        <textarea class="overflow-auto textarea-border marleft10 form-control"
+                  placeholder="Резюме"
+                  name="resume"
+                  rows="5"
+                  wrap="soft"
+                  ng-model="theUser.portalData.Resume"
+                  log-click="Профиль пользователя::Поле <Краткое резюме> в профиле пользователя"></textarea>
+      </div>
+    </article>
+
+    <article class="row">
+      <hr class="divider-profile marleft20">
+      <div  class="marleft25 martop10 text-s16">Подписки</div>
+      <div class="col-lg-12 marleft10 martop10">
+        <p ng-repeat="item in listSubscribtion" class="subscriptions-item">
+          <md-checkbox id="check_sub{{item.key}}"
+                       ng-model="subscribes[item.key]"
+                       title="{{item.key}}"
+                       log-click="Профиль пользователя::Галка <Подписки: {{item.subtype.subscription}}> в профиле пользователя">
+            {{item.subtype.subscription}}
+          </md-checkbox>
+        </p>
+      </div>
+    </article>
+    <!-- <article class="row">
+      <hr class="divider-profile marleft10">
+      <div class="col-lg-12">
+        <div  class="marleft10 martop10 text-s16">Почта</div>
+        <div class="input-group underlined marleft10 padleft0">
+          <label for="server" class="input-group-addon no-border no-background text-s12 padleft0">Сервер:</label>
+          <input type="text" ng-model="theUser.mailProperties.server" id="server" class="form-control text-s12 no-border">
+        </div>
+        <div class="input-group underlined marleft10 padleft0">
+          <label for="server" class="input-group-addon no-border no-background text-s12 padleft0">Логин:</label>
+          <input type="text" ng-model="theUser.mailProperties.login" id="server" class="form-control text-s12 no-border">
+        </div>
+        <div class="input-group underlined marleft10 padleft0">
+          <label for="server" class="input-group-addon no-border no-background text-s12 padleft0">Пароль:</label>
+          <input type="password" ng-model="theUser.mailProperties.pass" id="server" class="form-control text-s12 no-border">
+        </div>
+      </div>
+    </article> -->
+    <article class="row">
+      <hr class="divider-profile marleft10">
+      <div class="col-lg-24">
+        <div class="marleft10 martop10 text-s16">Уведомления</div>
+        <div class="input-group underlined marleft10 padleft0">
+          <label for="push" class="input-group-addon no-border no-background text-s12 padleft0">Код для уведомлений:</label>
+          <input type="text"
+                 ng-model="theUser.portalData.pushToken"
+                 id="push"
+                 class="form-control text-s12 no-border"
+                 log-click="Профиль пользователя::Поле <Код для уведомлений> в профиле пользователя">
+        </div>
+      </div>
+    </article>
+    <article class="row martop20">
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-lg-24">
+            <md-button href
+                       class="btn btn-blue"
+                       ng-click="save(theUser)"
+                       log-click="Профиль пользователя::Кнопка <Сохранить> в профиле пользователя">
+              Сохранить
+            </md-button>
+            <md-button href
+                       class="btn btn-gray"
+                       ui-sref="body.profileDisplay({ id: user.username})"
+                       log-click="Профиль пользователя::Кнопка <Отмена> в профиле пользователя">
+              Отмена
+            </md-button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+</section>

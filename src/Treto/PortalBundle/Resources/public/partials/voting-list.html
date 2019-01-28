@@ -1,0 +1,41 @@
+<title>Прошедшие мнения</title>
+<div id="votings">
+  <div class="container martop10">
+    <div class="row">
+      <div class="col-sm-24 panel pad0force">
+        <div class="pad0_15">
+          <h5 class="martop20" ng-init="revSort=true;"
+              ng-click="revSort=!revSort"
+              log-click="Прошедшие голосования::Сортировка прошедших мнений по возрастанию\убыванию">
+              Прошедшие мнения:
+          </h5>
+        </div>
+        <!--<a class="btn btn-xs btn-success"
+               ui-sref="body.createDiscus({ thistype: 'formVoting', id: 0 })"
+               log-click="Прошедшие голосования::Ссылка <Создать> опрос в врошедши голосованиях">Создать</a>-->
+        <div class="container pad0_15" ng-if="votes" infinite-scroll="requestMore()" infinite-scroll-distance="1">
+          <!-- <p class="padbot15 text-s11">Количество мнений на странице: {{offset}}</p> -->
+          <div class="row padbot10" ng-repeat="vote in votes">
+            <div class="col-sm-3">
+              <span>{{vote.created | datetime}}</span>
+            </div>
+            <div class="col-sm-17">
+              <a class="black_33"
+                 ui-sref="body.discus({ id: vote.unid, type:'' })"
+                 log-click="Прошедшие голосования::Ссылка на опрос в прошедших голосованиях">
+                 {{vote.subject || vote.subjVoting}}
+              </a>
+            </div>
+            <div class="col-sm-4">
+              <a class="black_33"
+                 href ui-sref="body.profileDisplay({ id: vote.Author })"
+                 log-click="Прошедшие голосования::Ссылка на профиль автора опроса в прошедших голосованиях">
+                 {{vote.AuthorRus || vote.Author}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

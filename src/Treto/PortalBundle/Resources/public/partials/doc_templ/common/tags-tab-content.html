@@ -1,0 +1,44 @@
+<div class="tags" ng-if="doc.Tags.length">
+    <span ng-repeat="tag in doc.Tags | orderBy:'-name':true">{{tag.name}}
+        <span ng-click="removeTag(tag.name); deleteTagDB(tag.name);"
+              class="tag-remove-span"
+              log-click="Теги::Кнопка <Удалить тег> во всплывающем окне тегов"> &times;</span>
+    </span>
+</div>
+<input  type="text"
+        ng-model="doc.tempTag"
+        id="tag"
+        uib-typeahead="tag for tag in getTags($viewValue)"
+        typeahead-loading="loadingLocations"
+        class="tag-input"
+        ng-keydown="$event.which===13&&($event.preventDefault()||addTag(doc));"
+        log-click="Теги::Поле <Добавить тег> во всплывающем окне тегов"/>
+<div ng-if="loading.statusTags===1" class="text-center">
+    <md-progress-circular md-mode="indeterminate" md-diameter="20px"></md-progress-circular>
+</div>
+<div ng-if="!loading.statusTags">
+    <article class="available-tags" vertical-scroll>
+        <div class="vs-screen">
+            <span  ng-repeat="tag in Tags | orderBy:'-name':true"
+                    ng-show="selected.Letter ? selected.Letter === tag.name[0] : true"
+                    ng-click="doc.tempTag = tag.name"
+                    class="tag-span touch"
+                    style="font-size:{{tag.fontSize}}px;"
+                    log-click="Теги::Выбор тега из доступных во всплывающем окне тегов">
+                {{tag.name}}
+            </span>
+        </div>
+    </article>
+    <article class="letters">
+        <span>
+            <a  href ng-class="{black:selected.Letter.length == 0}"
+                ng-click="selected.Letter = ''"
+                log-click="Теги::Переключатель тегов по букве <все> во всплывающем окне тегов">Все</a>
+        </span>
+        <span ng-repeat="letter in Letters" ng-show="searchFilter(letter, true);">
+            <a  href ng-class="{black:selected.Letter === letter}"
+                ng-click="selected.Letter = letter"
+                log-click="Теги::Переключатель тегов по букве во всплывающем окне тегов">{{letter}}</a>
+        </span>
+    </article>
+</div>

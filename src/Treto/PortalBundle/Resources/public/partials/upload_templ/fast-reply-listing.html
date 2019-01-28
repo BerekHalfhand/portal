@@ -1,0 +1,39 @@
+<div ng-init="discus=$parent.discus;doc=$parent.doc;" class="attachments-list" ng-class="{'has-attachments': model.length}">
+  <ul ng-hide="doc.ddCollapsed" class="list-inline marbot0">
+    <li ng-repeat="item in model" ng-init="attachFilename = $parent.discus.getDocumentFilename(item[0].doc, $parent.discus.current.unid)" ng-if="(item[0].mimeArray[1] != 'gif' && item[0].mimeArray[1] != 'png' && item[0].mimeArray[1] != 'jpeg')"
+    class="relative file-link-wrap" ng-mouseenter="attachHover=true" ng-mouseleave="attachHover=false;">
+      <md-button
+        ng-href="{{!item[0].domain?item[0].link:'http://'+item[0].domain+item[0].link}}"
+        class="file-link"
+        target="_blank"
+        log-click="Загрузка файлов::Кнопка <Скачать прикреплённый файл> в быстром ответе">
+        <md-icon class="material-icons blue">insert_drive_file</md-icon>
+        <md-icon class="material-icons blue hover-icon">file_download</md-icon>
+        {{attachFilename}}
+      </md-button>
+      <md-button ng-click="deleteFile(discus.fastReplyMsg, $index, discus)"
+                 class="delete-btn"
+                 log-click="Загрузка файлов::Кнопка <Удалить прикреплённый файл> в быстром ответе">
+                  <md-icon class="material-icons">clear</md-icon>
+      </md-button>
+    </li>
+  </ul>
+  <ul ng-hide="doc.ddCollapsed" class="list-inline marbot0" lightgallery>
+    <li ng-repeat="item in model" ng-init="attachFilename = $parent.discus.getDocumentFilename(item[0].doc, $parent.discus.current.unid, $parent.doc)" ng-if="(item[0].mimeArray[1] == 'gif' || item[0].mimeArray[1] == 'png' || item[0].mimeArray[1] == 'jpeg')"
+    class="relative img-link-wrap" ng-mouseenter="attachHover=true" ng-mouseleave="attachHover=false;">
+      <div class="img-link">
+        <a class="lightgallery-image" ng-href="{{!item[0].domain?item[0].link:'http://'+item[0].domain+item[0].link}}"
+           target="_blank"
+           log-click="Загрузка файлов::Ссылка на прикреплённую картинку в быстром ответе">
+          <img ng-src="{{!item[0].domain?item[0].thumbnail:'http://'+item[0].domain+item[0].thumbnail}}">
+        </a>
+        <div class="short-filename martop5 grey text-s13" ng-attr-title="{{attachFilename}}">{{attachFilename}}</div>
+        <div class="delete-attachment"
+             ng-click="deleteFile(discus.fastReplyMsg, $index, discus)"
+             log-click="Загрузка файлов::Кнопка <Удалить прикреплённую картинку> в быстром ответе">
+             &times;
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,7 @@
+<ul class="dropdown-menu posts-list" ng-class="{'side-menu':!independent, 'block minwidth600':independent}">
+  <li ng-repeat="o in model" 
+  ng-click="discus.scrollUnid(o.unid); doc._meta.resultsOpen = false; doc._meta.specifOpen = false; independent ? $event.stopPropagation() : false;"
+  style="margin: 10px 15px;">
+    <document doc="o" nomenu="true"></document>
+  </li>
+</ul>

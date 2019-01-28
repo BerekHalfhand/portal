@@ -1,0 +1,120 @@
+<title>Уведомления</title>
+<div id="notificator">
+  <div class="floating-controlls"
+       ng-class="{'shown': checkedDocsCount && (urgentCount + normalCount > 0)}">
+
+    <md-button md-no-ink
+      class="back-btn"
+      ng-click="uncheckAllTheDocs()"
+      title="Назад"
+      log-click="Информатор::Кнопка <Назад> в меню информатора">
+      <md-icon class="material-icons">arrow_back</md-icon>
+      <span class="btn-label">Назад</span>
+    </md-button>
+
+    <!--<span class="select-action-label">Выберите действие:</span>-->
+
+    <md-button md-no-ink
+      class="read-btn"
+      ng-click="markCheckedAsRead()"
+      title="Прочитано"
+      log-click="Информатор::Кнопка <Прочитано> в меню информатора">
+      <md-progress-circular md-mode="indeterminate" md-diameter="18" class="graphite-blue"
+        ng-show="markingDocumentsRead"></md-progress-circular>
+      <md-icon class="material-icons"
+               ng-show="!markingDocumentsRead">check</md-icon>
+      <span class="btn-label">Прочитано</span>
+    </md-button>
+
+    <span uib-dropdown
+          class="delay-menu">
+      <md-button md-no-ink
+        class="postpone-btn"
+        uib-dropdown-toggle
+        title="Отложить"
+        log-click="Информатор::Меню <Отложить> в меню информатора">
+        <md-progress-circular md-mode="indeterminate" md-diameter="18" class="graphite-blue"
+          ng-show="delayingDocuments"></md-progress-circular>
+        <md-icon class="material-icons"
+                ng-show="!delayingDocuments">access_time</md-icon>
+        <span class="btn-label">Отложить</span>
+      </md-button>
+      <ul class="dropdown-menu text-s12" role="menu">
+        <li><a href ng-click="delayCheckedFor(1440)" log-click="Информатор::Пункт меню <Отложить: На сутки> в меню информатора">На сутки</a></li>
+        <li><a href ng-click="delayCheckedFor(2880)" log-click="Информатор::Пункт меню <Отложить: На 2 дня> в меню информатора">На 2 дня</a></li>
+        <li><a href ng-click="delayCheckedFor(4320)" log-click="Информатор::Пункт меню <Отложить: На 3 дня> в меню информатора">На 3 дня</a></li>
+        <li><a href ng-click="delayCheckedFor(7200)" log-click="Информатор::Пункт меню <Отложить: На 5 дней> в меню информатора">На 5 дней</a></li>
+        <li><a href ng-click="delayCheckedFor(10080)" log-click="Информатор::Пункт меню <Отложить: На неделю> в меню информатора">На неделю</a></li>
+      </ul>
+    </span>
+
+    <md-button md-no-ink
+      class="favorite-btn"
+      ng-click="toggleCheckedFavorites()"
+      title="В избранное"
+      log-click="Информатор::Кнопка <В избранное> в меню информатора">
+      <md-icon class="material-icons">star</md-icon>
+      <span class="btn-label">В избранное</span>
+    </md-button>
+
+    <md-button md-no-ink
+      class="unsubscribe-btn"
+      ng-click="unsubscribeChecked()"
+      title="Не уведомлять"
+      log-click="Информатор::Кнопка <Не уведомлять> в меню информатора">
+      <md-progress-circular md-mode="indeterminate" md-diameter="18" class="graphite-blue"
+        ng-show="unsubscribing"></md-progress-circular>
+      <md-icon class="material-icons"
+               ng-show="!unsubscribing">notifications_off</md-icon>
+      <span class="btn-label">Не уведомлять</span>
+    </md-button>
+
+  </div>
+
+  <h1>Информатор
+    <span class="themes-counter">{{urgentCount + normalCount}}</span>
+    <a ui-sref="body.notifications"
+       ui-sref-opts="{reload: true}"
+       class="text-s13"
+       title="Старый информатор доступен на время тестирования нового"
+       log-click="Информатор::Ссылка на старый информатор в информаторе">
+      Старый информатор
+    </a>
+  </h1>
+
+  <div class="empty-notification"
+        ng-show="!(urgentCount + normalCount)">
+    <div class="empty-notification-icon-wrap">
+      <md-icon class="material-icons">notifications_none</md-icon>
+    </div>
+    <div class="empty-notification-label">Уведомлений пока нет</div>
+  </div>
+
+  <!--<div class="notifications-wrap"
+       ng-show="!(urgentCount + normalCount)">
+    <h5 class="title">Пока непрочитанных сообщений нет</h5>
+  </div>-->
+
+  <div class="notifications-wrap"
+       ng-show="urgentCount">
+    <h5 class="title">Требует срочного ответа или действия <span class="themes-counter">{{urgentCount}}</span></h5>
+    <ul class="notifications"
+        ng-class="{'updating': updatingNotifs}">
+        <notification ng-repeat="(key, notif) in urgentNotif | orderObjectBy:'entryOrder':true"
+                      ng-model="notif"
+                      ng-cloak></notification>
+    </ul>
+  </div>
+
+  <div class="notifications-wrap"
+       ng-show="normalCount">
+    <h5 class="title"
+        ng-if="urgentCount">Остальные сообщения <span class="themes-counter">{{normalCount}}</span></h5>
+    <ul class="notifications"
+        ng-class="{'updating': updatingNotifs}">
+      <notification ng-repeat="(key, notif) in normalNotif | orderObjectBy:'entryOrder':true"
+                    ng-model="notif"
+                    ng-cloak></notification>
+    </ul>
+  </div>
+</div>

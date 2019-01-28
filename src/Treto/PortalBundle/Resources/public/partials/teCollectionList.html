@@ -1,0 +1,128 @@
+<title>Коллекции</title>
+<section id="teCollections">
+    <div class="container panel martop15">
+        <div class="row">
+            <div class="params padtop10 padbot10 padleft15 padright15 bggrey_fb">
+                <div>
+                    <span class="dark-grey">Коллекции: </span>
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: type === 'publication'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'publication\', period: \'' + fastPeriod + '\' })'}}"
+                       title="За вчера"
+                       log-click="Коллекции::Переключатель на <Опубликованные> коллекции на странице коллекций">
+                       опубликованные
+                    </a>,
+                    <a href
+                       class="blue radio-link bold" ng-class="{active: type === 'delivery'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'delivery\', period: \'' + fastPeriod + '\' })'}}"
+                       title="За неделю"
+                       log-click="Коллекции::Переключатель на <Cнятые с производства> коллекции на странице коллекций">
+                       снятые с производства
+                    </a>
+                </div>
+                <div class="martop5">
+                    <span class="dark-grey">Период: </span>
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: fastPeriod === 'day'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'' + type + '\', period: \'day\' })'}}"
+                       title="За вчера"
+                       log-click="Коллекции::Переключатель периода <за вчера> на странице коллекций">
+                       за вчера
+                    </a>,
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: fastPeriod === 'week'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'' + type + '\', period: \'week\' })'}}"
+                       title="За неделю"
+                       log-click="Коллекции::Переключатель периода <за неделю> на странице коллекций">
+                       неделю
+                    </a>,
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: fastPeriod === 'month'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'' + type + '\', period: \'month\' })'}}"
+                       title="За месяц"
+                       log-click="Коллекции::Переключатель периода <за месяц> на странице коллекций">
+                       месяц
+                    </a>,
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: fastPeriod === 'quarter'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'' + type + '\', period: \'quarter\' })'}}"
+                       title="За квартал"
+                       log-click="Коллекции::Переключатель периода <за квартал> на странице коллекций">
+                       квартал
+                    </a>,
+                    <a href
+                       class="blue radio-link bold"
+                       ng-class="{active: fastPeriod === 'year'}"
+                       ui-sref="{{'body.teCollectionList({ type: \'' + type + '\', period: \'year\' })'}}"
+                       title="За год"
+                       log-click="Коллекции::Переключатель периода <за год> на странице коллекций">
+                       год
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="display row">
+            <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24 text-center bordtop_ed padtop10 padbot10 text-s14" ng-if="loading">
+                Загрузка...
+            </div>
+            <table ng-if="!loading" class="col-lg-24 col-md-24 col-sm-24 col-xs-24 table table-striped table-bordered marbot0 bordtop_ed valign-middle no-bord-left no-bord-right">
+                <thead>
+                    <tr class="row">
+                        <th class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bgwhite bold touch"
+                            ng-click="sortBy('id')"
+                            log-click="Коллекции::Сортировка таблицы коллекций по id">
+                            id
+                            <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.property!=='id'">
+                                {{ sort.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                            <img ng-hide="sort.property==='id'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png">
+                        </th>
+                        <th class="col-lg-8 col-md-8 col-sm-8 col-xs-8 bgwhite bold touch"
+                            ng-click="sortBy('name')"
+                            log-click="Коллекции::Сортировка таблицы коллекций по назнанию">
+                            Коллекция
+                            <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.property!=='name'">
+                                {{ sort.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                            <img ng-hide="sort.property==='name'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png">
+                        </th>
+                        <th class="col-lg-8 col-md-8 col-sm-8 col-xs-8 bgwhite bold touch"
+                            ng-click="sortBy('fname')"
+                            log-click="Коллекции::Сортировка таблицы коллекций по фабрике">
+                            Фабрика 
+                            <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.property!=='fname'">
+                                {{ sort.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                            <img ng-hide="sort.property==='fname'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png">
+                        </th>
+                        <th class="col-lg-4 col-md-4 col-sm-4 col-xs-4 bgwhite bold touch"
+                            ng-click="sortBy('dateOutput')"
+                            log-click="Коллекции::Сортировка таблицы коллекций по дате публикации\снятия с производства">
+                            {{type === 'publication' ? 'Дата публикации' : 'Дата снятия с производства' }}
+                            <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.property!=='dateOutput'">
+                                {{ sort.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                            <img ng-hide="sort.property==='dateOutput'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row" ng-repeat="c in list.collections | orderBy : sort.property : sort.reverse">
+                        <td>{{c.id}}</td>
+                        <td>
+                            <a href="{{c.url}}"
+                               class="light-green"
+                               target="_blank"
+                               title="Открыть на сайте"
+                               log-click="Коллекции::Ссылка на коллекцию на сайте">
+                                {{c.name}}
+                            </a></td>
+                        <td>{{c.fname}}</td>
+                        <td>{{c.dateOutput | datetime}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div> 
+</section>

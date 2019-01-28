@@ -1,0 +1,120 @@
+<!--ng-controller="portalSettingsCtrl"-->
+<div class="container" ng-if="role('PM')">
+    <div class="row martop10">
+        <div class="col-lg-24 panel">
+            <div class="row">
+                <div class="color-panel" style="border-top-color: rgb(126, 240, 40);">
+                    <table class="table table-unborded" ng-if="(avtype == dict.type)"><tbody>
+                    <tr>
+                        <th>Название</th>
+                        <th>Домен</th>
+                        <th>Соль</th>
+                        <th>Статус</th>
+                        <th colspan="2">https</th>
+                    </tr>
+                    <tr ng-if="loading">
+                        <td colspan="4" style="text-align: center">
+                            <h3 style="color:#757575">Загрузка...</h3>
+                        </td>
+                    </tr>
+                    <tr ng-repeat="settings in allSettings.sharePortal" ng-if="settings.status != 'delete'">
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.companyName" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Название> в настройках sharePortal"/>
+                        </td>
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.domain" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Домен> в настройках sharePortal"/>
+                        </td>
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.salt" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Соль> в настройках sharePortal"/>
+                        </td>
+                        <td style="width: 150px;">
+                            <a ng-show="!settings.check || settings.check === 1"
+                               href
+                               ng-click="checkShare($index)" style="width: 130px;">
+                                {{!settings.check?'Проверить':''}}
+                                {{settings.check === 1?'Ожидайте':''}}
+                            </a>
+                            <span ng-show="settings.check === 2" class="label label-success">Удачный запрос</span>
+                            <span ng-show="settings.check === 3" class="label label-danger">Не удачный запрос</span>
+                        </td>
+                        <td>
+                            <md-checkbox ng-checked="settings.https"
+                                         ng-click="settings.edit = true; settings.https = !settings.https"
+                                         log-click="Настройки портала::Галка <https> в настройках sharePortal"></md-checkbox>
+                        </td>
+                        <td>
+                            <span ng-show="settings.edit" style="color:#757575">ред.</span>
+                            <button type="button" class="btn btn-danger"
+                                    ng-click="settings.status = 'delete'"
+                                    log-click="Настройки портала::Кнопка <Удалить> в настройках sharePortal">
+                                    Х
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4">Соль для текущего портала</th>
+                    </tr>
+                    <tr ng-repeat="settings in allSettings.selfSalt">
+                        <td colspan="4">
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.value" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Соль для текущего портала>"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Название</th>
+                        <th>ID блока</th>
+                        <th colspan="2">Видимость</th>
+                    </tr>
+                    <tr ng-repeat="settings in allSettings.indexBlocks" ng-if="settings.status != 'delete'">
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.name" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Название> в настройках indexBlocks"/>
+                        </td>
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.blockId" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <ID блока> в настройках indexBlocks"/>
+                        </td>
+                        <td>
+                            <input ng-change="settings.edit = true" type="text"
+                                   ng-model="settings.value" class="input input-sm form-control"
+                                   log-click="Настройки портала::Поле <Видимость> в настройках indexBlocks"/>
+                        </td>
+                        <td>
+                            <span ng-show="settings.edit" style="color:#757575">ред.</span>
+                            <button type="button" class="btn btn-danger"
+                                    ng-click="settings.status = 'delete'"
+                                    log-click="Настройки портала::Кнопка <Удалить> в настройках indexBlocks">
+                                    Х
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <button type="button" class="btn btn-info" ng-click="save()"
+                                    log-click="Настройки портала::Кнопка <Сохранить> в настройках indexBlocks">
+                                    Сохранить
+                            </button>
+                            <button type="button" class="btn btn-primary" ng-click="addSharePortal()"
+                                    log-click="Настройки портала::Кнопка <Добавить связь> в настройках indexBlocks">
+                                    Добавить связь
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody></table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <ul>
+    </ul>
+</div>

@@ -1,0 +1,27 @@
+  <div class="col-md-12 file-upload-template">
+    <a ng-init="pasteScreenShot=false"
+       href
+       ng-click="pasteScreenShot = !pasteScreenShot"
+       log-click="Загрузка файлов::Кнопка <Вставить скриншот>">Вставить скриншот</a>
+    <div class="other-drop-zone"
+         ng-show="pasteScreenShot"
+         contenteditable="true"
+         ng-paste="pasteImg($event)"
+         log-click="Загрузка файлов::Зона для присоединения файлов скриншота">Вставьте сюда картинку</div>
+    <div nv-file-drop="" nv-file-over="" 
+      uploader="uploader" over-class="other-over-zone" 
+      class="content other-drop-zone"
+      log-click="Загрузка файлов::Зона drag-and-drop для присоединения файлов"> 
+      <input type="file" nv-file-select="" uploader="uploader" ng-model="model"
+      multiple filters="customFilter">
+    </div>
+    <span ng-if="uploader.queue.length">
+    <div>
+      <div>
+        Идет загрузка файлов:
+        <div class="progress" style="">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+        </div>
+      </div>
+    </div>
+  </div>

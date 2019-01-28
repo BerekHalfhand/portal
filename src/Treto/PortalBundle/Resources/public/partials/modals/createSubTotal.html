@@ -1,0 +1,69 @@
+<div class="edit-doc">
+  <div class="text-s12 panel" ng-controller="createSubTotalCtrl" ctrl-enter="discus.saved?ok(true):false">
+    <div class="close-edit-form" ng-click="close()"
+         log-click="Дискуссии::Кнопка <Сохранить> в окне создания подитога">
+         &times;
+    </div>
+    <form ng-submit="submitted = true; ok(true);" novalidate name="modalForm" ng-init="submitted = false;">
+      <div class="modal-header" ng-if="discus.main_doc.ToSite === '1'" ng-init="discus.current.locale = false">
+        <div>
+          <md-checkbox ng-model="discus.current.NotForSite"
+                       ng-true-value="'1'"
+                       ng-false-value="'0'"
+                       log-click="Дискуссии::Галка <Не показывать сообщение на сайте> в окне создания подитога">
+            Не показывать сообщение на сайте
+          </md-checkbox>
+          <span ng-if="!discus.current.NotForSite || discus.current.NotForSite == '0'" uib-dropdown style="position:relative; display: inline-block; margin-left: 20px;">
+            <a href class="dropdown-toggle black"
+               uib-dropdown-toggle
+               ng-init="discus.current.locale = discus.current.locale?discus.current.locale:locale.records[0].value"
+               log-click="Дискуссии::Меню <Выберите локаль> в окне создания подитога">
+              {{discus.current.locale?discus.current.locale:'Выберите локаль'}}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <li ng-repeat="record in locale.records" title="{{record.value}}">
+                <a href class="text-s11 black" ng-click="discus.current.locale = record.value">{{record.value}}</a>
+              </li>
+            </ul>
+          </span>
+        </div>
+      </div>
+      <div class="modal-header" style="overflow-y:initial;padding-bottom:30px;">
+        <input class="text-s16"
+               type="text"
+               placeholder="Подытог: заголовок (обязательно)"
+               ng-model="discus.current.subject"
+               log-click="Дискуссии::Поле <заголовок> в окне создания подитога"/>
+        <t-mce ng-if="discus.current.unid"
+               model="discus.current.body"
+               mentions="discus.current.mentions"
+               log-click="Дискуссии::Поле <Введите текст> в окне создания подитога"></t-mce>
+        <div ng-if="!discus.current.unid">Подождите...</div>
+      </div>
+      <div class="modal-header" ng-if="discus.current.attachments.length > 0 || $root.uploader.isUploading" style="margin-right: 0px; margin-left: 0px;">
+        <div ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading" class="progress-thin pad0force">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': $root.uploader.progress + '%' }"></div>
+        </div>
+        <upload-list model="discus.current.attachments" template-url="listing"></upload-list>
+      </div>
+      <div class="modal-header custom-toolbar relative" ng-init="pasteScreenShot = {value: false}"
+           ng-class="{'padtop70': pasteScreenShot.value}">
+        <div ng-if="discus.current.unid" ng-show="showTags == true" ng-init="doc = discus.current">
+          <div style="margin-bottom: 5px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+        </div>
+        <button class="btn btn-info btn-xs marright10"
+                type="submit"
+                ng-disabled="!discus.saved"
+                style="margin-top: 8px; margin-bottom: 8px;"
+                copy-body
+                log-click="Дискуссии::Кнопка <Сохранить> в окне создания подитога">
+                Сохранить
+        </button>
+        <span ng-if="discus.current.unid">
+          <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }" auto="true" multiple="true" model="discus.current.attachments" templ="discus_ico.html"></upload-box>
+        </span>
+        <span id="mytoolbar"></span>
+      </div>
+    </form>
+  </div>
+</div>

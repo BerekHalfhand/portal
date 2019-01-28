@@ -1,0 +1,195 @@
+<section id="click-log" class="full-page-container">
+    <div ng-if="!loading">
+        <form class="stat-controlls">
+            <div class="period-datapickers-wrap">
+                <md-datepicker
+                    ng-model="period.start"
+                    md-min-date="minDate"
+                    md-max-date="period.end || maxDate"
+                    ng-change="period.type = 'custom'; changeDate();"
+                    md-open-on-focus
+                    md-placeholder="с"
+                    log-click="Статистика::Выбор даты периода <c> числа для отбора статистики">
+                </md-datepicker>
+                
+                <md-datepicker
+                    ng-model="period.end"
+                    md-min-date="period.start || minDate"
+                    md-max-date="maxDate"
+                    ng-change="period.type = 'custom'; changeDate();"
+                    md-open-on-focus
+                    md-placeholder="по"
+                    log-click="Статистика::Выбор даты периода <по> число для отбора статистики">
+                </md-datepicker>
+            </div>
+
+            <div class="period-thumbler-wrap">
+                <ul class="period-thumbler">
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'day'}"
+                            ng-click="stat.fastSelectPeriod('day'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за вчера> на странице статистики">за вчера</a>,
+                    </li>
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'week'}"
+                            ng-click="stat.fastSelectPeriod('week'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за неделю> на странице статистики">неделю</a>,
+                    </li>
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'month'}"
+                            ng-click="stat.fastSelectPeriod('month'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за месяц> на странице статистики">месяц</a>,
+                    </li>
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'quarter'}"
+                            ng-click="stat.fastSelectPeriod('quarter'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за квартал> на странице статистики">квартал</a>,
+                    </li>
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'year'}"
+                            ng-click="stat.fastSelectPeriod('year'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за год> на странице статистики">год</a>,
+                    </li>
+                    <li>
+                        <a href class="blue radio-link"
+                            ng-class="{active: stat.params.state.period.type === 'full'}"
+                            ng-click="stat.fastSelectPeriod('full'); changeDate();"
+                            log-click="Статистика::Переклюатель периода <за весь период> на странице статистики">весь период</a>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        <table class="modern-table table-fixed click-log-table"
+               ng-init="sort.property !== 'name' ? sortBy('name') : ''">
+            <thead>
+                <tr>
+                    <th>
+                        <md-icon title="Выберите элементы для построения графика по частоте использования"
+                                 style="margin: -2px;">
+                            show_chart
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('name')"
+                        title="Отсортировать по названию элементов"
+                        log-click="Статистика::Сортировка таблицы <Клики> на странице статистики по названию элемента">
+                        Элементы:
+                        <md-select ng-model="groupToShow"
+                                   title="Выбрать группу элементов для отображения"
+                                   aria-label="Выбрать группу элементов для отображения"
+                                   ng-change="clearGraphData()"
+                                   ng-click="$event.stopPropagation()"
+                                   log-click="Статистика::Выбор <Группа элементов> в таблице <Клики> на странице статистии">
+                            <md-option ng-value="group" ng-repeat="group in buttonGroups | orderBy: group">
+                                {{group}}
+                            </md-option>
+                        </md-select>
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='name'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('value')"
+                        title="Отсортировать по количеству кликов"
+                        log-click="Статистика::Сортировка таблицы <Клики> на странице статистики по количеству кликов">
+                        Кол-во кликов
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='value'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="btn in btns | orderBy: sort.property : sort.reverse track by btn.id"
+                    ng-if="btn.group === groupToShow || groupToShow === 'Все'">
+                    <td ng-click="$event.stopPropagation()">
+                        <md-checkbox md-no-ink
+                            ng-click="toggleChecked(btn.id)"
+                            ng-checked="checked(btn.id)"
+                            title="Отобразить на графике"
+                            aria-label="Отобразить на графике"
+                            log-click="Статистика::Галка <Отобразить на графике> в таблице <Клики> на странице статистии"></md-checkbox>
+                        <div class="popup-wnd graph-promt-popup"
+                             ng-show="showGraphPromtAt===btn.id&&checked(btn.id)">
+                            <div class="marbot10">Показать график?</div>
+                            <div class="btns-wrap">
+                                <md-button class="md-primary"
+                                           ng-click="graphPromtAnswer(true)"
+                                           log-click="Статистика::Кнопка <Да> во всплывающем окне <Показать график> в таблице <Клика> на странице статистии">
+                                    Да
+                                </md-button>
+                                <md-button ng-click="graphPromtAnswer(false)"
+                                           log-click="Статистика::Кнопка <Нет> во всплывающем окне <Показать график> в таблице <Клика> на странице статистии">
+                                    Нет
+                                </md-button>
+                            </div>
+                        </div>
+                    </td>
+                    <td ng-bind="btn.name"></td>
+                    <td ng-bind="btn.value"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="line-graph-popup-wrap" ng-show="graph.show">
+        <div class="line-graph-popup"
+             ng-click="$event.stopPropagation()">
+             <md-button class="icon-btn close-graph-btn"
+                        ng-click="graph.show = false"
+                        log-click="Статистика::Кнопка <Закрыть> в окне с графиком на странице статистии">
+                <md-icon class="material-icons">
+                    close
+                </md-icon>
+            </md-button>
+             <div class="marbot10">
+                <span class="va-middle">Вид графика: </span>
+                <md-select
+                    ng-model="graph.options.mode"
+                    ng-change="redrawGraph()"
+                    md-no-ink
+                    aria-label="period-per-knot"
+                    class="mar0 marright10"
+                    log-click="Статистика::Выбор опции <Вид графика> в окне с графиком на странице статистики">
+                    <md-option
+                        ng-repeat="option in graph.modes"
+                        ng-value="option.value">
+                        {{option.name}}
+                    </md-option>
+                </md-select>
+             </div>
+             <div class="marbot10">
+                <span class="va-middle">Точка на графике - это </span>
+                <md-select
+                    ng-model="graph.options.periodPerKnot"
+                    ng-change="redrawGraph()"
+                    md-no-ink
+                    aria-label="period-per-knot"
+                    class="mar0 marright10"
+                    log-click="Статистика::Выбор опции <Точка на графике - это> в окне с графиком на странице статистики">
+                    <md-option
+                        ng-repeat="option in graph.periodsPerKnots"
+                        ng-value="option.value"
+                        ng-hide="option.value > 1 && option.value * 2 > (period.end.getTime() - period.start.getTime()) / 86400000">
+                        {{option.name}}
+                    </md-option>
+                </md-select>
+                <span class="va-middle">* Неделя и месяц доступны только на больших периодах времени</span>
+             </div>
+            <line-graph graphs="graph.data" mode="graph.options.mode"></line-graph>
+            <div class="legend-wrap">
+                <ul>
+                    <li ng-repeat="graph in graph.data">
+                        <span class="color" ng-style="{'background': graph.color}"></span>
+                        <span class="legend" ng-bind="graph.legend"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

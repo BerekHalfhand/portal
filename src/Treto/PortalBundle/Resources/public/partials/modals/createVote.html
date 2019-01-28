@@ -1,0 +1,190 @@
+<div class="edit-doc center">
+  <div class="container text-s12 panel marbot0 pad0force" ng-controller="modalCreateVoteCtrl" style="position: relative" ctrl-enter="ok()">
+    <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+      <div ng-init="subjName = $root.show.create.formType == 'regular' ? 'Голосование' : 'Опрос мнения'" class="modal-header grey" style="padding: 2px 10px;">
+        <input name="inputSubject"
+               type="text"
+               autofocus
+               required
+               class="form-control no-border pad0force text-s13"
+               placeholder="{{subjName}}: заголовок"
+               ng-model="doc.subject"
+               log-click="Дискуссии::Поле <Заголовок> в окне создания голосования"/>
+        <ng-messages ng-show="submitted" for="modalForm.inputSubject.$error" class="required-warning" ng-click="submitted = false">
+          <ng-message when="required">Вопрос должен быть указан.</ng-message>
+        </ng-messages>
+        <a class="close pull-right marright5"
+           ng-click="close()"
+           style="position: absolute;top: 5px;right: 0;z-index: 1001"
+           title="Закрыть"
+           log-click="Дискуссии::Кнопка <Закрыть> в окне создания голосования">
+          <i class="material-icons">close</i>
+        </a>
+      </div>
+    
+      <div class="padtop0 padbot0 pos-static" style="overflow-y:auto;overflow-x:hidden;">
+        <div class="modal-body">
+          <md-checkbox
+            id="check-use-img"
+            ng-model="withAttach"
+            ng-init="doc.formSettings = []; doc.formSettings.showPreview = -1;"
+            log-click="Дискуссии::Галка <Иcпользовать картинки в качестве вариантов ответа> в окне создания голосования">
+           Иcпользовать картинки в качестве вариантов ответа
+          </md-checkbox>
+        </div>
+        <div class="modal-body">
+          <span>Можно выбрать до</span>
+          <input ng-model="doc.AnswersLim"
+                 id="answersQuantity"
+                 name="answersQuantity"
+                 required
+                 ng-change="(!doc.AnswersData.length && (doc.AnswersLim > 0)) ? (doc.AnswersData.length = doc.AnswersLim) : false"
+                 id="answers-quan"
+                 class="form-control input-sm input-small small-inline-input dark-grey text-center"
+                 type="number"
+                 log-click="Дискуссии::Поле <Можно выбрать до -число- ответов> в окне создания голосования"/>
+          <span>ответов</span>
+        </div>
+        <ng-messages ng-show="submitted" for="modalForm.answersQuantity.$error" class="required-warning" ng-click="submitted = false">
+          <ng-message when="required">Количество ответов должно быть указано.</ng-message>
+          <ng-message when="number">Укажите число.</ng-message>
+        </ng-messages>
+        <div class="modal-body padtop0">
+          <div class="row" ng-repeat="answer in doc.AnswersData track by $index">
+            <div class="col-lg-14 underlined marleft15 padtop0">
+              <div class="input-group">
+                <label class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">{{$index+1}}.</label>
+                <input id="answer_{{$index}}"
+                       name="{{$index}}"
+                       type="text"
+                       ng-model="doc.AnswersData[$index]"
+                       required
+                       ng-click="doc._meta.focus = $index"
+                       class="form-control text-s12 no-border"
+                       log-click="Дискуссии::Поле <Вариант ответа> в окне создания голосования"/>
+              </div>
+              <div ng-show="$parent.submitted && !doc.AnswersData[$index]" class="required-warning" ng-click="$parent.submitted = false">
+                <span>Вариант ответа должен быть указан.</span>
+              </div>
+            </div>
+            <div class="col-lg-5 sidepad5 underlined padtop0" style="height: 37px;">
+              <div class="width100per height27 btn-group" uib-dropdown ng-show="withAttach && doc.attachments.length > 0" ng-init="doc.AnswersPictures[$index]=''; doc.AnswersPicturesNames[$index] = '';">
+                <button type="button"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        class="btn btn-default dropdown-toggle dropdown-style"
+                        style="overflow: hidden;"
+                        log-click="Дискуссии::Меню <Выберите картинку> в окне создания голосования">
+                  {{doc.AnswersPicturesNames[$index] || 'Выберите картинку '}}<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                  <li>
+                    <a href
+                       ng-click="doc.AnswersPictures[$index]=''; doc.AnswersPicturesNames[$index] = ''; toggleRequired($index, true)"
+                       log-click="Дискуссии::Пункт <Без картинки> в меню <Выберите картинку> в окне создания голосования">
+                      Без картинки
+                    </a>
+                  </li>
+                  <li ng-repeat="attach in doc.attachments">
+                    <a href
+                       ng-click="doc.AnswersPictures[$parent.$index] = attach[0].link; doc.AnswersPicturesNames[$parent.$index] = attach[0].doc.originalFilename; toggleRequired($parent.$index, false)"
+                       log-click="Дискуссии::Пункт <Картинка> в меню <Выберите картинку> в окне создания голосования">
+                      {{attach[0].doc.originalFilename}}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div ng-if="withAttach" class="col-lg-2">
+              <span ng-click="doc.uploaderInvoked = $index;">
+                <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }"
+                auto="true" multiple="false" model="doc.attachments" templ="voting_upload.html" votepichandler="uploadPicHandler()"></upload-box>
+              </span>
+            </div>
+            <div class="col-lg-2">
+              <span ng-if="withAttach&&doc.AnswersPictures[$index]">
+                <img ng-click="doc.formSettings.showPreview == $index ? doc.formSettings.showPreview = -1 : doc.formSettings.showPreview = $index"
+                     ng-src="{{doc.AnswersPictures[$index].replace('\/src\/','\/thumbnail\/')}}"
+                     class="touch"
+                     style="height: 37px;"
+                     log-click="Дискуссии::Ссылка на превью загруженной картинки в окне создания голосования"/>
+              </span>
+              <div ng-show="doc.formSettings.showPreview == $index"
+                   ng-click="doc.formSettings.showPreview == $index ? doc.formSettings.showPreview = -1 : doc.formSettings.showPreview = $index"
+                   class="img-preview"
+                   log-click="Дискуссии::Ссылка на превью загруженной картинки в окне создания голосования">
+                <img ng-src="{{doc.AnswersPictures[$index]}}" style="max-height: 300px; max-width: 300px;"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="col-lg-12">
+            <span ng-click="doc.AnswersData[doc.AnswersData.length] = ''"
+                  ng-disabled="!discus.saved" class="touch"
+                  log-click="Дискуссии::Кнопка <Добавить вариант ответа> в окне создания голосования">
+                  +<span class="green"> Добавить вариант ответа</span>
+            </span>
+            <span ng-if="doc.AnswersData.length>2"
+                  ng-click="doc.AnswersData.pop()"
+                  ng-disabled="!discus.saved"
+                  class="touch padleft20"
+                  log-click="Дискуссии::Кнопка <Удалить вариант ответа> в окне создания голосования">
+                  -<span class="green"> Удалить вариант ответа</span>
+            </span>
+          </div>
+          <div class="col-lg-12" ng-if="$root.show.create.formType == 'index'">
+            <div class="pull-right">
+              <span>Сколько дней опрашивать: </span>
+              <input ng-init="doc.PeriodPoll=5"
+                     ng-model="doc.PeriodPoll"
+                     required
+                     id="inputPeriod"
+                     name="inputPeriod"
+                     class="form-control input-sm input-small small-inline-input text-center"
+                     type="number"
+                     log-click="Дискуссии::Поле <Сколько дней опрашивать> в окне создания голосования"/>
+              <ng-messages ng-show="submitted" for="modalForm.inputPeriod.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Период опроса должен быть указан.</ng-message>
+                <ng-message when="number">Укажите число.</ng-message>
+              </ng-messages>
+            </div>
+          </div>
+        </div>
+        <div class="modal-body padleft20 red">
+          <p>Просьба: при оценке вариантов всегда делать пункт "ничего не нравится", иначе достоверность опросов искажается.</p>
+        </div>
+        <div class="modal-footer" ng-if="discus.current.attachments.length > 0 || $root.uploader.isUploading">
+          <div ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading" class="progress-thin pad0force">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': $root.uploader.progress + '%' }"></div>
+          </div>
+          <upload-list model="discus.current.attachments" template-url="listing"></upload-list>
+        </div>
+        <div ng-if="$root.show.create.formType == 'regular'">
+          <div class="modal-footer padbot0" ng-if="partDoc = discus.current">
+            <div ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+            <ng-messages ng-show="$parent.$parent.submitted" for="modalForm.$error" class="required-warning"
+                  ng-click="$parent.$parent.submitted = false" style="position: absolute;left: 0">
+              <ng-message when="participantsRequired">Добавьте участников голосования.</ng-message>
+            </ng-messages>
+          </div>
+        </div> 
+        <div class="modal-footer no-border relative" ng-init="pasteScreenShot = {value: false}"
+             ng-class="{'padtop70': pasteScreenShot.value}">
+          <div ng-show="showTags == true">
+            <div style="margin-bottom: 5px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+          </div>
+          <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }" auto="true" multiple="true" model="doc.attachments" templ="discus_ico.html"></upload-box>
+        </div>
+      </div>
+      <div class="modal-footer no-border">
+          <md-button type="submit"
+                     class="btn btn-blue"
+                     value=""
+                     log-click="Дискуссии::Кнопка <Сохранить> в окне создания голосования">
+                     Сохранить
+          </md-button>
+      </div>
+    </form>
+  </div>
+</div>

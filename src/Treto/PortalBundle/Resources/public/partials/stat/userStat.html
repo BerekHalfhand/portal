@@ -1,0 +1,101 @@
+<!-- Not in use as of May 16, 2017 -->
+<!-- To be deleted soon -->
+
+<section class="full-page-container">
+    <div class="bggrey_fb">
+    <div ng-show="usersTab">
+        <div class="row">
+        <div class="col-lg-12 col-md-24 col-sm-24">
+            <div class="bold padleft15 padright15 padtop15 padbot5 bggrey_fb">Новые сортудники:</div>
+            <table class="table table-striped table-bordered marbot0 bordtop_ed valign-middle no-bord-left no-bord-right bgwhite">
+            <thead>
+                <tr class="row">
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('employed', 'DtWork')"
+                    log-click="Статистика::Сортировка таблицы <Новые сотрудники> на странице статистики по дате приёма на работу">
+                        Дата
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.employed.property!=='DtWork'">
+                        {{ sort.employed.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.employed.property==='DtWork'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('employed', '$root.usersAll[user.Login].name')"
+                    log-click="Статистика::Сортировка таблицы <Новые сотрудники> на странице статистики по имени">
+                        ФИО
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.employed.property!=='$root.usersAll[user.Login].name'">
+                        {{ sort.employed.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.employed.property==='$root.usersAll[user.Login].name'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('employed', 'workGroup')"
+                    log-click="Статистика::Сортировка таблицы <Новые сотрудники> на странице статистики по должности">
+                        Должность
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.employed.property!=='workGroup'">
+                        {{ sort.employed.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.employed.property==='workGroup'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row" ng-repeat="user in usersTab.employed | orderBy: sort.employed.property : sort.employed.reverse">
+                <td class="col-lg-8 col-md-8 col-sm-8">{{::user.DtWork|datetime:true}}</td>
+                <td class="col-lg-8 col-md-4 col-sm-4">
+                    <a href
+                        ui-sref="body.profileDisplay({id: user.Login})"
+                        class="blue"
+                        title="Посмотреть профиль сотрудника"
+                        log-click="Статистика::Ссылка на профиль принятого на работу сотрудника в таблице на странице статистики">
+                    {{ ::($root.usersAll[user.Login].name || user.Login) }}
+                    </a>
+                </td>
+                <td class="col-lg-8 col-md-4 col-sm-4">{{::$root.usersAll[user.Login].WorkGroup|join}}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        <div class="col-lg-12 col-md-24 col-sm-24">
+            <div class="bold padleft15 padright15 padtop15 padbot5 bggrey_fb">Уволившиеся и уволенные сортудники:</div>
+            <table class="table table-striped table-bordered marbot0 bordtop_ed valign-middle no-bord-left no-bord-right bgwhite">
+            <thead>
+                <tr class="row">
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('fired', 'DtDismiss')"
+                    log-click="Статистика::Сортировка таблицы <Уволенные сотрудники> на странице статистики по дате увольнения">
+                        Дата
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.fired.property!=='DtDismiss'">
+                        {{ sort.fired.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.fired.property==='DtDismiss'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('fired', '$root.usersAll[user.Login].name')"
+                    log-click="Статистика::Сортировка таблицы <Уволенные сотрудники> на странице статистики по имени">
+                        ФИО
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.fired.property!=='$root.usersAll[user.Login].name'">
+                        {{ sort.fired.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.fired.property==='$root.usersAll[user.Login].name'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                <th class="col-lg-8 col-md-8 col-sm-8 bold bgwhite pad15_8 padright15 touch"
+                    ng-click="sortBy('fired', 'workGroup')"
+                    log-click="Статистика::Сортировка таблицы <Уволенные сотрудники> на странице статистики по должности">
+                        Должность
+                        <i class="pull-right material-icons ng-binding" style="margin-bottom: -7px;" ng-hide="sort.fired.property!=='workGroup'">
+                        {{ sort.fired.reverse?'arrow_drop_down':'arrow_drop_up' }}</i>
+                        <img ng-hide="sort.fired.property==='workGroup'" class="pull-right padtop2 ng-hide" src="/public/images/tasks/sort.png"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row" ng-repeat="user in usersTab.fired | orderBy: sort.fired.property : sort.fired.reverse">
+                <td class="col-lg-8 col-md-8 col-sm-8">{{::user.DtDismiss|datetime:true}}</td>
+                <td class="col-lg-8 col-md-4 col-sm-4">
+                    <a href
+                        ui-sref="body.profileDisplay({id: user.Login})"
+                        class="blue"
+                        title="Посмотреть профиль сотрудника"
+                        log-click="Статистика::Ссылка на профиль уволенного сотрудника в таблице на странице статистики">
+                    {{ ::($root.usersAll[user.Login].name || user.Login) }}
+                    </a>
+                </td>
+                <td class="col-lg-8 col-md-4 col-sm-4">{{::$root.usersAll[user.Login].WorkGroup|join}}</td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+    </div>
+</section>

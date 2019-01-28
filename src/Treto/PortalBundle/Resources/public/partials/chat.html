@@ -1,0 +1,137 @@
+<audio id="new_message">
+  <source src="/public/new_message.m4a">
+  <source src="/public/new_message.ogg">
+</audio>
+<div id="chat" class="bgwhite">
+  <div id="chat-myname" class="header xxx pad10 bgblue">
+    <ul class="list-inline mar0">
+      <li ng-show="$window.chatUnreadMessages>0">
+        <i class="text-s16 blink material-icons touch" ng-click="selectUnread()">chat</i>
+      </li>
+      <li ng-show="$window.chatUnreadMessages==0" uib-dropdown style="position:relative;">
+        <a uib-dropdown-toggle title="Изменить статус">
+          <span class="touch ico" ng-class="'chat-status'+$window.user.chatStatus.id" title="{{$window.user.chatStatus.text}}"></span>
+          <span class="touch text-s11 white glyphicon glyphicon-triangle-bottom"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href class="text-s11" ng-click="changeStatus(1)">
+              <span class="ico chat-status1"></span> Доступен
+            </a>
+          </li>
+          <li>
+            <a href class="text-s11" ng-click="changeStatus(2)">
+              <span class="ico chat-status2"></span> Отошел до...
+            </a>
+          </li>
+          <li>
+            <a href class="text-s11" ng-click="changeStatus(3)">
+              <span class="ico chat-status1"></span> Вовлечен на...
+            </a>
+          </li>
+          <li>
+            <a href class="text-s11" ng-click="changeStatus(0)">
+              <span class="ico chat-status0"></span> Отсутствую до...
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- <li style="border-left: 1px solid white;">
+        <span class="ico chat-settings"></span>
+      </li>
+      <li>
+        <span class="ico chat-refresh"></span>
+      </li>
+      <li>
+        <span class="ico chat-plus-minus"></span>
+      </li> -->
+      <li style="border-left: 1px solid white;">
+        <span class="ico chat-show-hide" ng-init="online=false" ng-click="online=!online" title="Скрыть / показать пользователей вне сети"></span>
+      </li>
+      <li uib-dropdown style="position:relative;">
+        <a href uib-dropdown-toggle title="История">
+          <span class="ico chat-history touch"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a href class="text-s11" ng-click="openChatHistory();">Все сообщения</a>
+          </li>
+          <li>
+            <a href class="text-s11" ng-click="openChatHistory(false, true);">Конференции</a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <span class="ico chat-conf touch" ng-click="openModalCreateConf(); $event.stopPropagation();" title="Новая конференция"></span>
+      </li>
+    </ul>
+
+  </div>
+  <div class="panel-body" style="resize:both;">
+    <ul class="list-unstyled">
+      <li ng-init="collapsed.empl=false">
+        <span class="touch" ng-click="collapsed.empl = !collapsed.empl"><span class="text-s11 pink glyphicon glyphicon-triangle-{{ collapsed.empl ? 'bottom' : 'top' }}"></span> Трето({{usrsInGroup.length}}/{{userNames().length}})</span>
+        <div class="divider martop10"></div>
+        <ul uib-collapse="collapsed.empl" class="list-unstyled">
+          <li ng-repeat="usr in userNames() | orderBy:'name' | filter:filterShowInGroup() as usrsInGroup" class="clearfix marbot10 text-thin text-s12" >
+            <a ng-class="usr.status.id===1||usr.status.id===2?'black text-fat':'grey'" href ng-click="selectUser(usr.id, usr.name, 'empl')">{{usr.name}}</a>
+            <span class="pull-right ico chat-status{{usr.status.id}}" title="{{statusDesc[usr.status.id]}}"></span>
+            <span class="badge pull-right">{{usr.unread_messages==0?'':usr.unread_messages}}</span>
+            <span class="pull-right">{{usr.status.text}}</span>
+          </li>
+        </ul>
+      </li>
+      <li ng-init="collapsed.conf=true">
+        <span class="touch" ng-click="collapsed.conf = !collapsed.conf"><span class="text-s11 pink glyphicon glyphicon-triangle-{{ collapsed.conf ? 'bottom' : 'top' }}"></span> Конференции({{countOfObject($window.confs)}})</span>
+        <div class="divider martop10"></div>
+        <ul uib-collapse="collapsed.conf" class="list-unstyled">
+          <li ng-repeat="(id, conf) in $window.confs" ng-init="editName=false" class="clearfix marbot10 text-thin text-s12">
+            <input ng-show="editName" type="text" ng-model="newConf">
+            <span ng-show="editName" class="green glyphicon glyphicon-ok" ng-click="chatRenameConf(conf.id, newConf);editName=false;"></span>
+            <span ng-show="editName" class="red glyphicon glyphicon-remove" ng-click="editName=false;"></span>
+            <a href ng-show="!editName" ng-click="selectUser(conf.id, conf.name, 'Conf')"> 
+              {{conf.name}}
+            </a>
+            <span class="badge pull-right">{{conf.unread_messages==0?'':conf.unread_messages}}</span>
+            <a href ng-show="!editName" ng-click="editName = !editName;newConf='';">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true" tooltip-popup-delay='500' uib-tooltip='Переименовать'></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li ng-init="collapsed.guests=true">
+        <span class="touch" ng-click="collapsed.guests = !collapsed.guests"><span class="text-s11 pink glyphicon glyphicon-triangle-{{ collapsed.guests ? 'bottom' : 'top' }}"></span> Посетители сайта({{countOfObject($window.guests)}})</span>
+        <div class="divider martop10"></div>
+        <ul uib-collapse="collapsed.guests" class="list-unstyled">
+          <li ng-repeat="(key, guest) in $window.guests" class="clearfix marbot10 text-thin text-s12">
+            <a href ng-show="!editName" ng-click="selectUser(guest.id, guest.name, 'guest')"> 
+              {{guest.name}}
+            </a>
+            <span class="badge pull-right">{{guest.unread_messages==0?'':guest.unread_messages}}</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script type="text/ng-template" id="modalCreateConf.html">
+  <div id="modalCreateConf" ctrl-enter="ok()">
+    <div class="modal-header">
+        <span class="text-s16">Создание конференции</span>
+    </div>
+    <div class="modal-body" >
+      <p>Тема конференции: <input class="form-control input-sm" type="text" ng-model="confName"></p>
+      <p>Выберите участников:</p>
+      <ul class="list-group" style="height: 300px;overflow-y: auto">
+        <li class="list-group-item" ng-repeat="usr in $window.usersArr | orderBy:'name'">
+          <md-checkbox  id="usr_{{usr.id}}" ng-model="checkedUsrs[usr.id]" class="text-s11">{{usr.name}}</md-checkbox>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <a href class="black" ng-click="cancel()">Отмена</a>
+      <a href class="blue" ng-click="ok()">Создать</a>
+    </div>
+  </div>
+</script>

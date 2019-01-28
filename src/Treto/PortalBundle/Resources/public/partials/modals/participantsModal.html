@@ -1,0 +1,12 @@
+<div ng-controller="discusParticipantsCtrl" class="participants-panel">
+  <div class="discus_add_user">
+    <div>
+      <add-participants share-portal="share" share-enable="shareEnable" is-participants="true" ngmodel="participants" multiple="true" placeholder="'Участники'" inpwidth="'155px'" typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'" security="discus.tempParticipants"></add-participants>
+    </div>
+    <div class="button-wrapper">
+      <md-button href class="btn btn-blue add" ng-click="save();" log-click="Участники::Кнопка <Добавить> в окне добавления участников">Добавить</md-button>
+      <md-button href class="btn btn-gray" ng-click="close();" log-click="Участники::Кнопка <Отменить> в окне добавления участников">Отменить</md-button>
+      <other-command></other-command>
+    </div>
+  </div>
+</div>

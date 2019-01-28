@@ -1,0 +1,39 @@
+<div class="styledModal">
+    <div class="modal-header">Добавление словаря</div>
+    <div class="modal-body container">
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="text"
+                       placeholder="key"
+                       class="form-control input-sm"
+                       ng-model="key"
+                       log-click="Админка::Поле <key> во всплывающем окне <Добавление словаря> в консоли алминистратора"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input type="text"
+                       placeholder="value"
+                       class="form-control input-sm"
+                       ng-model="value"
+                       log-click="Админка::Поле <value> во всплывающем окне <Добавление словаря> в консоли алминистратора"/>
+                <div ng-show="error" class="required-warning" ng-click="error = ''">
+                    <span>{{error}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning"
+                ng-click="ok()"
+                log-click="Админка::Кнопка <Добавить> во всплывающем окне <Добавление словаря> в консоли алминистратора">
+            ДОБАВИТЬ
+        </button>
+        <button class="btn btn-warning cancel"
+                ng-click="cancel()"
+                log-click="Админка::Кнопка <Отмена> во всплывающем окне <Добавление словаря> в консоли алминистратора">
+            ОТМЕНА
+        </button>
+    </div>
+</div>
+

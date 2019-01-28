@@ -1,0 +1,10 @@
+<div class="notif-popups" ng-if="discus.main_doc">
+  <div ng-if="discus.selectedEditForm=='message'||discus.selectedEditForm=='messagebb'"
+       ng-include="'/bundles/tretoportal/partials/modals/editMessage.html'"></div>
+  <div ng-if="discus.selectedEditForm=='formTask'"
+       ng-include="'/bundles/tretoportal/partials/modals/editTask.html'"></div>
+  <div ng-if="discus.selectedEditForm=='formProcess'"
+       ng-include="'/bundles/tretoportal/partials/modals/editFormProcess.html'"></div>
+  <div ng-if="discus.displayParticipants"
+       ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-group-participants.html'"></div>
+</div>

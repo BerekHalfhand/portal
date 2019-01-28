@@ -1,0 +1,19 @@
+<div ng-controller="popupCtrl" ctrl-enter="ok()" class ='styledModal'>
+    <div class="modal-header {{ popup.style }}" ng-show="popup.title">
+      <h3 class="modal-title">{{ popup.title }}</h3>
+    </div>
+    <div class="modal-body" ng-bind-html="popup.message"></div>
+    <div class="modal-footer">
+        <button class="btn btn-primary"
+                ng-click="popup.ok()"
+                ng-bind-html="popup.buttonTitles.ok || 'OK'"
+                log-click="Всплывающее окно::Кнопка <OK> во всплывающем окне">
+        </button>
+        <button class="btn btn-warning"
+                ng-click="popup.cancel()"
+                ng-show="popup.useCancel"
+                ng-bind-html="popup.buttonTitles.cancel || 'Отмена'"
+                log-click="Всплывающее окно::Кнопка <Отмена> во всплывающем окне">
+        </button>
+    </div>
+</div>

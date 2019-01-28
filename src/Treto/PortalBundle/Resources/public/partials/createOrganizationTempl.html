@@ -1,0 +1,1057 @@
+<div style="overflow-y:auto;overflow-x:hidden;">
+    <div class="modal-body padtop0">
+        <div class="row">
+            <div class="col-lg-24">
+                <span class="blue">{{['', 'OOO', 'ЗАО', 'ИП', 'ОАО', '', 'Иностранная'][contact.FormOwnership]}} "{{contact.OtherName}}"</span>
+                <span class="pull-right">
+                    <input id="check_ooo"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="1"
+                        ng-checked="contact.FormOwnership === '1'"
+                        log-click="Контакты::Переключатель <Тип организации: ООО> во всплывающем окне создания организации"/>
+                    <label for="check_ooo">ООО</label>
+
+                    <input id="check_zao"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="2"
+                        ng-checked="contact.FormOwnership === '2'"
+                        log-click="Контакты::Переключатель <Тип организации: ЗАО> во всплывающем окне создания организации"/>
+                    <label for="check_zao">ЗАО</label>
+
+                    <input id="check_ip"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="3"
+                        ng-checked="contact.FormOwnership === '3'"
+                        log-click="Контакты::Переключатель <Тип организации: ИП> во всплывающем окне создания организации"/>
+                    <label for="check_ip">ИП</label>
+
+                    <input id="check_oao"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="4"
+                        ng-checked="contact.FormOwnership === '4'"
+                        log-click="Контакты::Переключатель <Тип организации: ОАО> во всплывающем окне создания организации"/>
+                    <label for="check_oao">ОАО</label>
+
+                    <input id="check_foreign"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="6"
+                        ng-checked="contact.FormOwnership === '6'"
+                        log-click="Контакты::Переключатель <Тип организации: Иностранная> во всплывающем окне создания организации"/>
+                            <label for="check_foreign">Иностранная</label>
+
+                    <input id="check_other"
+                        type="radio"
+                        name="first"
+                        ng-model="contact.FormOwnership"
+                        value="5"
+                        ng-checked="contact.FormOwnership === '5'"
+                        log-click="Контакты::Переключатель <Тип организации: Другое> во всплывающем окне создания организации"/>
+                    <label for="check_other">Другое</label>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input name="inputContactName"
+                       required class="form-control input-sm"
+                       type="text"
+                       placeholder="Официальное название"
+                       ng-model="contact.OtherName"
+                       log-click="Контакты::Поле <Официальное название> во всплывающем окне создания организации"/>
+                <ng-messages ng-show="submitted" for="modalForm.inputContactName.$error" class="required-warning" ng-click="submitted = false">
+                    <ng-message when="required">Официальное название должно быть указано.</ng-message>
+                </ng-messages>
+            </div>
+            <div class="col-lg-12">
+                <input class="form-control input-sm"
+                       type="text"
+                       placeholder="Сокращенное название"
+                       ng-model="contact.MainName"
+                       log-click="Контакты::Поле <Сокращенное название> во всплывающем окне создания организации"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input class="form-control input-sm"
+                       type="text"
+                       placeholder="Название для поисковиков"
+                       ng-model="contact.SiteName"
+                       log-click="Контакты::Поле <Название для поисковиков> во всплывающем окне создания организации"/>
+            </div>
+            <div class="col-lg-12">
+                <input class="form-control input-sm"
+                       type="text"
+                       placeholder="Название юрлица на инвойсах"
+                       ng-model="contact.NameCompany"
+                       log-click="Контакты::Поле <Название юрлица на инвойсах> во всплывающем окне создания организации"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24">
+                <textarea class="form-control input-sm"
+                          rows="5"
+                          placeholder="Комментарий"
+                          ng-model="contact.Comment"
+                          log-click="Контакты::Поле <Комментарий> во всплывающем окне создания организации">
+                </textarea>
+            </div>
+        </div>
+        <div class="row martop10">
+            <div class="col-lg-4 blue">Тип контакта</div>
+            <div class="col-lg-20">
+                <div class="bord-bot" uib-dropdown>
+                    <div ng-show="submitted && !contact.ContactStatus[0]" class="required-warning" ng-click="submitted = false">
+                        <span>Тип контакта должен быть указан.</span>
+                    </div>
+                    <span ng-repeat="c in contact.ContactStatus">
+                      {{statusListDict.getRecordValue(c)}}
+                      <a href class="black" style="padding-left:5px;padding-right:15px;"
+                         ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', c)"
+                         log-click="Контакты::Кнопка <Удалить тип контакта> во всплывающем окне создания организации">&times;</a>
+                    </span>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать тип контакта> во всплывающем окне создания организации">Выбрать</a>
+                        <div class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                            <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value'" ng-if="record.subtype.organization && record.subtype.show === '1' && !record.parentKey">
+                                <md-checkbox ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', record.key)" ng-checked="contact.ContactStatus.indexOf(record.key)!=-1">
+                                    {{ record.value }}
+                                </md-checkbox>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 blue martop10">Профиль деятельности</div>
+            <div class="col-lg-20">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <span ng-repeat="g in contact.Group">
+                        {{g}}
+                        <a href class="black" style="padding-left:5px;padding-right:15px;"
+                           ng-click="multiselectHelper.selectCheckbox(contact, 'Group', g)"
+                           log-click="Контакты::Кнопка <Удалить профиль деятельности> во всплывающем окне создания организации">&times;</a>
+                    </span>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать профиль деятельности> во всплывающем окне создания организации">Выбрать</a>
+                        <div class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                            <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value' " ng-if="contact.ContactStatus.length ? contact.ContactStatus.indexOf(record.parentKey) > -1 : true">
+                                <md-checkbox ng-click="multiselectHelper.selectCheckbox(contact, 'Group', record.value)" ng-checked="contact.Group.indexOf(record.value)!=-1">
+                                    {{ record.value }}
+                                </md-checkbox>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 blue martop10">Страна</div>
+            <div class="col-lg-20 padbot10">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать страну> во всплывающем окне создания организации">
+                       {{organizationCountries.getRecordValue(contact.Country)?organizationCountries.getRecordValue(contact.Country[0]):"Выбрать"}}
+                    </a>
+                    <ul class="dropdown-menu" role="menu" style="padding:12px;height:300px;width:auto;overflow:auto">
+                        <li ng-repeat="(key,record) in organizationCountries.records | orderObjectBy:'value'">
+                            <a href ng-click="contact.Country = [record.key]"> {{ record.value }} </a>
+                        </li>
+                    </ul>
+                    <div ng-show="submitted && !contact.Country" class="required-warning" ng-click="submitted = false">
+                        <span>Страна должна быть указана.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="contact.ContactStatus.indexOf('11') > -1 || contact.ContactStatus.indexOf('9') > -1">
+            <div class="col-lg-4 blue martop10">Метод оплаты</div>
+            <div class="col-lg-20 padbot10">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <a href class="green"
+                       uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать метод оплаты> во всплывающем окне создания организации">
+                        {{payMethodList[contact.payMethod]?payMethodList[contact.payMethod]:"Выбрать"}}
+                    </a>
+                    <ul class="dropdown-menu" role="menu" style="padding:12px;width:auto;overflow:auto">
+                        <li ng-repeat="(key,record) in payMethodList">
+                            <a href ng-click="contact.payMethod = [key]"> {{ record }} </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="contact.ContactStatus.indexOf('11') > -1 || contact.ContactStatus.indexOf('9') > -1">
+            <div class="col-lg-4 blue martop10">Образцы поштучно</div>
+            <div class="col-lg-20 padbot10">
+                <div class="bord-bot martop10" ng-init="bg = false; dc = false;">
+
+                    <md-checkbox ng-checked="contact.individuallySamples.indexOf('bg') > -1"
+                                 ng-click="changeIndividuallySamples('bg')"
+                                 log-click="Контакты::Галка <Образцы поштучно: Фон> во всплывающем окне создания организации">Фон</md-checkbox>
+                    <md-checkbox ng-checked="contact.individuallySamples.indexOf('dc') > -1"
+                                 ng-click="changeIndividuallySamples('dc')"
+                                 log-click="Контакты::Галка <Образцы поштучно: Декор> во всплывающем окне создания организации">Декор</md-checkbox>
+                    <md-checkbox ng-checked="contact.individuallySamples.indexOf('or') > -1"
+                                 ng-click="changeIndividuallySamples('or')"
+                                 log-click="Контакты::Галка <Образцы поштучно: По запросу> во всплывающем окне создания организации">По запросу</md-checkbox>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24">
+                <input type="text"
+                       class="form-control input-sm"
+                       placeholder="Сотрудники компании"
+                       ng-model="contact.Employee"
+                       ng-init="oldEmpl = contact.Employee"
+                       uib-typeahead="user.name as user.name for user in autoComplete.persons($viewValue.substring($viewValue.lastIndexOf(',')+1).trim())"
+                       typeahead-loading="loadingNames"
+                       typeahead-wait-ms="200"
+                       typeahead-on-select="contact.Employee = (oldEmpl && (oldEmpl+', ')) + ($item.name);oldEmpl = contact.Employee" disabled="disabled"
+                       log-click="Контакты::Поле <Сотрудники компании> во всплывающем окне создания организации"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24">
+                <input type="text" class="form-control input-sm" placeholder="Ответственный менеджер"
+                       ng-model="contact.ResponsibleManager"
+                       uib-typeahead="user.name as user.name for user in autoComplete.persons($viewValue, 'Бренд менеджер')"
+                       typeahead-loading="loadingNames"
+                       typeahead-wait-ms="400"
+                       typeahead-on-select="contact.ResponsibleManager = $item.name;contact.ResponsibleManager_ID = $item.unid"
+                       log-click="Контакты::Поле <Ответственный менеджер> во всплывающем окне создания организации"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24 martop10">
+                <span class="blue">Запретить изменения по API</span>
+                <md-checkbox id="check_ban_api"
+                        ng-model="contact.banApi"
+                        name="three"
+                        ng-checked="contact.banApi == '1' ||
+                                    contact.banApi == 'true' ||
+                                    contact.banApi == 1"
+                        log-click="Контакты::Галка <Запретить изменения по API> во всплывающем окне создания организации">
+                </md-checkbox>
+            </div>
+        </div>
+        <div class="row" ng-init="tab.name='connect'">
+            <div class="col-lg-24">
+                <span class="doc-subject" >
+                    <a href class="text-s14 contact-tab"
+                       ng-class="{active:tab.name=='connect'}"
+                       ng-click="tab.name='connect'"
+                       log-click="Контакты::Вкладка <Для связи> во всплывающем окне создания организации">Для связи</a>
+                    <a href class="text-s14 contact-tab"
+                       ng-class="{active:tab.name=='properties'}"
+                       ng-click="tab.name='properties'"
+                       log-click="Контакты::Вкладка <Банковские реквизиты> во всплывающем окне создания организации">Банковские реквизиты</a>
+                    <a href
+                       ng-show="contact.ContactStatus.indexOf('11') > -1 || contact.ContactStatus.indexOf('9') > -1"
+                       class="text-s14 contact-tab"
+                       ng-class="{active:tab.name=='conditions'}"
+                       ng-click="tab.name='conditions'"
+                       log-click="Контакты::Вкладка <Условия работы> во всплывающем окне создания организации">Условия работы</a>
+                </span>
+                <div class="divider" style="margin-top:10px"></div>
+            </div>
+        </div>
+        <div ng-show="tab.name=='connect'">
+            <div class="row">
+                <div class="col-lg-8" ng-init="!contact.PhoneValues ? contact.PhoneValues = ['']:''; !phones ? phones = []:''">
+                    <span ng-repeat="phone in contact.PhoneValues track by $index" >
+                        <span ng-show="contact.PhoneValues[$index]">{{contact.PhoneValues[$index]}}</span>
+                        <input ng-hide="contact.PhoneValues[$index]"
+                               style="width: initial;"
+                               type="text"
+                               placeholder="Рабочий телефон"
+                               ng-model="phones[$index]"
+                               ng-change="(phones[$index]&&!contact.PhoneValues[$index+1])?contact.PhoneValues[$index+1]='':'';"
+                               ng-blur="contact.PhoneValues[$index] = phones[$index];"
+                               log-click="Контакты::Поле <Рабочий телефон> во всплывающем окне создания организации"/>
+                        <a href ng-show="contact.PhoneValues[$index]"
+                           ng-click="contact.PhoneValues.splice($index,1); phones.splice($index,1);"
+                           log-click="Контакты::Поле <Удалить рабочий телефон> во всплывающем окне создания организации">
+                           &times;
+                        </a>
+                    </span>
+                    <div class="divider"></div>
+                </div>
+                <div class="col-lg-8" ng-init="!contact.EmailValues ? contact.EmailValues = ['']:''; !emails ? emails = []:''">
+                    <span ng-repeat="email in contact.EmailValues track by $index" >
+                        <span ng-show="contact.EmailValues[$index]"
+                              ng-click="contact.MainEmail = contact.EmailValues[$index]"
+                              ng-style="contact.MainEmail == contact.EmailValues[$index] ? { 'font-weight':'bold'} : {cursor:'pointer'}"
+                              log-click="Контакты::Отметить <e-mail> как основной во всплывающем окне создания организации">
+                              {{contact.EmailValues[$index]}}
+                        </span>
+                        <input ng-hide="contact.EmailValues[$index]"
+                               style="width: initial;"
+                               type="text"
+                               placeholder="Почта"
+                               ng-model="emails[$index]"
+                               ng-change="(emails[$index]&&!contact.EmailValues[$index+1])?contact.EmailValues[$index+1]='':'';"
+                               ng-blur="contact.EmailValues[$index] = emails[$index];"
+                               log-click="Контакты::Поле <Почта> во всплывающем окне создания организации"/>
+                        <a href ng-show="contact.EmailValues[$index]"
+                           ng-click="contact.MainEmail == contact.EmailValues[$index] ?contact.MainEmail='':'';contact.EmailValues.splice($index,1); emails.splice($index,1);"
+                           log-click="Контакты::Кнопка <Удалить почта> во всплывающем окне создания организации">
+                           &times;
+                        </a>
+                    </span>
+                    <div class="divider"></div>
+                    <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false">
+                        <ng-message when="email">Не валидный e-mail.</ng-message>
+                    </ng-messages>
+                </div>
+                <div class="col-lg-8" ng-init="!contact.PhoneCellValues ? contact.PhoneCellValues = ['']:'';">
+                    <input type="text" ng-model="contact.Site" placeholder="Сайт"
+                           log-click="Контакты::Поле <Сайт> во всплывающем окне создания организации"/>
+                    <div class="divider"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <span class="blue">Адрес фактический</span>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text"
+                           placeholder="Индекс"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressZipCode_Actual"
+                           log-click="Контакты::Поле <Адрес фактический: Индекс> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Город/Населенный пункт"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressCityName_Actual"
+                           log-click="Контакты::Поле <Адрес фактический: Город/Населенный пункт> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Улица"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressStreetName_Actual"
+                           log-click="Контакты::Поле <Адрес фактический: Улица> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Дом</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressHouseNumber_Actual"
+                               log-click="Контакты::Поле <Адрес фактический: Дом> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Корпус</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressBlockNumber_Actual"
+                               log-click="Контакты::Поле <Адрес фактический: Корпус> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Квартира</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressOfficeSuiteNumber_Actual"
+                               log-click="Контакты::Поле <Адрес фактический: Квартира> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+                <div class="col-lg-24">
+                    <span class="blue">Представление адреса: {{contact | addressActual }}</span>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col-lg-24 martop10">
+                        <span ng-class="{grey:!contact.DeliveryAddressIsDiff, blue:contact.DeliveryAddressIsDiff}">Адрес доставки</span>
+                        <md-checkbox
+                            id="check_deliv"
+                            ng-click="contact.DeliveryAddressIsDiff = contact.DeliveryAddressIsDiff?false:true;"
+                            name="two"
+                            log-click="Контакты::Галка <Адрес доставки: Отличен от фактического> во всплывающем окне создания организации">
+                       Отличен от фактического</md-checkbox>
+                    </div>
+            </div>
+            <div class="row" ng-show="contact.DeliveryAddressIsDiff">
+                <div class="col-lg-4">
+                    <input type="text"
+                           placeholder="Индекс"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressZipCode_ForDelivery"
+                           log-click="Контакты::Поле <Адрес доставки: Индекс> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                            placeholder="Город/Населенный пункт"
+                            class="form-control input-sm"
+                            ng-model="contact.AddressCityName_ForDelivery"
+                            log-click="Контакты::Поле <Адрес доставки: Город/Населенный пункт> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Улица"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressStreetName_ForDelivery"
+                           log-click="Контакты::Поле <Адрес доставки: Улица> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Дом</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressHouseNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Дом> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Корпус</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressBlockNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Корпус> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Квартира</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressOfficeSuiteNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Квартира> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+                <div class="col-lg-24">
+                    <span class="blue">Представление: {{contact | addressDelivery }}</span>
+                </div>
+            </div>
+            <div class="row">
+                    <div class="col-lg-24 martop10">
+                        <span ng-class="{grey:!contact.LegalAddressIsDiff, blue:contact.LegalAddressIsDiff}">Адрес юридический</span>
+                        <md-checkbox
+                            id="check_legal"
+                            ng-model="contact.LegalAddressIsDiff"
+                            name="three"
+                            log-click="Контакты::Галка <Адрес юридический: Отличен от фактического> во всплывающем окне создания организации">
+                            Отличен от фактического</md-checkbox>
+                    </div>
+            </div>
+            <div class="row" ng-show="contact.LegalAddressIsDiff">
+                <div class="col-lg-4">
+                    <input type="text"
+                           placeholder="Индекс"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressZipCode_ForLegal"
+                           log-click="Контакты::Поле <Адрес юридический: Индекс> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Город/Населенный пункт"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressCityName_ForLegal"
+                           log-click="Контакты::Поле <Адрес юридический: Город/Населенный пункт> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Улица"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressStreetName_ForLegal"
+                           log-click="Контакты::Поле <Адрес юридический: Улица> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Дом</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressHouseNumber_ForLegal"
+                               log-click="Контакты::Поле <Адрес юридический: Дом> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Корпус</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressBlockNumber_ForLegal"
+                               log-click="Контакты::Поле <Адрес юридический: Корпус> во всплывающем окне создания организации"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Квартира</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressOfficeSuiteNumber_ForLegal"
+                               log-click="Контакты::Поле <Адрес юридический: Квартира> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+                <div class="col-lg-24">
+                    <span class="blue">Представление: {{contact | addressLegal }}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="tab.name=='properties'">
+            <div class="row">
+                <div class="col-lg-12">
+                    <input ng-model="contact.OGRN"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="ОГРН"
+                           log-click="Контакты::Поле <ОГРН> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-12">
+                    <input ng-model="contact.OKPO"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="ОКПО"
+                           log-click="Контакты::Поле <ОКПО> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <input ng-model="contact.INN"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="ИНН"
+                           log-click="Контакты::Поле <ИНН> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-12">
+                    <input ng-model="contact.KPP"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="КПП"
+                           log-click="Контакты::Поле <КПП> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <input ng-model="contact.CorrespondentAccount"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="Корр.счет."
+                           log-click="Контакты::Поле <Корр.счет.> во всплывающем окне создания организации"/>
+                    <input ng-model="contact.RegNo"
+                           ng-if="contact.FormOwnership === '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="Reg. No."
+                           log-click="Контакты::Поле <Reg. No.> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-12">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Расч.счет."
+                           ng-model="contact.CurrentAccount"
+                           log-click="Контакты::Поле <Расч.счет.> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Банк"
+                           ng-model="contact.Bank"
+                           log-click="Контакты::Поле <Банк> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <input ng-model="contact.Bick"
+                           ng-if="contact.FormOwnership !== '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="БИК"
+                           log-click="Контакты::Поле <БИК> во всплывающем окне создания организации"/>
+                    <input ng-model="contact.VATNo"
+                           ng-if="contact.FormOwnership === '6'"
+                           type="text"
+                           class="form-control input-sm"
+                           placeholder="VAT No."
+                           log-click="Контакты::Поле <VAT No.> во всплывающем окне создания организации"/>
+                </div>
+                <div class="col-lg-12">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Swift"
+                           ng-model="contact.Swift"
+                           log-click="Контакты::Поле <Swift> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="ФИО руководителя"
+                           ng-model="contact.BossFIO"
+                           log-click="Контакты::Поле <ФИО руководителя> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Должность руководителя"
+                           ng-model="contact.BossRank"
+                           log-click="Контакты::Поле <Должность руководителя> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="ФИО бухгалтера"
+                           ng-model="contact.BookerFIO"
+                           log-click="Контакты::Поле <ФИО бухгалтера> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+        </div>
+        <div ng-show="tab.name=='conditions'&&(contact.ContactStatus.indexOf('11') > -1||contact.ContactStatus.indexOf('9') > -1)">
+            <div class="row form-group">
+                <label class="control-label col-lg-10">Работаем от</label>
+                <div class="col-lg-6" ng-init="
+            !cws ? cws = []:'';
+            !contact.ContactWorkFromID || !contact.ContactWorkFromID.length ? contact.ContactWorkFromID = ['']:'';
+            !contact.ContactWorkFrom || !contact.ContactWorkFrom.length ? contact.ContactWorkFrom = ['']:'';">
+		        <span ng-repeat="cwf in contact.ContactWorkFrom track by $index">
+                    <span ng-show="contact.ContactWorkFrom[$index]">{{contact.ContactWorkFrom[$index]}}</span>
+                    <input
+                            uib-typeahead="user.name as user.name for user in autoComplete.companies($viewValue)"
+                            typeahead-loading="loadingNames"
+                            typeahead-wait-ms="400"
+                            typeahead-on-select="
+                            contact.ContactWorkFrom[$index] = $item.name;
+                            contact.ContactWorkFromID[$index] = $item.unid;
+                            cws[$index] = $item.name;
+                            contact.ContactWorkFrom[$index+1]='';
+                            contact.ContactWorkFromID[$index+1]='';"
+                            typeahead-no-results="noResults.val"
+
+                            ng-hide="contact.ContactWorkFrom[$index]"
+                            style="width: initial;" type="text"
+                            placeholder="Введите название компании"
+                            ng-model="cws[$index]"
+                            log-click="Контакты::Поле <Работаем от: название компании> во всплывающем окне создания организации"/>
+                      <a href ng-show="contact.ContactWorkFrom[$index]"
+                         ng-click="
+                         contact.ContactWorkFrom.splice($index,1);
+                         contact.ContactWorkFromID.splice($index,1);
+                         cws.splice($index,1);
+                         !contact.ContactWorkFromID || !contact.ContactWorkFromID.length ? contact.ContactWorkFromID = ['']:'';
+                         !contact.ContactWorkFrom || !contact.ContactWorkFrom.length ? contact.ContactWorkFrom = ['']:'';
+                         "
+                         log-click="Контакты::Кнопка <Удалить> значение <работаем от: название компании> во всплывающем окне создания организации">
+                         &times;
+                      </a>
+		        </span>
+                    <div class="divider"></div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10" for="MinDeliveryTerm">Мин. срок поставки (дни)</label>
+                <div class="col-lg-6">
+                    <input type="text"
+                           class="input-sm form-control"
+                           id="MinDeliveryTerm"
+                           ng-model="contact.MinDeliveryTerm"
+                           valid-number
+                           log-click="Контакты::Поле <Мин. срок поставки (дни)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10" for="MinOrderSum">Мин. сумма заказа (евро)</label>
+                <div class="col-lg-6">
+                    <input type="text"
+                           class="input-sm form-control"
+                           id="MinOrderSum"
+                           ng-model="contact.MinOrderSum"
+                           valid-number
+                           log-click="Контакты::Поле <Мин. сумма заказа (евро)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+                    <div class="checkbox">
+                        <md-checkbox
+                            id="IsPackageOnly"
+                            name="IsPackageOnly"
+                            ng-click="contact.IsPackageOnly = !contact.IsPackageOnly"
+                            ng-checked="contact.IsPackageOnly == 1"
+                            class="for-collapse"
+                            log-click="Контакты::Галка <Заказы принимаются кратно упаковкам> во всплывающем окне создания организации">
+                            Заказы принимаются кратно упаковкам
+                        </md-checkbox>
+                    </div>
+            </div>
+            <div class="row" ng-show="contact.IsPackageOnly">
+                    <div class="checkbox">
+                        <md-checkbox
+                            id="IsPackageWithConditions"
+                            name="IsPackageWithConditions"
+                            ng-click="contact.IsPackageWithConditions = contact.IsPackageWithConditions?0:1"
+                            ng-checked="contact.IsPackageWithConditions"
+                            class="for-collapse"
+                            log-click="Контакты::Галка <Кратность с условиями> во всплывающем окне создания организации">
+                            Кратность с условиями
+                        </md-checkbox>
+                    </div>
+            </div>
+            <div class="row form-group" ng-show="contact.IsPackageOnly && contact.IsPackageWithConditions">
+                <div class="col-lg-24">
+                    <table class="table table-bordered">
+                        <thead>
+                        <th></th>
+                        <th>Единицы измерения</th>
+                        <th>Размер (x*y)</th>
+                        <th>Кратность</th>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="package in contact.PackageMeasureUnit track by $index">
+                            <td>
+                                <span class="ico plus-minus"
+                                      ng-click="contact.removePackage($index);"
+                                      title="Удалить"
+                                      log-click="Контакты::Кнопка <Удалить> условие в таблице с условиями кратности во всплывающем окне создания организации"></span>
+                            </td>
+                            <td class="col-lg-10">
+                                <input id="PackageMeasureUnit1_{{$index}}"
+                                       type="radio"
+                                       hidden
+                                       value="шт"
+                                       ng-model="contact.PackageMeasureUnit[$index]"
+                                       ng-checked="contact.PackageMeasureUnit[$index] === 'шт'"
+                                       log-click="Контакты::Переключатель <Единицы измерения: шт> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                                <label for="PackageMeasureUnit1_{{$index}}">шт</label>
+                                <input id="PackageMeasureUnit2_{{$index}}"
+                                       type="radio"
+                                       hidden
+                                       value="м2"
+                                       ng-model="contact.PackageMeasureUnit[$index]"
+                                       ng-checked="contact.PackageMeasureUnit[$index] === 'м2'"
+                                       log-click="Контакты::Переключатель <Единицы измерения: м2> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                                <label for="PackageMeasureUnit2_{{$index}}">м2</label>
+                                <input id="PackageMeasureUnit3_{{$index}}"
+                                       type="radio"
+                                       hidden
+                                       value="м.пог"
+                                       ng-model="contact.PackageMeasureUnit[$index]"
+                                       ng-checked="contact.PackageMeasureUnit[$index] === 'м.пог'"
+                                       log-click="Контакты::Переключатель <Единицы измерения: м.пог> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                                <label for="PackageMeasureUnit3_{{$index}}">м.пог</label>
+                                <input id="PackageMeasureUnit4_{{$index}}"
+                                       type="radio"
+                                       hidden
+                                       ng-click="contact.PackageMeasureUnit[$index] = ''"
+                                       ng-checked="['шт', 'м2', 'м.пог'].indexOf(contact.PackageMeasureUnit[$index]) === -1"
+                                       log-click="Контакты::Переключатель <Единицы измерения: другое> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                                <label for="PackageMeasureUnit4_{{$index}}">другое</label>
+                                <input type="text"
+                                       class="input-sm form-control"
+                                       ng-model="contact.PackageMeasureUnit[$index]"
+                                       ng-show="['шт', 'м2', 'м.пог'].indexOf(contact.PackageMeasureUnit[$index]) === -1"
+                                       log-click="Контакты::Поле <Единицы измерения: другое: кастомные единицы измерения> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                            </td>
+                            <td class="col-lg-6">
+                                <input type="text"
+                                       class="form-control"
+                                       ng-model="contact.PackageSize[$index]"
+                                       log-click="Контакты::Поле <Размер (x*y)> в таблице с условиями кратности во всплывающем окне создания организации"/>
+                            </td>
+                            <td class="col-lg-6">
+                                <input type="text"
+                                       class="form-control"
+                                       ng-model="contact.PackageFactor[$index]"
+                                       log-click="Контакты::Поле <Кратность> в таблице с условиями кратности во всплывающем окне создания организации"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <span class="ico plus-minus active"
+                          ng-click="contact.addPackage();"
+                          title="Добавить"
+                          log-click="Контакты::Кнопка <Добавить> условие в таблицу с условиями кратности во всплывающем окне создания организации">
+                    </span>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+                <label class="control-label col-lg-10">Cрок накопления заказов для вывоза(дни)</label>
+                <div class="col-lg-14">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Введите количество"
+                           ng-model="contact.DaysObtainOrders"
+                           log-click="Контакты::Поле <Cрок накопления заказов для вывоза(дни)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-lg-10">Порог дробления заказов(Евро)</label>
+                <div class="col-lg-14">
+                    <input type="text"
+                           class="form-control input-sm"
+                           placeholder="Введите сумму"
+                           ng-model="contact.SumOrdersMax"
+                           log-click="Контакты::Поле <Порог дробления заказов(Евро)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10">Условия оплаты</label>
+                <div class="col-lg-14" ng-init="isNew ? contact.PayType = 1 : ''">
+                    <input id="PayType1"
+                           type="radio"
+                           name="PayType"
+                           hidden value="1"
+                           ng-model="contact.PayType"
+                           ng-checked="contact.PayType === '1'"
+                           ng-click="contact.clearFields(['PayAfterInvoiceTerm', 'PayPrepayment'])"
+                           log-click="Контакты::Переключатель <Условия оплаты: кредит> во всплывающем окне создания организации"/>
+                    <label for="PayType1">кредит</label>
+                    <input id="PayType2"
+                           type="radio"
+                           name="PayType"
+                           hidden
+                           value="2"
+                           ng-model="contact.PayType"
+                           ng-checked="contact.PayType === '2'"
+                           ng-click="contact.clearFields(['PayCreditSum', 'PayCreditTerm'])"
+                           log-click="Контакты::Переключатель <Условия оплаты: предоплата> во всплывающем окне создания организации"/>
+                    <label for="PayType2">предоплата</label>
+                </div>
+            </div>
+            <div ng-show="contact.PayType == 1" uib-collapse="contact.PayType != 1">
+                <div class="row form-group">
+                    <label class="control-label col-lg-10" for="PayCreditSum">Размер кредитной линии (евро)</label>
+                    <div class="col-lg-6">
+                        <input type="text"
+                               class="input-sm form-control"
+                               id="PayCreditSum"
+                               ng-model="contact.PayCreditSum"
+                               log-click="Контакты::Поле <Размер кредитной линии (евро)> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-10" ng-init="isNew ? contact.PayCreditTerm = 30 : ''">Срок оплаты от даты инвойса (дни)</label>
+                    <div class="col-lg-14">
+                        <input id="PayCreditTerm1"
+                               type="radio"
+                               name="PayCreditTerm"
+                               hidden
+                               value="30"
+                               ng-model="contact.PayCreditTerm"
+                               ng-checked="contact.PayCreditTerm === '30'"
+                               log-click="Контакты::Переключатель <Срок оплаты от даты инвойса (дни): 30> во всплывающем окне создания организации"/>
+                        <label for="PayCreditTerm1">30</label>
+                        <input id="PayCreditTerm2"
+                               type="radio"
+                               name="PayCreditTerm"
+                               hidden
+                               value="40"
+                               ng-model="contact.PayCreditTerm"
+                               ng-checked="contact.PayCreditTerm === '40'"
+                               log-click="Контакты::Переключатель <Срок оплаты от даты инвойса (дни): 40> во всплывающем окне создания организации"/>
+                        <label for="PayCreditTerm2">40</label>
+                        <input id="PayCreditTerm3"
+                               type="radio"
+                               name="PayCreditTerm"
+                               hidden
+                               value="60"
+                               ng-model="contact.PayCreditTerm"
+                               ng-checked="contact.PayCreditTerm === '60'"
+                               log-click="Контакты::Переключатель <Срок оплаты от даты инвойса (дни): 60> во всплывающем окне создания организации"/>
+                        <label for="PayCreditTerm3">60</label>
+                        <input id="PayCreditTerm4"
+                               type="radio"
+                               name="PayCreditTerm"
+                               hidden
+                               value="90"
+                               ng-model="contact.PayCreditTerm"
+                               ng-checked="contact.PayCreditTerm === '90'"
+                               log-click="Контакты::Переключатель <Срок оплаты от даты инвойса (дни): 90> во всплывающем окне создания организации"/>
+                        <label for="PayCreditTerm4">90</label>
+                        <input id="PayCreditTerm5"
+                               type="radio"
+                               name="PayCreditTerm"
+                               hidden
+                               value="120"
+                               ng-model="contact.PayCreditTerm"
+                               ng-checked="contact.PayCreditTerm === '120'"
+                               log-click="Контакты::Переключатель <Срок оплаты от даты инвойса (дни): 120> во всплывающем окне создания организации"/>
+                        <label for="PayCreditTerm5">120</label>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="contact.PayType === '2'" uib-collapse="contact.PayType !== '2'">
+                <div class="row form-group">
+                    <label class="control-label col-lg-10">Наличие отсрочки</label>
+                    <div class="col-lg-14" ng-init="isNew ? contact.PayIsDelayPresent = 0 : ''">
+                        <input id="PayIsDelayPresent1"
+                               type="radio"
+                               name="PayIsDelayPresent"
+                               hidden
+                               value="1"
+                               ng-model="contact.PayIsDelayPresent"
+                               ng-checked="contact.PayIsDelayPresent === '1'"
+                               log-click="Контакты::Переключатель <Наличие отсрочки: есть> во всплывающем окне создания организации"/>
+                        <label for="PayIsDelayPresent1">есть</label>
+                        <input id="PayIsDelayPresent2"
+                               type="radio"
+                               name="PayIsDelayPresent"
+                               hidden
+                               value="0"
+                               ng-model="contact.PayIsDelayPresent"
+                               ng-checked="contact.PayIsDelayPresent === '0'"
+                               ng-click="contact.clearFields(['PayAfterInvoiceTerm'])"
+                               log-click="Контакты::Переключатель <Наличие отсрочки: нет> во всплывающем окне создания организации"/>
+                        <label for="PayIsDelayPresent2">нет</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="control-label col-lg-10" for="PayPrepayment">{{contact.PayIsDelayPresent === '0' ? 'Предоплата перед запуском в производство (%)': 'Предоплата (%)'}}</label>
+                    <div class="col-lg-6">
+                        <input type="text"
+                               class="input-sm form-control"
+                               id="PayPrepayment"
+                               ng-model="contact.PayPrepayment"
+                               valid-number
+                               log-click="Контакты::Поле <Предоплата перед запуском в производство (%)/Предоплата (%)> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+                <div class="row form-group" uib-collapse="contact.PayIsDelayPresent != 1">
+                    <label class="control-label col-lg-10" for="PayAfterInvoiceTerm">Срок полной оплаты от даты инвойса (дни)</label>
+                    <div class="col-lg-6">
+                        <input type="text"
+                               class="input-sm form-control"
+                               id="PayAfterInvoiceTerm"
+                               ng-model="contact.PayAfterInvoiceTerm"
+                               valid-number
+                               log-click="Контакты::Поле <Срок полной оплаты от даты инвойса (дни)> во всплывающем окне создания организации"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="control-label col-lg-10" for="PrepaymentDiscount">Скидка за предоплату (%)</label>
+                <div class="col-lg-6">
+                    <input type="text"
+                           class="input-sm form-control"
+                           id="PrepaymentDiscount"
+                           ng-model="contact.PrepaymentDiscount"
+                           valid-number
+                           log-click="Контакты::Поле <Скидка за предоплату (%)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10">Нерегулярная фабрика</label>
+                <div class="col-lg-14">
+                    <input id="check_pub1"
+                           type="radio"
+                           name="IsIrregularFabric"
+                           hidden
+                           value="1"
+                           ng-model="contact.IsIrregularFabric"
+                           ng-checked="contact.IsIrregularFabric === '1'"
+                           log-click="Контакты::Переключатель <Нерегулярная фабрика: да> во всплывающем окне создания организации"/>
+                    <label for="check_pub1">да</label>
+                    <input id="check_pers1"
+                           type="radio"
+                           name="IsIrregularFabric"
+                           hidden
+                           value="0"
+                           ng-model="contact.IsIrregularFabric"
+                           ng-checked="contact.IsIrregularFabric === '0'"
+                           log-click="Контакты::Переключатель <Нерегулярная фабрика: нет> во всплывающем окне создания организации"/>
+                    <label for="check_pers1">нет</label>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10" for="CallCost">Стоимость заезда (евро)</label>
+                <div class="col-lg-6">
+                    <input type="text"
+                           class="input-sm form-control"
+                           id="CallCost"
+                           ng-model="contact.CallCost"
+                           valid-number
+                           log-click="Контакты::Поле <Стоимость заезда (евро)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="control-label col-lg-10" for="ExportDeclarationCost">Стоимость экспортной декларации (евро)</label>
+                <div class="col-lg-6">
+                    <input type="text"
+                           class="input-sm form-control"
+                           id="ExportDeclarationCost"
+                           ng-model="contact.ExportDeclarationCost"
+                           valid-number
+                           log-click="Контакты::Поле <Стоимость экспортной декларации (евро)> во всплывающем окне создания организации"/>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <label class="control-label">Каникулы:</label>
+            <div ng-repeat="holiday in contact.inHoliday track by $index" class="row form-group">
+                <label class="control-label col-lg-2">c</label>
+                <p class="col-lg-6 p-underlined bgr-calendar">
+                    <new-datepicker date-min-limit="1900/01/01">
+                        <input prevent-keyboard-input
+                               ng-model="inHolidayView[$index]"
+                               type="text"
+                               ng-change="changeHoliday('inHoliday', $index)"
+                               log-click="Контакты::Выбор даты <Каникулы с> во всплывающем окне создания организации"/>
+                    </new-datepicker>
+                </p>
+                <label class="control-label col-lg-2">по</label>
+                <p class="col-lg-6 p-underlined bgr-calendar">
+                    <new-datepicker date-min-limit="1900/01/01">
+                        <input prevent-keyboard-input
+                               ng-model="outHolidayView[$index]"
+                               type="text"
+                               ng-change="changeHoliday('outHoliday', $index)"
+                               log-click="Контакты::Выбор даты <Каникулы по> во всплывающем окне создания организации"/>
+                    </new-datepicker>
+                </p>
+                <div class="col-lg-1 height35">
+                <span ng-if="$last" class="padright10 touch" style="vertical-align: middle;line-height: 35px;"
+                      ng-click="contact.inHoliday[contact.inHoliday.length-1] &&
+                      contact.outHoliday[contact.inHoliday.length-1] ?
+                      contact.inHoliday.push('') : false;"
+                      log-click="Контакты::Кнопка <Добавить каникулы> во всплывающем окне создания организации">
+                  <i ng-class="{grey:!contact.inHoliday[contact.inHoliday.length-1] || !contact.outHoliday[contact.inHoliday.length-1],blue:contact.inHoliday[contact.inHoliday.length-1] && contact.outHoliday[contact.inHoliday.length-1]}"
+                     class="material-icons text-s14">add_circle</i>
+                </span>
+                </div>
+                <div class="col-lg-1 height35" style="padding: 0; width: 0;" ng-show="contact.inHoliday.length > 1">
+                <span ng-if="$last" class="padright10 touch" style="vertical-align: middle;line-height: 35px;"
+                      ng-click="
+                      contact.inHoliday.splice($index, 1);
+                      inHolidayView.splice($index, 1);
+                      contact.outHoliday.splice($index, 1);
+                      outHolidayView.splice($index, 1);"
+                      log-click="Контакты::Кнопка <Удалить каникулы> во всплывающем окне создания организации">
+                  <i class="material-icons text-s14 red">remove_circle</i>
+                </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body pos-static" ng-if="contact && contact.DocumentType">
+        <div ng-init="partDoc = contact" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+    </div>
+    <div class="modal-footer">
+        <div class="row">
+            <div class="col-lg-24">
+                <md-button type="submit"
+                           ng-click="submitted = true;"
+                           class="btn btn-blue"
+                           value=""
+                           log-click="Контакты::Кнопка <Сохранить> во всплывающем окне создания организации">
+                           Сохранить
+                </md-button>
+            </div>
+        </div>
+    </div>
+</div>

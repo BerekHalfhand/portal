@@ -1,0 +1,34 @@
+<a href ui-sref="body.criterions"
+   class="btn btn-default btn-sm"
+   log-click="Банк вопросов::Кнопка <Назад> на вкладке <Новый вопрос> в опросниках">Назад</a>
+<a href class="pull-right btn btn-default btn-sm"
+   ng-click="save()"
+   ng-disabled="!(question.name&&question.Criterions.length > 0)"
+   log-click="Банк вопросов::Кнопка <Сохранить> на вкладке <Новый вопрос> в опросниках">Сохранить</a>
+
+<h3>Новый вопрос</h3>
+
+<div ng-repeat="crit in criterionsAry()">
+  <md-checkbox id="input_{{crit.unid}}"
+               ng-checked="crit.unid===unid"
+               ng-click="addCriterion(crit.unid)"
+               log-click="Банк вопросов::Галка в списке критериев на вкладке <Новый вопрос> в опросниках">
+    {{crit.name}}
+  </md-checkbox>
+</div>
+
+<div class="row">
+  <div class="col-md-2">Вопрос:</div>
+  <div class="col-md-22">
+    <input type="text" class="form-control" ng-model="question.name"
+           log-click="Банк вопросов::Поле <Вопрос> на вкладке <Новый вопрос> в опросниках"/>
+  </div>
+</div>
+<div class="row content">
+  <div class="col-md-2">Описание</div>
+  <div class="col-md-22">
+    <textarea rows="3" class="form-control input-sm" ng-model="question.Description"
+              log-click="Банк вопросов::Поле <Описание> на вкладке <Новый вопрос> в опросниках">
+    </textarea>
+  </div>
+</div>

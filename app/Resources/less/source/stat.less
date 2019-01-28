@@ -1,0 +1,520 @@
+#stat ul.list-unstyled li a,
+.stat-list-wrap a:nth-child(2) {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: inline-block;
+  width: 85%;
+  line-height: 1.1;
+}
+
+#stat {
+  .thumbler a{
+    font-weight: 700;
+  }
+
+  .nav-tabs {
+    font-size: 0;
+    
+    & > li{
+      display: inline-block;
+      float: none;
+      font-size: 14px;
+    }
+  }
+}
+
+.topThemes .controlls a{
+  line-height: 36px;
+
+  &.active{
+    border-bottom: 2px solid @tab-active-border-color;
+    color: @font-color;
+  }
+}
+
+.top-like-dislike {
+  .top-likes {
+    margin: 20px 0;
+    line-height: 21px;
+
+    .title-wrap {
+      .title {
+        font-size: 17px;
+      }
+
+      & + * {
+        margin-top: 10px;
+      }
+
+      & > * {
+        margin-right: 10px;
+      }
+    }
+
+    .like-wrap {
+      position: relative;
+      padding-left: 60px;
+      min-height: 40px;
+      line-height: 20px;
+      font-size: 13px;
+
+      & ~ .like-wrap {
+        margin-top: 8px;
+      }
+
+      .arrow {
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 3px;
+        z-index: 1;
+        text-shadow: -1px -1px 0 @white, -1px 1px 0 @white, 1px -1px 0 @white, 1px 1px 0 @white;
+
+        &.no-arrow {
+          opacity: 0;
+        }
+      }
+
+      .count {
+        display: inline-block;
+        position: absolute;
+        top: 5px;
+        left: 0;
+        line-height: 30px;
+      }
+
+      .author-avatar-wrap {
+        border-radius: 2px;
+        background: url(/public/images/default-avatar.png) no-repeat center / cover;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 5px;
+        left: 20px;
+
+        .author-avatar {
+          .pos-cover;
+          border-radius: 2px;
+          background: no-repeat center / cover;
+        }
+
+        .user-lg-image {
+          top: 0;
+        }
+      }
+
+      .author-name {
+        //color: @graphite;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 700;
+      }
+
+      .comment {
+        color: @font-color;
+
+        @media all and (min-width: 541px) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .more-link-wrap {
+      margin-top: 7px;
+
+      .more-link {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+.main-stat {
+  max-width: 400px;
+
+  .main-stat-blocks {
+    & > * + *,
+    .top-chatterboxes + .top-silent {
+      margin-top: 10px;
+    }
+  }
+}
+
+#messages-by-user {
+  padding-top: 15px;
+
+  table.messages-by-user {
+     margin: 0 -16px -16px;
+     width: auto;
+     max-width: initial;
+  }
+
+  .todayDoesnotCount {
+    background: fade(@dark-red, 20%);
+  }
+
+  .legend {
+    & > span {
+      vertical-align: middle;
+    }
+
+    .doesnotCountColor {
+      background: fade(@dark-red, 20%);
+      width: 25px;
+      height: 25px;
+      display: inline-block;
+      margin-right: 10px;
+    }
+  }
+}
+
+.graph-promt-popup {
+  position: absolute;
+  margin-top: -45px;
+  top: 50%;
+  left: 100%;
+  margin-left: 4px;
+  text-align: left;
+  z-index: 1;
+  white-space: nowrap;
+
+  &::before {
+    transform: translate3d(-50%,-50%,0) rotate(45deg);
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    background: @white;
+    box-shadow: 0 0 8px 0 fade(@black, 40%);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background: @white;
+  }
+}
+
+.click-log-table {
+  td,
+  th {
+    &:nth-child(1) {
+      width: 40px;
+    }
+    
+    &:nth-child(2) {
+      md-select {
+        margin: 0 0 0 5px;
+
+        .md-select-value,
+        &.md-default-theme .md-select-value {
+          border-bottom: none;
+          padding: 0;
+          min-width: 0;
+
+          .md-select-icon {
+            width: 12px;
+          }
+        }
+      }
+    }
+    
+    &:nth-child(3) {
+      width: 120px;
+    }
+  }
+
+  td {
+    &:nth-child(1),
+    &:nth-child(3) {
+      text-align: center;
+      position: relative;
+    }
+
+    md-checkbox {
+      margin-bottom: 0;
+      vertical-align: middle;
+
+      .md-label {
+        display: none;
+      }
+    }
+  }
+}
+
+.messages-stat-table {
+  td,
+  th {
+    &:nth-child(1) {
+      width: 40px;
+    }
+    
+    @media all and (min-width: 541px) {
+      &:nth-child(2) {
+        width: 35%;
+      }
+    }
+    
+    @media all and (max-width: 540px) {
+      &:nth-child(2) {
+        width: 25%;
+      }
+    }
+  }
+  
+  td {
+    &:not(:nth-child(2)) {
+      text-align: center;
+      position: relative;
+    }
+
+    md-checkbox {
+      margin-bottom: 0;
+      vertical-align: middle;
+
+      .md-label {
+        display: none;
+      }
+    }
+  }
+}
+
+.like-stat-table {
+  td,
+  th {
+    @media all and (min-width: 541px) {
+      &:nth-child(1) {
+        width: 52%;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 10%;
+      }
+
+      &:nth-child(4),
+      &:nth-child(5) {
+        width: 14%;
+      }
+    }
+    
+    @media all and (max-width: 540px) {
+      &:nth-child(1) {
+        width: 36%;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 14%;
+      }
+
+      &:nth-child(4),
+      &:nth-child(5) {
+        width: 18%;
+      }
+    }
+  }
+  
+  td {
+    &:not(:nth-child(1)) {
+      text-align: center;
+    }
+  }
+}
+
+.popular-themes-stat-table {
+  td,
+  th {
+    @media all and (min-width: 541px) {
+      &:nth-child(1) {
+        width: 40%;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 13%;
+      }
+
+      &:nth-child(4),
+      &:nth-child(5) {
+        width: 17%;
+      }
+    }
+
+    @media all and (max-width: 540px) {
+      &:nth-child(1) {
+        width: 32%;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 15%;
+      }
+
+      &:nth-child(4),
+      &:nth-child(5) {
+        width: 19%;
+      }
+    }
+  }
+  
+  td {
+    &:not(:nth-child(1)) {
+      text-align: center;
+    }
+  }
+}
+
+.stat-tabs-container {
+  border-bottom: 1px solid @dark-border-color;
+}
+
+.stat-controlls {
+  margin-bottom: 20px;
+
+  add-participants {
+    padding-right: 1px;
+    display: block;
+
+    @media all and (min-width: 1400px) {
+      width: 50%;
+    }
+
+    @media all and (min-width: 1000px) and (max-width: 1399px) {
+      width: 80%;
+    }
+
+    @media all and (max-width: 999px) {
+      width: 100%;
+    }
+  }
+}
+
+.period-datapickers-wrap {
+  margin-left: -9px;
+
+  @media all and (min-width: 541px) {
+    .v-align(middle);
+    margin-right: 50px;
+  }
+}
+
+.period-thumbler-wrap {  
+  @media all and (min-width: 541px) {
+    .v-align(middle);
+  }
+
+  @media all and (max-width: 540px) {
+    margin-top: 10px;
+  }
+
+  .period-thumbler {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: inline;
+    font-weight: 700;
+
+    li {
+      display: inline-block;
+    }
+  }
+}
+
+.line-graph-popup-wrap {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 10;
+  background: fade(@black, 40%);
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  @media all and (min-width: 921px) {
+    padding: 60px;
+  }
+
+  @media all and (min-width: 720px) and (max-width: 920px) {
+    padding: 30px;
+  }
+
+  @media all and (max-width: 719px) {
+    padding: 0;
+  }
+
+  .line-graph-popup {
+    background: @white;
+    position: relative;
+
+    @media all and (min-width: 720px) {
+      padding: 60px 40px 40px;
+    }
+
+    @media all and (max-width: 719px) {
+      padding: 45px 25px 25px;
+    }
+
+    .close-graph-btn {
+      position: absolute;
+
+      @media all and (min-width: 720px) {
+        top: 20px;
+        right: 28px;
+      }
+
+      @media all and (max-width: 719px) {
+        top: 5px;
+        right: 13px;
+      }
+    }
+
+    .line-graph-wrap {
+      @media all and (min-width: 720px) {
+        margin-left: -40px;
+        margin-right: -40px;
+      }
+
+      @media all and (max-width: 719px) {
+        margin-left: -25px;
+        margin-right: -25px;
+      }
+    }
+
+    .legend-wrap {
+      margin-top: 10px;
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li:not(:last-child) {
+          margin-bottom: 5px;
+        }
+      }
+
+      .color {
+        .circle;
+        .v-align(middle);
+        height: 19px;
+        width: 19px;
+        margin-right: 10px;
+      }
+
+      .legend {
+        vertical-align: middle
+      }
+    }
+  }
+}

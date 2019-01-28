@@ -1,0 +1,56 @@
+<span class="btn btn-default" title="{{$root.localize(timeSupport ? 'datetime' : 'date','date.tooltip')}}">
+  <span>
+    <select ng-model="sd"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled"
+            title="{{$root.localize('day','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Дата> в настройках времени">
+      <option ng-repeat="d in available.days" ng-selected="{{sd==d}}" value="{{d}}">{{d}}</option>
+    </select>
+    <select ng-model="sm"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled"
+            title="{{$root.localize('month','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Месяц> в настройках времени">
+      <option ng-repeat="(idx,m) in available.months" ng-selected="{{sm==idx}}" value="{{idx}}">{{m}}</option>
+    </select>
+    <select ng-model="sy"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled"
+            title="{{$root.localize('year','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Год> в настройках времени">
+      <option ng-repeat="y in available.years" ng-selected="{{sy==y}}" value="{{y}}">{{y}}</option>
+    </select>
+  </span>
+  <br ng-show="timeSupport" />
+  <span ng-show="timeSupport">
+    <select ng-model="sh"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled"
+            title="{{$root.localize('hours','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Часы> в настройках времени">
+      <option ng-repeat="h in available.hours" ng-selected="{{sh==h}}" value="{{h}}">{{h}}</option>
+    </select><b>:</b>
+    <select ng-model="si"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled"
+            title="{{$root.localize('minutes','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Минуты> в настройках времени">
+      <option ng-repeat="i in available.minutes" ng-selected="{{si==i}}" value="{{i}}">{{i}}</option>
+    </select>
+    <!-- <b>:</b>
+    <select ng-model="ss"
+            ng-change="dtUpdate()"
+            ng-disabled="ngDisabled" title="{{$root.localize('seconds','date.tooltip')}}"
+            log-click="Настройки времени::Выбор опции <Секунды> в настройках времени">
+      <option ng-repeat="s in available.seconds" ng-selected="{{ss==s}}" value="{{s}}">{{s}}</option>
+    </select>-->
+  </span>
+  <button ng-show="ngModel"
+          class="btn btn-default btn-xs"
+          title="Очистить значение"
+          ng-click="dtClear()"
+          log-click="Настройки времени::Кнопка <Очистить значение> в настройках времени">
+      &times;
+  </button>
+</span>

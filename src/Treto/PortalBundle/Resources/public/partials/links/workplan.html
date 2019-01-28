@@ -1,0 +1,91 @@
+<title>График работы</title>
+<section class="container-fluid bgwhite" style="height: 100%; width: 100%; position: absolute;">
+  <div class="row martop10">
+<!--<div class="col-lg-6" ng-show="busy">
+		  &nbsp;
+	  </div>-->
+    <div class="col-lg-6">
+      <div class="width100per btn-group" ng-if="sectionDict.records.length" ng-init="sectionListInit()" uib-dropdown>
+        <button type="button"
+                class="btn btn-default dropdown-toggle width100per no-border text-left"
+                data-toggle="dropdown"
+                uib-dropdown-toggle
+                log-click="График работы::Меню <Отдел> на странице графика работы">
+          <span id="tag_span">{{ selectedSection }}</span> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu maxheight600 minwidth290 overflow-auto">
+          <li ng-repeat="sec in sectionList">
+            <a href ng-click="$parent.selectedSection = sec.name; $parent.$parent.selectedSection = sec.name; rebuild()">{{ sec.name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-18" ng-show="!busy" id="date-picker">
+      <div class="list-inline right50per">
+        <li class="wp-arrow-left touch" ng-click="decrementMonth()"
+            log-click="График работы::Кнопка <Предидущий месяц> на странице графика работы">
+          <i class="material-icons hover-blue">arrow_back</i>
+        </li>
+        <li class="text-vcenter">
+          <span class="text-s16">{{model.datePresentation}}</span>
+        </li>
+        <li class="wp-arrow-right touch" ng-click="incrementMonth()"
+            log-click="График работы::Кнопка <Следующий месяц> на странице графика работы">
+          <i class="material-icons hover-blue">arrow_forward</i>
+        </li>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <hr class="hr-d3 martop0">
+  <div class="row">
+    <div class="col-lg-20">
+      <table class="wp-table" >
+        <tbody>
+          <tr class="bordbot_d3">
+            <td class="rowheader wd" rowspan="2" ><b>Сотрудник</b></td>
+            <td ng-repeat="d in model.monthModel" class="cell-dropdown text-center {{{'s':'right-bordered '}[d.c]}} {{{'e':'red'}[d.cl]}}">{{d.wd}}</td>
+          </tr>
+          <tr class="bordbot_d3">
+            <td ng-repeat="d in model.monthModel" class="wd pad0force cell-dropdown text-center {{{'s':'right-bordered '}[d.c]}} {{{'e':'red'}[d.cl]}}">{{d.md}}</td>
+          </tr>
+        </tbody>
+        <tbody ng-if="busy">
+          <tr>
+              <td colspan="{{model.monthModel.length + 1}}">
+                Идет загрузка...
+              </td>
+          </tr>
+        </tbody>
+        <tbody ng-if="!busy" ng-repeat="workGroup in model.workGroupList" ng-if="model.workGroupList.length">
+          <tr class="wp-table"><td colspan="{{model.monthModel.length + 1}}"><strong>{{workGroup.name}}</strong></td></tr>
+          <tr class="wp-table" ng-repeat="plan in workGroup.planList">
+            <td class="rowheader username wd">
+              <a href class="darker-grey"
+                 ui-sref="body.profileDisplay({id: plan.Login})"
+                 log-click="График работы::Ссылка на профиль сотрудника в таблице на странице графика работы">
+                {{plan.FullNameInRus}}
+              </a>
+              <span ng-if="user.username == plan.Login"></span>
+              <span ng-if="user.portalData.role.indexOf('PM')!=-1"></span>
+            </td>
+            <td class="wd {{{'s':'right-bordered '}[day.c]}}" ng-repeat="day in plan.data">
+              <work-plan-cell day="day" override="user.portalData.role.indexOf('PM')!=-1" username="user.username" plan-login="plan.Login" plan="plan" model="model"></work-plan-cell>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-4 list-unstyled">
+      <ul>
+        <li>р - Рабочий день</li>
+        <li>к - Командировка</li>
+        <li>в - Выходной день</li>
+        <li>б - Больничный</li>
+        <li>о - Отпуск</li>
+        <li>н - Не в штате</li>
+      </ul>
+    </div>
+  </div>
+
+</section>

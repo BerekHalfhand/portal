@@ -1,0 +1,118 @@
+<div style="display: inline;" ng-controller="tagsCtrl">
+  <span class="ico tag"></span>
+  <span class="gray">Теги: </span>
+  <span class="tag-span" ng-repeat="tag in doc.Tags | orderBy:'-name':true">{{tag.name}}
+    <span ng-click="removeTag(tag.name); deleteTagDB(tag.name);"
+          class="tag-remove-span"
+          log-click="Теги::Кнопка <Удалить тег> в блоке тегов"> &times;</span>
+  </span>
+  <a href class="green marleft10"
+     ng-click="show.Tags = false"
+     log-click="Теги::Кнопка <Скрыть> в блоке тегов">скрыть</a>
+  <a href class="green marleft10"
+     ng-click="invokeMenu();"
+     log-click="Теги::Кнопка <Добавить> в блоке тегов">добавить</a>
+  <div ng-show="showAddTagForm" ng-init="showExpanded = false;" class="panel" style="position:absolute;top: 0;z-index:10;padding: 20px;max-width:600px;">
+    <div class="row">
+      <div class="col-sm-14">
+        <div class="input-group underlined padtop0">
+          <label ng-click="showExpanded = !showExpanded"
+                 ng-class="{blue: showExpanded}"
+                 for="tag"
+                 class="input-group-addon no-border no-background padleft0 touch"
+                 log-click="Теги::Кнопка <Показать\скрыть список тегов> во всплывающем окне блока тегов">
+            <i class="material-icons md-18">flag</i>
+          </label>
+          <div class="typeahead-style">
+            <input type="text"
+                   ng-model="doc.tempTag"
+                   id="tag"
+                   uib-typeahead="tag for tag in getTags($viewValue)"
+                   typeahead-loading="loadingLocations"
+                   class="form-control text-s12 no-border"
+                   log-click="Теги::Поле <Добавить тег> во всплывающем окне блока тегов"/>
+          </div>
+        </div>
+        <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh" style="position: absolute; top: 15px; right: 0px;"></i>
+      </div>
+      <div class="col-sm-10 padtop10">
+        <md-checkbox id="checkMyOnly"
+                     ng-checked="params.MyOnly"
+                     ng-click="params.MyOnly=!params.MyOnly;"
+                     log-click="Теги::Галка <Только мои> во всплывающем окне блока тегов">
+          Только мои
+        </md-checkbox>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-24" style="padding-top: 30px;">
+        <a href class="blue"
+           ng-click="addTag(doc); invokeMenu();"
+           log-click="Теги::Кнопка <Добавить> во всплывающем окне блока тегов">
+          ДОБАВИТЬ
+        </a>
+        <a href class="grey"
+           ng-click="invokeMenu();"
+           style="padding-left: 30px;"
+           log-click="Теги::Кнопка <Отменить> во всплывающем окне блока тегов">
+          ОТМЕНИТЬ
+        </a>
+      </div>
+    </div>
+    <article ng-if="showExpanded" ng-controller="tagsPageCtrl" ng-init="expCategory = 2; loadMyTags();">
+      <span class="grey">или выберите из уже имеющихся: </span>
+      <span>
+        <a href class="green marright5"
+           ng-click="Tags = []; selected.Letter = ''; expCategory = 1; loadPopularTags();"
+           log-click="Теги::Вкладка <Популярные> во всплывающем окне блока тегов">
+          популярные
+        </a>
+      </span>
+      <span>
+        <a href class="green marright5"
+           ng-click="Tags = []; selected.Letter = ''; expCategory = 2; loadMyTags();"
+           log-click="Теги::Вкладка <Мои теги> во всплывающем окне блока тегов">
+          мои теги
+        </a>
+      </span>
+      <span>
+        <a href class="green"
+           ng-click="Tags = []; selected.Letter = ''; expCategory = 3; loadTags();"
+           log-click="Теги::Вкладка <Все теги> во всплывающем окне блока тегов">
+          все теги
+        </a>
+      </span>
+      <div>
+        <article style="margin-top: 15px" ng-if="Tags">
+          <span class="marright15">
+            <a href ng-class="{blue:selected.Letter.length == 0, black:selected.Letter.length > 0}"
+               ng-click="selected.Letter = ''"
+               log-click="Теги::Переключатель тегов по букве <все> во всплывающем окне блока тегов">
+              Все
+            </a>
+          </span>
+          <span ng-repeat="letter in Letters" ng-show="searchFilter(letter, true);" class="marright15">
+            <a href ng-class="{blue:selected.Letter === letter, black:selected.Letter !== letter}"
+               ng-click="selected.Letter = letter"
+               log-click="Теги::Переключатель тегов по букве во всплывающем окне блока тегов">
+              {{letter}}
+            </a>
+          </span>
+        </article>
+        
+        <div ng-show="loading.tags" class="mar10">Загрузка тегов...</div>
+        
+        <article ng-if="!loading.tags" style="margin: 15px 0">
+          <span ng-repeat="tag in Tags | orderBy:'-name':true"
+                ng-show="selected.Letter ? selected.Letter === tag.name[0] : true"
+                ng-click="doc.tempTag = tag.name"
+                class="tag-span touch"
+                style="text-decoration: underline; font-size:{{tag.fontSize}}px;"
+                log-click="Теги::Выбор тега из доступных во всплывающем окне блока тегов">
+            {{tag.name}}
+          </span>
+        </article>
+      </div>
+    </article>
+  </div>
+</div>

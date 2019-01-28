@@ -1,0 +1,727 @@
+/* disabling buttons and links being outlined on focus */
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner {
+    border: none;
+}
+
+:focus {
+    outline: none;
+    -moz-outline: 3px solid #fff !important;
+}
+
+
+
+
+
+input[type="radio"]:focus {
+    -moz-outline-radius: 12px !important;
+    -moz-outline-offset: 0px !important;
+}
+
+input[type="checkbox"]:focus {
+    -moz-outline-offset: -1px !important;
+    -moz-outline: 1px solid #000 !important;
+}
+
+.placeholder-text.ng-pristine {
+  color: @placeholder-color;
+}
+
+input[type="text"],
+input[type="password"] {
+  background-color: transparent;
+}
+
+input[type="checkbox"],
+input[type="radio"]{
+  display:none;
+
+  & + label {
+    font-weight: normal;
+    margin-left: -5px;
+
+    &::before {
+      content: "";
+      display: inline-block;
+      height: 18px;
+      width: 18px;
+      margin: 0px 5px -4px 5px;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+input[type="radio"] {
+  & + label::before {
+    background-position: left;
+    background-image: url("/public/images/radioBox.png");
+  }
+
+  &:checked + label::before,
+  & + label.checked::before {
+    background-position: right;
+    background-image: url("/public/images/radioBox.png");
+  }
+
+  &:disabled + label::before,
+  & + label.disabled::before {
+    background-position: left;
+    background-image: url("/public/images/radioBox.png");
+    opacity: 0.2;
+  }
+}
+
+input[type="checkbox"] {
+  & + label::before{
+    background-position: left;
+    background-image: url("/public/images/checkBox.png");
+  }
+
+  &:checked + label::before,
+  & + label.checked::before {
+    background-position: right;
+    background-image: url("/public/images/checkBox.png");
+  }
+
+  &:disabled + label::before,
+  & + label.disabled::before {
+    background-position: left;
+    background-image: url("/public/images/checkBox.png");
+    opacity: 0.2;
+  }
+}
+
+
+
+
+a {
+  color: @link-color;
+
+  &.light-green{
+    color: @green;
+  }
+  &.green{
+    color: @green;
+  }
+  &.black{
+    color: @black;
+  }
+  &.black_33{
+    color: @dark-grey;
+  }
+  &.white,
+  &.white{
+    color: @white;
+  }
+  &.grey{
+    color: @grey;
+  }
+  &.blue{
+    color: @blue;
+  }
+  &.disabled{
+    pointer-events: none;
+    cursor: default;
+    color: @grey !important;
+  }
+}
+
+
+
+
+md-dialog-actions {
+  .md-focused {
+    background-color: @btn-bg-color !important;
+    color: @btn-font-color;
+  }
+  .md-focused:hover {
+    background-color: @grey_f9 !important;
+  }
+  
+  .md-button {
+    color: @blue !important;
+    margin: 8px 0 8px 8px !important;
+    width: 200px;
+    border: none !important;
+  }
+}
+
+md-progress-linear {
+    path {
+        stroke: @progress-color;
+    }
+    &.default-theme path {
+        stroke: @progress-color;
+    }
+    &.grey path {
+        stroke: @grey;
+    }
+    &.blue path {
+        stroke: @blue;
+    }
+    .md-bar {
+      background: @progress-color;
+    }
+    &.default-theme .md-bar {
+      background: @progress-color;
+    }
+    &.grey .md-bar {
+      background: @grey;
+    }
+    &.blue .md-bar {
+      background: @blue;
+    }
+}
+md-progress-circular {
+    .v-align(middle);
+
+    path {
+        stroke: @circular-progress-color;
+    }
+    &.default-theme path {
+        stroke: @circular-progress-color;
+    }
+    &.grey path {
+        stroke: @grey;
+    }
+    &.blue path {
+        stroke: @blue;
+    }
+    &.graphite-blue path {
+        stroke: @graphite-blue;
+    }
+}
+
+.md-button {
+  .animate;
+  transition-property: border, background, color;
+
+  &,
+  &.md-default-theme {
+    border-radius: 2px;
+    background: @btn-bg-color;
+    border: 1px solid @btn-border-color;
+    color: @btn-font-color;
+    min-width: 0;
+    min-height: 0;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: none;
+    padding: 0 19px;
+    margin: 0;
+    font-weight: 400;
+    outline: none!important;
+
+    &:not([disabled]) {
+      &:hover {
+        background-color: @btn-hover-bg-color;
+        border-color: @btn-hover-border-color;
+        color: @btn-hover-font-color;
+      }
+
+      &:active,
+      &:focus {
+        background-color: @btn-active-bg-color;
+        border-color: @btn-active-border-color;
+        color: @btn-active-font-color;
+      }
+  }
+
+    &.md-primary,
+    &.btn-blue {
+      &,
+      &.md-raised {
+        background-color: @btn-primary-bg-color;
+        border-color: @btn-primary-border-color;
+        color: @btn-primary-font-color;
+
+        &:not([disabled]) {
+          &:hover {
+            background-color: @btn-primary-hover-bg-color;
+            border-color: @btn-primary-hover-border-color;
+            color: @btn-primary-hover-font-color;
+          }
+
+          &:active,
+          &:focus {
+            background-color: @btn-primary-active-bg-color !important;
+            border-color: @btn-primary-active-border-color;
+            color: @btn-primary-active-font-color;
+          }
+        }
+      }
+    }
+
+    &.md-raised:not([disabled]) {
+      box-shadow: @btn-shadow;
+    }
+
+    &[disabled] {
+      color: @btn-disabled-font-color !important;
+
+      &:not(.icon-btn):not(.discus-icon-btn) {
+        background-color: @btn-disabled-bg-color !important;
+        border-color: @btn-disabled-border-color !important;
+      }
+    }
+
+    &.md-icon-button {
+      border-color: @icon-btn-border-color;
+
+      &:not([disabled]) {
+        &[aria-expanded="true"],
+        &:hover {
+          border-color: @icon-btn-hover-border-color;
+        }
+
+        &:active,
+        &:focus {
+          border-color: @icon-btn-active-border-color;
+        }
+      }
+
+      &[disabled] {
+        border-color: @icon-btn-disabled-border-color !important;
+      }
+    }
+
+    &.discus-icon-btn,
+    &.icon-btn {
+      background: @icon-btn-bg-color;
+      border-color: @icon-btn-border-color;
+      color: @icon-btn-icon-color;
+      z-index: initial;
+      min-height: 0;
+      min-width: 0;
+      height: 31px;
+      width: 31px;
+      font-size: 14px;
+      line-height: 1;
+      box-shadow: none;
+      padding: 0 !important;
+      margin: 0;
+
+      &:not([disabled]) {
+        &[aria-expanded="true"],
+        &:hover {
+          background-color: @icon-btn-hover-bg-color;
+          border-color: @icon-btn-hover-border-color;
+          color: @icon-btn-hover-icon-color;
+        }
+
+        &:active,
+        &:focus {
+          background-color: @icon-btn-active-bg-color;
+          border-color: @icon-btn-active-border-color;
+          color: @icon-btn-active-icon-color;
+        }
+      }
+
+      &[disabled] {
+        background-color: @icon-btn-disabled-bg-color !important;
+        border-color: @icon-btn-disabled-border-color !important;
+        color: @icon-btn-disabled-icon-color !important;
+      }
+
+      md-icon {
+        display: inline-block;
+        color: inherit;
+      }
+    }
+
+    &.md-datepicker-button,
+    &.md-datepicker-triangle-button {
+      background: transparent;
+    }
+  }
+}
+
+md-datepicker {
+  .md-datepicker-input {
+      min-width: 85px;
+  }
+
+  .md-icon-button+.md-datepicker-input-container {
+    margin-left: 0;
+  }
+
+  &.md-datepicker-open {
+    &,
+    &.md-default-theme {
+      .md-datepicker-calendar-icon {
+        color: @icon-btn-active-icon-color;
+      }
+    }
+
+    input.md-datepicker-input {
+      height: initial;
+      margin-left: 0;
+    }
+
+    .md-datepicker-input-container,
+    .md-datepicker-input,
+    label:not(.md-no-float):not(.md-container-ignore) {
+      margin-bottom: 0;
+    }
+  }
+
+  .md-datepicker-input-container {
+    border-color: @input-border-color;
+  }
+
+  .md-datepicker-input-container {
+    &.md-datepicker-focused {
+      border-color: @icon-btn-active-icon-color;
+      border-width: 1px;
+    }
+  }
+}
+
+.md-datepicker-input-mask {
+  display: none;
+}
+
+md-checkbox {
+  &.min-margin {
+    height: 20px;
+    margin-bottom: 3px;
+    .md-container {
+      &::after {
+        display: none !important;
+      }
+    }
+  }
+
+  &.md-default-theme.md-checked,
+  &.md-checked {
+    .md-icon {
+      background-color: @green;
+    }
+
+    &.md-focused {
+      .md-container {
+        &::before {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  &.md-focused:not([disabled]):not(.md-checked) {
+    .md-container {
+      &::before {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &.md-default-theme:not(.md-checked) {
+    .md-icon {
+      border-color: #d4d4d4;
+      background-color: @white;
+    }
+  }
+
+  &:not(.md-checked) {
+    .md-icon {
+      border-color: #d4d4d4;
+      background-color: @white;
+    }
+  }
+}
+
+md-radio-group {
+  &.md-default-theme,
+  & {
+    &.md-focused:not(:empty) .md-checked .md-container::before {
+      background-color: transparent;
+    }
+
+    &.md-focused .md-checked .md-container::before {
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+}
+
+md-radio-button {
+  &.md-default-theme,
+  & {
+    &.md-checked .md-off,
+    .md-off {
+      border-color: @dark-grey;
+    }
+    .md-on {
+      background-color: @dark-grey;
+    }
+  }
+
+  &.blue {
+    &.md-checked .md-off,
+    .md-off {
+      border-color: @blue;
+    }
+    .md-on {
+      background-color: @blue;
+    }
+  }
+
+  &.green {
+    &.md-checked .md-off,
+    .md-off {
+      border-color: @green;
+    }
+    .md-on {
+      background-color: @green;
+    }
+  }
+
+  &.red {
+    &.md-checked .md-off,
+    .md-off {
+      border-color: @red;
+    }
+    .md-on {
+      background-color: @red;
+    }
+  }
+}
+
+md-select {
+  display: inline-block;
+
+  &,
+  &.md-default-theme {
+    .md-select-value {
+      border-bottom-width: 1px;
+      padding-bottom: 2px;
+      border-bottom-color: @input-border-color;
+
+      &.md-select-placeholder {
+        color: @input-border-color;
+      }
+    }
+
+    &:not([disabled]):focus {
+      .md-select-value {
+        border-bottom-width: 1px;
+        padding-bottom: 2px;
+        border-bottom-color: @input-active-border-color;
+      }
+    }
+  }
+}
+
+md-input-container {
+  .md-placeholder,
+  label:not(.md-no-float):not(.md-container-ignore) {
+    font-weight: 400;
+    color: @grey;
+  }
+
+  &.md-default-theme:not(.md-input-invalid).md-input-focused,
+  &:not(.md-input-invalid).md-input-focused {
+    label {
+      color: @input-active-border-color;
+    }
+    
+    md-icon {
+      color: @input-active-border-color;
+    }
+  }
+
+  .md-input {
+    -webkit-box-ordinal-group: initial;
+    -webkit-order: initial;
+    order: initial;
+  }
+
+  &,
+  &.md-default-theme {
+    .md-input {
+      border-bottom-width: 1px;
+      border-color: @input-border-color;
+      -webkit-font-smoothing: antialiased;
+      font-size: 13px;
+    }
+  }
+
+  &.md-default-theme:not(.md-input-invalid).md-input-focused,
+  &:not(.md-input-invalid).md-input-focused,
+  &.md-default-theme:not(.md-input-invalid).md-input-resized,
+  &:not(.md-input-invalid).md-input-resized {
+    .md-input {
+      border-bottom-width: 1px;
+      border-color: @input-active-border-color;
+    }
+  }
+
+  &.md-input-focused,
+  &.md-input-has-placeholder,
+  &.md-input-has-value {
+    label:not(.md-no-float) {
+      transform: translate3d(0,12px,0) scale(0.85);
+    }
+  }
+
+  input,
+  md-select {
+      &[disabled] {
+      background: @lighter-grey;
+      border-color: transparent;
+    }
+  }
+}
+  
+md-input-container.md-input-focused:not(.md-input-has-value) {
+  md-select {
+    &,
+    &.md-default-theme {
+      .md-select-value.md-select-placeholder {
+        border-bottom-color: @input-active-border-color;
+        color: @input-active-border-color;
+      }
+    }
+  }
+}
+
+md-tabs {
+  &,
+  &.md-default-theme {
+    md-ink-bar {
+      color: @tab-active-font-color;
+      background: @tab-active-border-color;
+    }
+
+    md-tabs-wrapper {
+      background-color: @panel-color;
+      border-color: @dark-border-color;
+      padding: 0 10px;
+    }
+
+    .md-tab {
+      margin: 0 6px;
+      padding: 12px 6px;
+      font-size: 13px;
+      line-height: 20px;
+      color: @tab-inactive-font-color;
+      text-transform: none;
+
+      &.md-active {
+        color: @tab-active-font-color;
+      }
+    }
+  }
+}
+
+md-tabs-canvas {
+  height: 44px;
+}
+
+md-pagination-wrapper {
+  height: auto;
+}
+
+md-autocomplete {
+  height: auto;
+  min-width: 100px;
+
+  md-autocomplete-wrap {
+    height: auto;
+
+    &.md-whiteframe-1dp,
+    &.md-whiteframe-z1 {
+      box-shadow: none;
+    }
+  }
+
+  .md-show-clear-button {
+    button {
+      transition: none !important;
+      margin: 0;
+
+      md-icon {
+        transform: none;
+        top: 0;
+        left: 0;
+        line-height: 30px;
+        height: 30px;
+        width: 30px;
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+}
+
+.md-datepicker-calendar-pane {
+  z-index: 10000;
+}
+
+.md-virtual-repeat-container {
+  &.md-autocomplete-suggestions-container {
+    min-width: 300px !important;
+  }
+}
+
+
+
+
+@keyframes spin {
+  0% {
+    transform: none;
+  }
+  50% {
+    .rotate(180deg);
+  }
+  100% {
+    .rotate(360deg);
+  }
+}
+.spinner {
+  animation: spin 1s infinite linear;
+  .v-align(middle);
+  .circle;
+  position: relative;
+  font-size: 0;
+  height: 20px;
+  width: 20px;
+  border: 3px solid fade(@dark-grey, 50%);;
+  border-left-color: @dark-grey;
+
+  &.grey { /* this is the default color */
+    border: 3px solid fade(@dark-grey, 50%);;
+    border-left-color: @dark-grey;
+  }
+
+  &.dark,
+  &.dark-grey,
+  &.black {
+    border: 3px solid fade(@dark-grey, 50%);;
+    border-left-color: @dark-grey;
+  }
+
+  &.white {
+    border: 3px solid fade(@white, 50%);;
+    border-left-color: @white;
+  }
+
+  &.green {
+    border: 3px solid fade(@green, 50%);;
+    border-left-color: @green;
+  }
+
+  &.blue {
+    border: 3px solid fade(@blue, 50%);;
+    border-left-color: @blue;
+  }
+}
+

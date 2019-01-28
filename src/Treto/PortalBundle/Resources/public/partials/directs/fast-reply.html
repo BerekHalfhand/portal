@@ -1,0 +1,101 @@
+<section class="fast-reply">
+    <!-- Temporarely disabled
+    <md-button class="blue md-raised" title="Новые сообщения" aria-label="Новые сообщения"
+                id="to-new-posts-down"
+                ng-click="discus.scrollToNewPost();"
+                ng-if="discus._meta.hasNewPostsDownViewport"
+                log-click="Дискуссии::Кнопка <Новые сообщени> в дискуссии">
+        <md-icon class="material-icon">arrow_downward</md-icon>
+        Новые сообщения
+    </md-button>-->
+    <form ctrl-enter="discus.saved?ok(true):false">
+        <div class="optional">
+            <upload-list ng-if="discus.fastReplyMsg.attachments.length"
+                         model="discus.fastReplyMsg.attachments"
+                         template-url="fast-reply-listing"></upload-list>
+            <md-progress-linear
+                ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading"
+                md-mode="determinate"
+                value="{{$root.uploader.progress}}"
+                class="blue"></md-progress-linear>
+            <div ng-if="discus.main_doc.ToSite === '1' || (discus.main_doc.form == 'Contact' && (discus.main_doc.ContactStatus.indexOf(7) !== -1 ||
+            discus.main_doc.ContactStatus.indexOf('7') !== -1 || discus.main_doc.ContactStatus.indexOf(10) !== -1 ||
+            discus.main_doc.ContactStatus.indexOf('10') !== -1))"
+                 ng-init="discus.fastReplyMsg.locale = !discus.fastReplyMsg.locale?'ru':discus.fastReplyMsg.locale" style="padding-left: 8px;">
+                <md-checkbox id="check_public"
+                       ng-init="discus.fastReplyMsg.NotForSite = 1"
+                       ng-model="discus.fastReplyMsg.NotForSite"
+                       ng-true-value="'0'" ng-false-value="'1'"
+                       class="marright20 marbot0"
+                       log-click="Дискуссии::Галка <Публиковать на сайте> в блоке быстрого ответа в дискуссии">
+                    Публиковать на сайте
+                </md-checkbox>
+
+                <span ng-if="!discus.fastReplyMsg.NotForSite || discus.fastReplyMsg.NotForSite == '0'"
+                      uib-dropdown keep-in-viewport=".dropdown-menu.new" on-toggle="place();"
+                      class="relative inline-block">
+                    <a href class="dropdown-toggle black" uib-dropdown-toggle
+                       ng-init="discus.fastReplyMsg.locale = discus.fastReplyMsg.locale?discus.fastReplyMsg.locale:locale.records[0].value"
+                       log-click="Дискуссии::Меню <Выберите локаль> в блоке быстрого ответа в дискуссии">
+                      {{discus.fastReplyMsg.locale?discus.fastReplyMsg.locale:'Выберите локаль'}}<span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu new top-dropdown" role="menu">
+                        <li ng-repeat="record in locale.records" title="{{record.value}}">
+                            <a href class="text-s11 black" ng-click="discus.fastReplyMsg.locale = record.value">{{record.value}}</a>
+                        </li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+        <div class="reply-wrap">
+            <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }"
+                        auto="true"
+                        multiple="true"
+                        model="discus.fastReplyMsg.attachments"
+                        templ="fast-reply-uploader.html"></upload-box>
+            <input type="text"
+                   ng-show="isReplyFocusedOnce||discus.fastReplyMsg.subject.length"
+                   ng-model="discus.fastReplyMsg.subject"
+                   ng-keydown="readOnType()"
+                   class="subject-input"
+                   placeholder="Заголовок (не обязательно)"
+                   log-click="Дискуссии::Поле <Заголовок> в блоке быстрого ответа в дискуссии"/>
+            <t-mce model="discus.fastReplyMsg.body"
+                   mentions="discus.fastReplyMsg.mentions"
+                   no-autofocus
+                   eternal-toolbar
+                   class="reply mentions-on-top"
+                   ng-disabled="{{discus.sending}}"
+                   ng-keydown="readOnType()"
+                   ng-focus="isReplyFocusedOnce = true;"
+                   toolbar-container="'#fastReplyToolbar'"
+                   log-click="Дискуссии::Поле <Введите текст> в блоке быстрого ответа в дискуссии"></t-mce>
+            <md-button ng-show="!discus.sending&&(fastReplyLength||hasAttach||discus.fastReplyMsg.subject)"
+                       class="md-ink-ripple icon-btn send"
+                       ng-click="discus.saved?ok(true):false"
+                       ng-disabled="discus.sending"
+                       title="Ответить"
+                       aria-label="Ответить"
+                       log-click="Дискуссии::Кнопка <Ответить> в блоке быстрого ответа в дискуссии">
+                <md-icon class="material-icons">send</md-icon>
+            </md-button>
+            <div ng-if="discus.sending" class="progress-wrapper">
+                <md-progress-circular md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+            </div>
+        </div>
+        <div class="status">
+            <span class="grey" ng-repeat="(login,value) in discus.usrTyping">
+              <b ng-bind="$root.users[login].name"></b> печатает...
+            </span>
+            <div class="fastReplyToolbar-wrap" ng-show="isReplyFocusedOnce">
+                <md-button class="md-ink-ripple icon-btn text-format-btn"
+                           ng-class="{'active': showToolbar}"
+                           ng-click="showToolbar = !showToolbar"
+                           log-click="Дискуссии::Кнопка <Показать\скрыть инструменты редактирования текста> в блоке быстрого ответа в дискуссии">
+                    <md-icon class="material-icons">text_format</md-icon>
+                </md-button>
+                <div id="fastReplyToolbar" ng-show="showToolbar"></div>
+            </div>
+        </div>
+    </form>
+</section>

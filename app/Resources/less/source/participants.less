@@ -1,0 +1,701 @@
+// блок в котором размещается панель с выбором сотрудников
+.participanrs-panel-wrapper {
+  position: absolute;
+  left: 0;
+
+  @media (max-width: 479px) {
+    width: 100%;
+  }
+}
+.participanrs-panel-wrapper.top0 {
+  top: 0;
+  bottom: auto;
+}
+.participanrs-panel-wrapper.bottom100 {
+  top: auto;
+  bottom: 100%;
+}
+
+.participants-panel {
+  position: relative;
+  width: 735px;
+  padding: 10px;
+  background: @grey_f9;
+  border: 1px solid #cccccc;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+
+  md-checkbox {
+
+    .md-label {
+      margin-left: 25px;
+    }
+  }
+}
+
+.discus_add_user{
+
+  // блок с кнопками и выбором команд
+  .button-wrapper {
+    padding-top: 15px;
+
+    @media (max-width: 479px) {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .add {
+      @media (max-width: 479px) {
+        order: 1;
+        width: 49%;
+        margin: 0;
+      }
+    }
+
+    .btn-gray {
+      margin-right: 31px;
+
+      @media (max-width: 479px) {
+        order: 2;
+        width: 49%;
+        margin: 0;
+      }
+    }
+  }
+
+  // кнопки "Добавить" и "Отменить"
+  .md-button {
+    width: 106px;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+  }
+  
+  // кнопка "Добавить"
+  .btn-blue {
+    margin-right: 11px;
+  }
+}
+
+// блок выбора участников
+.add-participants-table {
+  display: flex;
+  width: 100%;
+
+  @media (max-width: 719px) {
+    display: block;
+  }
+  
+  // выпадающее меню с участниками (под inpit)
+  .dropdown-menu {
+    top: ~"calc(100% + 3px)";
+    min-width: 313px;
+    max-height: 348px;
+    overflow: hidden;
+    padding: 5px;
+    margin: 0;
+
+    @media (max-width: 479px) {
+      min-width: 100%;
+    }
+    
+    // плавный градиент снизу
+    &:after {
+      display: none;
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 17px;
+      bottom: 0px;
+      height: 30px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 1));
+      pointer-events: none;
+    }
+
+    ul {
+      position: relative;
+      max-height: 320px;
+      margin: 0;
+      overflow: auto;
+      padding: 3px 12px 3px 3px;
+      list-style: none;
+
+      li {
+
+        a {
+          display: block;
+          padding: 5px;
+          color: #000;
+          font-weight: 400;
+          transition: all 200ms ease-in-out;
+
+          .name {
+            font-weight: 700;
+          }
+        }
+      }
+
+      li.active {
+
+        a {
+          color: #000;
+          font-weight: 400;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: none;
+            background-color: #f3f7fb !important;
+          }
+        }
+      }
+    }
+  }
+
+  .dropdown-menu.show-gradient {
+    &:after {
+      display: block;
+    }
+  }
+
+  // всплывающее меню выбора сотрудников из команд и отделов
+  .select-command {
+    left: ~"calc(100% + 15px)";
+    top: -17px;
+    min-width: 270px;
+    max-width: none;
+    min-height: 80px;
+    padding: 30px 15px 20px 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
+    @media (max-width: 719px) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+
+    &:before {
+      right: auto;
+      left: 0;
+    }
+    &:after {
+      right: auto;
+      left: -7.5px;
+    }
+
+    .select-comand__wrapper-content {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 600px;
+    }
+  }
+}
+
+// со скрытым полем "Количество участников"
+.add-participants-table.hide-info {
+
+  @media (max-width: 719px) {
+    display: flex;
+    align-items: center;
+  }
+
+  .add-participants-table__item {
+    &:first-child {
+      width: 30px;
+    }
+
+    &:last-child {
+      width: ~"calc(100% - 30px)";
+    }
+  }
+
+  .participants-number {
+    display: none;
+  }
+}
+
+// со скрытым полем "Количество участников"
+.add-participants-table.hide-all-info {
+  .add-participants-table__item {
+    &:last-child {
+      width: 100%;
+    }
+  }
+}
+
+.add-participants-table__item {
+  // Блок с количеством участников и иконкой выбора сотрудников
+  &:first-child {
+    display: flex;
+    width: 120px;
+
+    @media (max-width: 719px) {
+      width: 100%;
+      padding: 3px 0;
+    }
+  }
+
+  // Блок с выбранными сотрудниками и поле ввода ФИО
+  &:last-child {
+    width: ~"calc(100% - 120px)";
+
+    @media (max-width: 719px) {
+      width: 100%;
+    }
+  }
+}
+
+// блок с количеством участников
+.participants-number {
+  min-width: 90px;
+  color: #c1c1c1;
+  font-size: 11px;
+  line-height: 11px;
+  font-weight: 400;
+  padding-top: 12px;
+
+  @media (max-width: 719px) {
+    padding-top: 0;
+  }
+}
+
+// кнопка Добавить участников
+.add-participant-btn {
+  position: relative;
+  padding-top: 8px;
+
+  @media (max-width: 719px) {
+    padding: 0;
+    margin-top: -5px;
+  }
+
+  .material-icons.touch {
+    font-size: 18px;
+    color: #3f5168;
+  }
+}
+
+.participants-block {
+  .v-align(middle);
+  margin-left: 0px;
+  margin-right: 0px;
+  overflow: auto;
+  max-height: 410px;
+}
+
+.participants-input-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding: 5px;
+  line-height: 18px;
+  border: 1px solid #c2cfd6;
+  background-color: @white;
+}
+
+.participants-input {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  overflow: auto;
+  max-height: 290px;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: @white;
+}
+
+.participant-element-cover {
+  display: inline-block;
+}
+
+.participant-element{
+  display: inline-block;
+  margin: 3px;
+  padding: 5px 8px;
+  font-size: 13px;
+  line-height: 16px;
+  background: #f0f0f0;
+  color: #335069;
+
+  b {
+    margin: 0 5px 0 0;
+  }
+
+  .delete {
+    color: #3d4e63;
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10px;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+
+    i {
+      vertical-align: top;
+    }
+  }
+}
+
+// стилизация input для ввода ФИО участника
+.typeahead-style {
+  flex-grow: 1;
+}
+
+#participantInput {
+  padding: 5px 10px;
+}
+
+.participant-remove {
+  position: absolute;
+  right: 5px;
+  top: 13px;
+  cursor: pointer;
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
+
+.participant-remove-1st {
+  top: 7px !important;
+}
+
+.add-participants-new {
+  position: relative;
+  padding-left: 41px;
+
+  & > .group-add {
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: @add-participants-chip-font-color;
+
+    &:not([disabled]){
+      &[aria-expanded="true"] {
+        color: @add-participants-btn-hover-color;
+      }
+
+      &:hover {
+        color: @add-participants-btn-hover-color;
+      }
+
+      &.active,
+      &:active {
+        color: @add-participants-btn-hover-color;
+      }
+    }
+  }
+
+  .md-chips {
+    border-radius: 2px;
+    border: 1px solid @add-participants-border-color;
+    background: @add-participants-bg-color;
+    font-size: 13px;
+    line-height: 19px;
+    padding: 0 0 4px 4px;
+    box-shadow: none;
+
+    md-chip {
+      border-radius: 0;
+      margin: 4px 4px 0 0;
+      line-height: 19px;
+      padding: 4px 8px;
+      height: 27px;
+
+      .md-chip-remove-container {
+        right: 8px;
+        line-height: 19px;
+        height: 19px;
+      }
+
+      .md-chip-remove {
+        width: 19px;
+        height: 19px;
+
+        md-icon {
+          .animate;
+          min-width: 0;
+          min-height: 0;
+          color: @add-participants-chip-font-color;
+        }
+
+        &:hover md-icon {
+          color: @add-participants-btn-hover-color;
+        }
+      }
+    }
+
+    .md-chip-input-container {
+      &:first-child {
+        width: 100%;
+      }
+
+      input {
+        vertical-align: middle;
+        height: 27px;
+        line-height: 27px;
+        color: @font-color;
+      }
+    }
+
+    .md-chip-input-container {
+      line-height: 27px;
+      margin: 4px 4px 0 0;
+
+      md-autocomplete,
+      md-autocomplete-wrap {
+        height: auto;
+      }
+
+      &:not(:first-child) {
+        margin: 4px 4px 0 0;
+      }
+    }
+
+    &.md-removable md-chip {
+      padding-right: 38px;
+    }
+
+    md-chips {
+      &,
+      &.md-default-theme {
+        md-chip {
+          background: @add-participants-chip-bg-color;
+          color: @add-participants-chip-font-color;
+        }
+
+        .md-chips.md-focused {
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+// блок выбора Команд для добавления участников
+other-command {
+  @media (max-width: 479px) {
+    order: 0;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+.other-command-wrapper {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+
+  @media (max-width: 479px) {
+    display: flex;
+    padding: 0;
+    margin: 0;
+  }
+
+  // чекбокс
+  md-checkbox {
+    margin: 0;
+    vertical-align: middle;
+  }
+
+  // всплывающее окно
+  .select-command {
+    left: ~"calc(100% + 10px)";
+    min-width: 270px;
+    min-height: 100px;
+    max-width: none;
+    padding: 20px 30px 20px 20px;
+    background-color: @white;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+
+    @media (max-width: 719px) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    
+    // уголок
+    &:before {
+      right: auto;
+      left: 0;
+    }
+    &:after {
+      right: auto;
+      left: -7.5px;
+    }
+
+    // чекбокс
+    md-checkbox {
+      display: block;
+    }
+    // вложенный чекбокс (второго уровня)
+    md-checkbox.embedded {
+      margin: 12px 0 0 20px;
+    }
+  }
+
+  // кнопка "Выбрать"
+  .btn-blue {
+    margin: 19px 0 0 0;
+  }
+
+  // текст ограниченной ширины, замененный на "..."
+  .text-overflow-wrapper {
+    @media (max-width: 719px) {
+      width: ~"calc(100% - 30px)";
+    }
+
+    i {
+      font-size: 20px;
+      color: #84949d;
+    }
+  }
+  .text-overflow {
+    max-width: 200px;
+
+    @media (max-width: 719px) {
+      max-width: 80%;
+    }
+  }
+}
+
+// кнопка "Закрыть" попап
+.popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  cursor: pointer;
+  color: #3d4e63;
+  z-index: 10;
+
+  &:hover {
+    color: #3d4e63;
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+
+// Родительский список
+.parent-list {
+  list-style: none;
+  margin: 0 0 20px 0;
+
+  // чекбокс
+  md-checkbox {
+    margin: 0;
+
+    .md-label {
+      line-height: 20px;
+    }
+  }
+}
+
+// Дочерний список
+.child-list {
+  min-width: 450px;
+  list-style: none;
+  padding: 0 0 0 20px;
+  margin: 0;
+
+  @media (max-width: 479px) {
+    min-width: 100%;
+  }
+
+  li {
+    margin: 12px 0 0 0;
+  }
+
+  // чекбокс
+  md-checkbox {
+    margin: 0;
+
+    .md-label {
+      margin-left: 30px;
+    }
+  }
+
+  .child-list {
+    padding-left: 30px;
+    font-size: 12px;
+
+    .md-label {
+      white-space: normal;
+    }
+  }
+}
+
+// иконка "круг внутри + или -"
+.minus-plus {
+  display: inline-block;
+  position: relative;
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  vertical-align: top;
+  font-family: 'Material Icons';
+  font-size: 12px;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.minus-plus.active {
+  
+  &:before {
+    content: '';
+  }
+}
+
+// надпись возле чекбокса
+.checkbox-label {
+  display: inline-block;
+  vertical-align: sub;
+  line-height: 13px;
+}
+
+// Блок с выбором участников из отделов
+.participants-divisions {
+  display: flex;
+
+  // вложенный список
+  .child-list {
+    width: 50%;
+
+    .child-list {
+      width: 100%;
+    }
+  }
+}
+
+// текст ограниченной ширины, замененный на "..."
+.text-overflow-wrapper {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

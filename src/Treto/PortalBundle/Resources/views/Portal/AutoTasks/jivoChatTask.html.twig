@@ -1,0 +1,21 @@
+{% if doc.visitor.name or doc.visitor.email or doc.visitor.phone or doc.visitor.description %}
+<table class="jivo-client" border="1">
+    <caption>Информация о посетителе</caption>
+    <tr>
+        {% if doc.visitor.name %}<td><b>Имя: </b></td>{% endif %}
+        {% if doc.visitor.email %}<td><b>Email: </b></td>>{% endif %}
+        {% if doc.visitor.phone %}<td><b>Телефон: </b></td>{% endif %}
+        {% if doc.visitor.description %}<td><b>Описание: </b></td>{% endif %}
+    </tr>
+    <tr>
+        {% if doc.visitor.name %}<td>{{ doc.visitor.name }}</td>{% endif %}
+        {% if doc.visitor.email %}<td>{{ doc.visitor.email }}</td>{% endif %}
+        {% if doc.visitor.phone %}<td>{{ doc.visitor.phone }}</td>{% endif %}
+        {% if doc.visitor.description %}<td>{{ doc.visitor.description }}</td>{% endif %}
+    </tr>
+</table>
+<br>
+{% endif %}
+{% for message in doc.chat.messages %}
+    <div><b>{{ message.timestamp | date("d.m.Y H:i:s") }}</b> <span>{{ message.message }}</span></div>
+{% endfor %}

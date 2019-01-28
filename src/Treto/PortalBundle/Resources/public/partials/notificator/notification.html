@@ -1,0 +1,12 @@
+<li ng-attr-id="notif_{{::notif.unid}}"
+  class="notification"
+  ng-class="{
+              'checked': checkedDocs[notif.parentUnid],
+              'expanded': true === notif.expanded,
+              'loading': discus.progress,
+              'task': 'formTask' === notif.form
+            }">
+  <notif-menu></notif-menu>
+  <notif-thread></notif-thread>
+  <notif-popups></notif-popups>
+</li>

@@ -1,0 +1,105 @@
+<div  id="user-table-wrap">
+    <table id="user-table">
+        <tr>
+            <!--<td ng-if="windowWidth > 640">
+               <a href="https://chat.remote.team" target="_blank"
+                  log-click="Главное меню::Кнопка <Чат> в главном меню"
+                  title="Чат">
+                <i class="material-icons white touch">chat</i>
+                <sup class="header-user-sup">
+                  <span class="badge" ng-show="chatUnreadMessages > 0">
+                    {{chatUnreadMessages}}
+                  </span>
+                </sup>
+              </a>
+            </td>-->
+
+            <td class="header_email">
+                <md-button class="icon-btn" title="Почта" aria-label="Почта"
+                           href="https://mail.treto.ru:3443"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           log-click="Главное меню::Кнопка <Почта> в главном меню">
+                    <md-icon class="material-icon">mail_outline</md-icon>
+                    <sup class="header-user-sup">
+                      <span class="badge" ng-show="newMailCount > 0">
+                        {{newMailCount}}
+                      </span>
+                    </sup>
+                </md-button>
+            </td>
+
+            <td class="header_notification" uib-dropdown is-open="menus.notif.isopen" ng-mouseover="cancelHideMenu('notif'); menus.notif.isopen=true;" ng-mouseleave="hideMenuTimeout(500, 'notif');">
+            <!--<td class="header_notification">-->
+                <md-button class="icon-btn" title="Информатор" aria-label="Информатор"
+                           ui-sref="{{$root.useNotificatorByDefault ? 'body.notificator' : 'body.notifications'}}"
+                           ui-sref-opts="{reload: true}"
+                           log-click="Главное меню::Кнопка <Информатор> в главном меню">
+                    <md-icon class="material-icon">notifications_none</md-icon>
+                    <sup class="header-user-sup">
+                      <span class="badge" ng-show="count.Notif > 0">
+                        {{count.Notif}}
+                      </span>
+                    </sup>
+                </md-button>
+                <ul ng-if="windowWidth > 920" class="dropdown-menu notification-menu notif-dropdown" role="menu">
+                <li class="marleft18 marbot10 martop5 marright15" ng-hide="count.Notif == 0">
+                  <span>
+                    <a class="text-s16 black nowrap"
+                       ui-sref="{{$root.useNotificatorByDefault ? 'body.notificator' : 'body.notifications'}}"
+                       ui-sref-opts="{reload: true}"
+                       log-click="Главное меню::Ссылка <Непрочитанные сообщения> в меню информатора">
+                      Непрочитанные сообщения
+                    </a>
+                  </span></li>
+                <li class="divider" ng-hide="count.Notif == 0" style="margin: 5px 0"></li>
+                <li class="marleft15 martop5 marright15 marbot5" ng-show="count.Notif == 0"><span class="nowrap">Пока непрочитанных сообщений нет</span></li>
+                <li class="marleft15 martop5 marright15" ng-repeat="(key, doc) in Notifications | orderObjectBy:'entryOrder':true">
+                  <span class="nowrap">
+                    <i ng-if="doc.urgency > 0" class="notif-icon urgent material-icons va-bottom cursor-default">{{doc.isPublic==1?'assignment_late':'lock'}}</i>
+
+                    <span ng-if="doc.urgency == 0" ng-switch on="doc.parentForm" class="notif-icon">
+                      <span ng-switch-when="formTask" class="material-icons va-bottom" >{{doc.isPublic==1?'assignment':'lock'}}</span>
+                      <span ng-switch-when="messagebb" class="material-icons va-bottom">{{doc.isPublic==1?'assignment':'lock'}}</span>
+                      <span ng-switch-when="formVoting" class="material-icons va-bottom">{{doc.isPublic==1?'sort':'lock'}}</span>
+                      <span ng-switch-when="formAdapt" class="material-icons va-bottom">{{doc.isPublic==1?'create_new_folder':'lock'}}</span>
+                      <span ng-switch-when="Empl" class="material-icons va-bottom">{{doc.isPublic==1?'folder_shared':'lock'}}</span>
+                      <span ng-switch-when="Contact" ng-if="doc.documentType == 'Person'" class="material-icons va-bottom">{{doc.isPublic==1?'folder_shared':'lock'}}</span>
+                      <span ng-switch-when="Contact" ng-if="doc.documentType == 'Organization'" class="material-icons va-bottom">{{doc.isPublic==1?'business':'lock'}}</span>
+                      <span ng-switch-default class="material-icons va-bottom">{{doc.isPublic==1?'create_new_folder':'lock'}}</span>
+                    </span>
+                    <span ng-if="doc.urgency < 0" class="notif-icon material-icons va-bottom">update</span>
+                    <a class="text-s11 marleft5 black nowrap"
+                       ui-sref="{{$root.useNotificatorByDefault ? 'body.notificator({id:doc.parentUnid})' : 'body.discus({id:doc.parentUnid})'}}"
+                       ui-sref-opts="{reload: true}"
+                       log-click="Главное меню::Ссылка в тему\просьбу в меню информатора"
+                       title="Перейти к обсуждению">
+                      <span ng-switch on="doc.parentForm">
+                        <span ng-switch-when="formTask"> ПРОСЬБА: </span>
+                        <span ng-switch-when="messagebb"> ПРОСЬБА: </span>
+                        <span ng-switch-when="message" ng-if="doc.parentForm == 'formTask'"> ПРОСЬБА: </span>
+                        <span ng-switch-when="formVoting"> ОПРОС: </span>
+                        <span ng-switch-when="formAdapt">АДАПТАЦИОННЫЙ ЛИСТ: </span>
+                        <span ng-switch-when="Empl"> ПРОФИЛЬ: </span>
+                        <span ng-switch-when="Contact" ng-if="doc.documentType == 'Person'">КОНТАКТ ПЕРСОНА: </span>
+                        <span ng-switch-when="Contact" ng-if="doc.documentType == 'Organization'">КОНТАКТ ОРГАНИЗАЦИЯ: </span>
+                      </span>
+                      {{doc.subject || doc.subjVoting || '(неопознанная тема '+$index+')'}}{{doc.flag ? ' '+doc.flag : ''}}
+                    </a>
+                  </span>
+                </li>
+                </ul>
+            </td>
+
+            <td class="header_profile">
+                <a href ui-sref="body.profileDisplay({id:user.username})"
+                   log-click="Главное меню::Кнопка <Профиль пользователя> в главном меню"
+                   ng-attr-title="{{user.username}} ({{user.portalData.LastName}} {{user.portalData.name}} {{user.portalData.MiddleName}})">
+                    <img class="round-photo-32" ng-src="/public/img_site/{{$root.environment}}/thumb_{{user.username}}.jpeg" />
+                </a>
+                <!--<div ng-show="$root.show.menuUser" ng-include=" '/bundles/tretouser/partials/profile/menu.html' "></div>-->
+            </td>
+        </tr>
+    </table>
+    <!--</ul>-->
+</div>

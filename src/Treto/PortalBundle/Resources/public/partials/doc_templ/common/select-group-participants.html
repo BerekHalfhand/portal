@@ -1,0 +1,168 @@
+<div class="edit-doc center">
+  <div class="container text-s12 panel marbot0 pad0force">
+    <div class="modal-header">
+      Добавить сотрудников
+      <button type="button"
+              class="close pull-right"
+              ng-click="discus.displayParticipants = false;"
+              title="Закрыть"
+              log-click="Участники::Кнопка <Закрыть> окно <Добавить сотрудников>">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body" style="overflow-y:auto;overflow-x:hidden;">
+      <div ng-show="discus.participantsList.saved" class="scrollable-list" style="width: auto; max-height: 400px;">
+        <md-checkbox class="from-control"
+                     ng-click="discus.allSectionCheckToggle();"
+                     ng-class="discus.participantsList.checked ? 'checked' : ''"
+                     log-click="Участники::Галка <Добавить всех сотрудников> в окне <Добавить сотрудников>">
+          Все:
+        </md-checkbox>
+
+        <article class="row" style="margin-left: -5px;" ng-if="discus.participantsList.saved" ng-init="breakAt = discus.participantsList.sectionsLength / 2">
+
+          <div class="col-lg-12">
+            <div ng-repeat="section in discus.participantsList.sections" ng-show="$rootScope.windowWidth < 1200 || $index < breakAt">
+              <md-checkbox
+                      class="min-margin"
+                      aria-label="checked"
+                      type="checkbox"
+                      id="tc_{{$index}}"
+                      ng-click="discus.sectionCheckToggle(section);"
+                      ng-checked="section.checked"
+                      log-click="Участники::Галка <Добавить сотрудников отдела> в окне <Добавить сотрудников>">
+                <span class="bold" ng-bind="participant.name"></span> <span ng-bind="participant.WorkGroup"></span>
+              </md-checkbox>
+              <span ng-click="section.expanded = !section.expanded"
+                  log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела> в окне <Добавить сотрудников>">
+                <span class="ico click plus-minus touch" ng-class="{active:!section.expanded}"></span>
+                {{section.name}}
+              </span>
+              <div ng-show="section.expanded" class="col-lg-24">
+                <div ng-repeat="participant in section.participants | orderObjectBy:'name'">
+                  <md-checkbox
+                          class="min-margin"
+                          aria-label="checked"
+                          type="checkbox"
+                          id="sc_{{$index}}"
+                          ng-click="discus.participantCheckToggle(section, participant);"
+                          ng-checked="participant.checked"
+                          log-click="Участники::Галка <Добавить сотрудника> в окне <Добавить сотрудников>">
+                    <span class="bold" ng-bind="participant.name"></span> <span ng-bind="participant.WorkGroup"></span>
+                  </md-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-12" ng-hide="$rootScope.windowWidth < 1200">
+            <div ng-repeat="section in discus.participantsList.sections" ng-hide="$index < breakAt">
+              <md-checkbox
+                      class="min-margin"
+                      aria-label="checked"
+                      type="checkbox"
+                      id="tc_{{$index}}"
+                      ng-click="discus.sectionCheckToggle(section);"
+                      ng-checked="section.checked"
+                      log-click="Участники::Галка <Добавить сотрудников отдела> в окне <Добавить сотрудников>">
+                <span class="bold" ng-bind="participant.name"></span> <span ng-bind="participant.WorkGroup"></span>
+              </md-checkbox>
+              <span ng-click="section.expanded = !section.expanded"
+                    log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела> в окне <Добавить сотрудников>">
+                <span class="ico click plus-minus touch" ng-class="{active:!section.expanded}"></span>
+                {{section.name}}
+              </span>
+              <div ng-show="section.expanded" class="col-lg-24">
+                <div ng-repeat="participant in section.participants | orderObjectBy:'name'">
+                  <md-checkbox
+                          class="min-margin"
+                          aria-label="checked"
+                          type="checkbox"
+                          id="fc_{{$index}}"
+                          ng-click="discus.participantCheckToggle(section, participant);"
+                          ng-checked="participant.checked"
+                          log-click="Участники::Галка <Добавить сотрудника> в окне <Добавить сотрудников>">
+                    <span class="bold" ng-bind="participant.name"></span> <span ng-bind="participant.WorkGroup"></span>
+                  </md-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+        <article class="row" ng-if="discus.shareEnable">
+          <div class="col-lg-24"><h4>Сотрудники других порталов</h4></div>
+        </article>
+        <article class="row" ng-if="discus.shareEnable">
+          <div class="col-lg-24"  ng-repeat="(portalDomain, portal) in discus.shareTree">
+            <div>
+              <md-checkbox
+                      class="min-margin"
+                      aria-label="checked"
+                      type="checkbox"
+                      id="fsc_{{$index}}"
+                      ng-click="portal.checked = !portal.checked; discus.changeSharePushArray('portal', portalDomain, portal);"
+                      ng-checked="portal.checked"
+                      log-click="Участники::Галка <Добавить сотрудников другого портала> в окне <Добавить сотрудников>">
+              </md-checkbox>
+              <span>
+                <span ng-click="portal.open = !portal.open"
+                      class="ico click plus-minus touch"
+                      ng-class="{active:!portal.open}"
+                      log-click="Участники::Кнопка <Показать\скрыть отделы другого портала> в окне <Добавить сотрудников>"></span>
+                {{::portal.name}}
+                <!--section start-->
+                <div ng-show="portal.open" class="col-lg-24" ng-repeat="(sectionName, section) in portal.data">
+                  <div>
+                    <md-checkbox
+                            class="min-margin"
+                            aria-label="checked"
+                            type="checkbox"
+                            id="ssc_{{$index}}"
+                            ng-click="section.checked = !section.checked; discus.changeSharePushArray('section', portalDomain, section);"
+                            ng-checked="section.checked"
+                            log-click="Участники::Галка <Добавить сотрудников отдела другого портала> в окне <Добавить сотрудников>">
+                    </md-checkbox>
+                    <span>
+                      <span ng-click="section.open = !section.open"
+                            class="ico click plus-minus touch"
+                            ng-class="{active:!section.open}"
+                            log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела другого портала> в окне <Добавить сотрудников>"></span>
+                      {{::sectionName}}
+                      <!--empl start-->
+                      <div ng-show="section.open" class="col-lg-24"  ng-repeat="empl in section.data">
+                        <div>
+                          <md-checkbox
+                                  class="min-margin"
+                                  aria-label="checked"
+                                  type="checkbox"
+                                  id="tsc_{{$index}}"
+                                  ng-click="empl.checked = !empl.checked; discus.changeSharePushArray('empl', portalDomain, empl);"
+                                  ng-checked="empl.checked"
+                                  log-click="Участники::Галка <Добавить сотрудника другого портала> в окне <Добавить сотрудников>">
+                            <span class="bold" ng-bind="empl.LastName+' '+empl.name"></span>
+                            <span ng-bind="empl.WorkGroup.join(', ')"></span>
+                          </md-checkbox>
+                        </div>
+                      </div>
+                      <!--empl end-->
+                    </span>
+                  </div>
+                </div>
+                <!--section end-->
+              </span>
+            </div>
+          </div>
+        </article>
+      </div>
+      <p></p>
+      <div class="alert alert-info" ng-show="!discus.participantsList.saved">Загрузка отделов...</div>
+    </div>
+    <div class="modal-footer">
+      <a href class="blue" title="Добавить сотрудников из выбранных отделов"
+         ng-click="discus.displayParticipants = false; discus.saveSelectedParticipants(discus.displayParticipantsDoc, discus.pushArray);"
+         log-click="Участники::Кнопка <Выбрать> в окне <Добавить сотрудников>">
+        Выбрать
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,109 @@
+svg {
+  &.graph {
+    rect.bg {
+      fill: @white;
+      stroke-width: 0;
+    }
+
+    g.grid {
+      rect.bg {
+        fill: @white;
+        stroke-width: 0;
+      }
+      
+      line {
+        fill: transparent;
+        stroke: @light-grey;
+        stroke-width: 2px;
+
+        &.axis {
+          stroke: @grey;
+          stroke-linecap: square;
+        }
+      }
+
+      text {
+        fill: @font-color;
+        stroke-width: 0;
+        font-size: 11px;
+
+        &.x-axis {
+          text-anchor: middle;
+        }
+
+        &.y-axis {
+          text-anchor: end;
+        }
+      }
+    }
+
+    g.graph-group {
+      path,
+      line,
+      circle,
+      ellipse,
+      rect {
+        stroke-width: 2px;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      g.graph {
+        path.graph {
+          .animate;
+          fill: transparent;
+          stroke: inherit;
+          stroke-width: 4px;
+          opacity: 0.6;
+        }
+
+        g.knot {
+          .animate;
+          stroke: inherit;
+          opacity: 0;
+          
+          circle {
+            stroke: inherit;
+            fill: @white;
+          }
+
+          g.knot-label {
+            .translate(-9999px, 0);
+            -webkit-transition: opacity 0.3s ease-out, -webkit-transform 0s linear 0.3s, -moz-transform 0s linear 0.3s, -ms-transform 0s linear 0.3s, -o-transform 0s linear 0.3s, transform 0s linear 0.3s;
+            -moz-transition: opacity 0.3s ease-out, -webkit-transform 0s linear 0.3s, -moz-transform 0s linear 0.3s, -ms-transform 0s linear 0.3s, -o-transform 0s linear 0.3s, transform 0s linear 0.3s;
+            -ms-transition: opacity 0.3s ease-out, -webkit-transform 0s linear 0.3s, -moz-transform 0s linear 0.3s, -ms-transform 0s linear 0.3s, -o-transform 0s linear 0.3s, transform 0s linear 0.3s;
+            -o-transition: opacity 0.3s ease-out, -webkit-transform 0s linear 0.3s, -moz-transform 0s linear 0.3s, -ms-transform 0s linear 0.3s, -o-transform 0s linear 0.3s, transform 0s linear 0.3s;
+            transition: opacity 0.3s ease-out, -webkit-transform 0s linear 0.3s, -moz-transform 0s linear 0.3s, -ms-transform 0s linear 0.3s, -o-transform 0s linear 0.3s, transform 0s linear 0.3s;
+            opacity: 0;
+
+            text {
+              font-size: 11px;
+              fill: @white;
+              stroke-width: 0;
+            }
+
+            rect {
+              stroke-width: 0;
+              fill: fade(@font-color, 80%);
+            }
+          }
+
+          &:hover {
+            g.knot-label {
+              transition: opacity 0.3s ease-out;
+              transform: none;
+              opacity: 1;
+            }
+          }
+        }
+        
+        &:hover {
+          path.graph,
+          g.knot {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}

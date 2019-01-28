@@ -1,0 +1,8 @@
+{% if quote.text is defined %}
+    <blockquote>
+        {% if quote.author is defined and quote.date is defined and quote.time is defined %}
+            <p class="quote-author">{{ quote.author }} {{ quote.occupation is defined?quote.occupation:'' }} ({{ quote.date }} {{ quote.time }}) пишет</p> <br>
+        {% endif %}
+        <div>{{ quote.text }}</div>
+    </blockquote>
+{% endif %}

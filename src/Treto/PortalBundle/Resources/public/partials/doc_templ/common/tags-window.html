@@ -1,0 +1,23 @@
+<md-tabs md-dynamic-height md-border-bottom ng-if="doc._meta.loadTagsPages">
+    <md-tab label="Популярные">
+        <md-content class="md-padding"
+                    ng-controller="tagsPageCtrl"
+                    ng-init="expCategory = 1; loadPopularTags();"
+                    ng-include="'/bundles/tretoportal/partials/doc_templ/common/tags-tab-content.html'">
+        </md-content>
+    </md-tab>
+    <md-tab label="Мои теги">
+        <md-content class="md-padding"
+                    ng-controller="tagsPageCtrl"
+                    ng-init="expCategory = 2; loadMyTags();"
+                    ng-include="'/bundles/tretoportal/partials/doc_templ/common/tags-tab-content.html'">
+        </md-content>
+    </md-tab>
+    <md-tab label="Все теги">
+        <md-content class="md-padding"
+                    ng-controller="tagsPageCtrl"
+                    ng-init="expCategory = 3; loadTags();"
+                    ng-include="'/bundles/tretoportal/partials/doc_templ/common/tags-tab-content.html'">
+        </md-content>
+    </md-tab>
+</md-tabs>

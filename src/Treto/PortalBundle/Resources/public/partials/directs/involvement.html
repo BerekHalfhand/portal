@@ -1,0 +1,116 @@
+<span class="involvement">
+    <span ng-if="!profileMode" class="default-mode">
+        <span ng-if="!user" class="grey text-s12" title="Бывший сотрудник">EX</span>
+        <span ng-if="user" class="relative">
+            <a ng-if="::(username === $root.user.username)"
+               href
+               ng-click="toggleEditWnd()"
+               class="grey text-s12 my-involvement"
+               title="{{'вовлечение' + (expireDate ? (' до ' + (expireDate | dateMonth) + ' включительно') : ', бессрочно')}}"
+               log-click="Вовлечение::Кнопка <-вовлечение-> открывает окно редактирования вовлечения">{{involvement + '%'}}</a>
+            <span ng-if="username !== $root.user.username"
+                  class="grey text-s12 not-my-involvement"
+                  title="{{'вовлечение' + (expireDate ? (' до ' + (expireDate | dateMonth) + ' включительно') : ', бессрочно')}}">{{involvement + '%'}}</span>
+            <div ng-if="::(username === $root.user.username)"
+                 ng-show="showEdit"
+                 ng-click="showEdit = false;" class="darkmatter">
+            </div>
+            <div ng-if="::(username === $root.user.username)"
+                 ng-show="showEdit"
+                 class="involvement-edit text-s12 text-left">
+                <div>
+                    <span class="grey">Вовлечение в работу:</span>
+                    <input type="text"
+                        ng-model="edit.involvement"
+                        placeholder="100"
+                        style="width: 40px;"
+                        class="text-s12 bordbot_e5 text-center padleft0 padright0 padbot5 padtop5 bold marright5"
+                        limitednumber min="0" max="100"
+                        log-click="Вовлечение::Поле <Вовлечение в работу> во всплывающем окне редактирования вовлечения"/> %
+                    </div>
+                <div>
+                    <span class="grey">до (включительно): </span>
+                    <md-datepicker
+                        ng-model="edit.date"
+                        md-min-date="today"
+                        md-open-on-focus
+                        md-placeholder="до"
+                        log-click="Вовлечение::Выбор даты <Вовлечение до> во всплывающем окне редактирования вовлечения">
+                    </md-datepicker>
+                </div>
+                <div class="martop10">
+                    <a href
+                       ng-click="save()"
+                       ng-show="!saving"
+                       class="blue uppercase marright15"
+                       log-click="Вовлечение::Кнопка <Сохранить> во всплывающем окне редактирования вовлечения">
+                       Сохранить
+                    </a>
+                    <a href
+                       ng-click="cancel()"
+                       ng-show="!saving"
+                       class="grey uppercase"
+                       log-click="Вовлечение::Кнопка <Отмена> во всплывающем окне редактирования вовлечения">
+                       Отмена
+                    </a>
+                    <md-progress-circular
+                        ng-if="saving"
+                        md-mode="indeterminate"
+                        md-diameter="15">
+                    </md-progress-circular>
+                </div>
+            </div>
+        </span>
+    </span>
+    
+    <div ng-if="profileMode" class="profile-mode">
+        <div ng-if="::(username === $root.user.username)">
+            <div class="item">
+                <span class="black_55">Вовлечение в работу:</span>
+                <input type="text"
+                    ng-model="edit.involvement"
+                    placeholder="100"
+                    style="width: 40px;"
+                    class="text-s12 bordbot_e5 text-center padlaeft0 padright0 padbot5 padtop5 bold marright5"
+                    limitednumber min="0" max="100"
+                    log-click="Вовлечение::Поле <Вовлечение в работу> в профиле сотрудника"/> %
+            </div>
+            <div class="item">
+                до (включительно)
+                <md-datepicker
+                    ng-model="edit.date"
+                    md-min-date="today"
+                    md-open-on-focus
+                    md-placeholder="до"
+                    log-click="Вовлечение::Выбор даты <Вовлечение до> в профиле сотрудника">
+                </md-datepicker>
+            </div>
+            <div class="item">
+                <a href
+                   ng-click="save()"
+                   ng-show="!saving"
+                   class="blue marright10"
+                   log-click="Вовлечение::Выбор даты <Сохранить> в профиле сотрудника">
+                  сохранить
+                </a>
+                <a href
+                   ng-click="edit.involvement = '100'; edit.date = undefined; save()"
+                   ng-show="!saving"
+                   class="grey"
+                   log-click="Вовлечение::Выбор даты <Очистить> в профиле сотрудника">
+                  очистить
+                </a>
+                <md-progress-circular
+                    ng-if="saving"
+                    md-mode="indeterminate"
+                    md-diameter="20">
+                </md-progress-circular>
+            </div>
+        </div>
+        <div ng-if="::(username !== $root.user.username)">
+            <span class="black_55">Вовлечение в работу:</span>
+            <b>{{involvement}}%</b>
+            {{ expireDate ? (' до ' + (expireDate | dateMonth) + ' включительно') : ', бессрочно' }}
+        </div>
+    </div>
+</span>

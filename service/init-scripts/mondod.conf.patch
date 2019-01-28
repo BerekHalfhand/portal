@@ -1,0 +1,3 @@
+# вставить в конец файла /etc/init.d/mongod если ещё нет такой строки.
+# осторожно, поддерживается не всеми версиями mongod
+setParameter=textSearchEnabled=true

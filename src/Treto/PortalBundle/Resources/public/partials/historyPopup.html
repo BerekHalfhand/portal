@@ -1,0 +1,31 @@
+<div class="container-fluid createDiscount" ng-controller="changeLogCtrl">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            История изменений
+            <button type="button"
+                    class="close pull-right"
+                    ng-click="$root.showhistoryPopup = false"
+                    title="Закрыть"
+                    log-click="История изменений::Кнопка <Закрыть> всплывающее окно <История изменений>">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="panel-body">
+            <div class="change-log-wrapper">
+                <ol class="list-group">
+                    <li ng-repeat="item in changeLog" class="list-group-item">
+                        <span class="change-log-date">{{item._Date}}</span>
+                        <span class="change-log-name">{{item._UserShortName || item._UserName}}</span>
+                        <div ng-repeat="(key, val) in item">
+                            <div ng-if="isTypeOf(val)" class="change-log-item">
+                                Изменил значение поля: <span class="label label-info">{{val._Title}}</span><br/>
+                                <span class="has-error"><span class="control-label">Старое значение:</span></span> "{{val._OldValue}}"<br/>
+                                <span class="has-success"><span class="control-label">Новое значение:</span></span> "{{val._NewValue}}"
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

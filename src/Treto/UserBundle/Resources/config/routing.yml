@@ -1,0 +1,125 @@
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+    prefix: /
+    
+fos_user_security_login:
+    path: /login
+    defaults: { _controller: "TretoUserBundle:User:login", _format:json }
+
+#fos_user_security_login_key:
+    #path: /login/{key}
+    #defaults: { _controller: "TretoUserBundle:User:login", _format:json }
+    
+user_get:
+    pattern: /get/{id}
+    defaults: { _controller: TretoUserBundle:Profile:get, _format: json }
+    methods: [GET]
+    requirements:
+        id: '[^\?^\&^\^]+'
+      
+user_set:
+    path: /set
+    defaults: { _controller: TretoUserBundle:Profile:set, _format: json }
+    methods: [POST]
+
+user_settings_set:
+    path: /setSettings
+    defaults: { _controller: TretoUserBundle:Profile:setSettings, _format:json }
+    methods: [POST]
+
+user_save_involvement:
+    path: /save-involvement
+    defaults: { _controller: TretoUserBundle:Profile:saveInvolvement, _format: json }
+    methods: [POST]
+    
+user_save_settings:
+    path: /save-settings
+    defaults: { _controller: TretoUserBundle:Profile:saveSettings, _format: json }
+    methods: [POST]
+    
+user_save_security:
+    pattern: /save-security
+    defaults: { _controller: TretoUserBundle:Profile:saveSecurity, _format: json }
+    methods: [POST]
+    
+user_list:
+    pattern: /list/{offset}/{limit}/{order}/{inversed}
+    defaults: { _controller: TretoUserBundle:Profile:list, offset: 0, limit: 128, order: null, inversed: "" }
+
+empl_portal_list:
+    pattern: /getPortalEmpls
+    defaults: { _controller: TretoUserBundle:Profile:getPortalEmpls }
+    methods: [POST]
+
+user_list_by_section:
+    pattern: /listbysection/{section}/{name}
+    defaults: { _controller: TretoUserBundle:Profile:listbysection, section: null, name: null }
+    
+user_list_dismissed:
+    pattern: /listdismissed/{name}
+    defaults: { _controller: TretoUserBundle:Profile:listdismissed, name: null }
+    
+user_subject_to_fullname_in_rus:
+    path: /subject-to-fullnameinrus
+    defaults: { _controller: TretoUserBundle:Profile:subjectToFullNameInRus }
+    
+user_likes_list:
+    pattern: /likes/list
+    defaults: { _controller: TretoUserBundle:Profile:likesList }
+    requirements:
+      _format: json
+      methods: POST
+    
+#fos_user_profile:
+#    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+#    prefix: /profile
+
+#fos_user_register:
+#    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+#    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+user_resetting_request:
+    path: /resetting/request
+    defaults: { _controller: "TretoUserBundle:Profile:request", _format:json }
+    methods: [POST]
+    
+user_resetting_verify:
+    path: /resetting/verify
+    defaults: { _controller: "TretoUserBundle:Profile:verify", _format:json }
+    methods: [POST]
+    
+user_resetting_change:
+    path: /resetting/change
+    defaults: { _controller: "TretoUserBundle:Profile:change", _format:json }
+    methods: [POST]
+    
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile
+    
+api_mail_count_new_messages:
+    path: /mail/count
+    defaults: { _controller: TretoUserBundle:Profile:getCountNewEmails }
+    requirements:
+      _format: json
+
+api_mail_search:
+    pattern: /mail/search
+    defaults: { _controller: TretoUserBundle:Profile:getMailHeaders }
+    requirements:
+      _format: json
+
+api_mail_get_by_ids:
+    pattern: /mail/getByIds/{ids}
+    defaults: { _controller: TretoUserBundle:Profile:getMailsByIds, ids:'' }
+    requirements:
+      _format: json
+      
+tools_generate_passwords:
+    path: /tools/generate-passwords
+    defaults: { _controller: TretoUserBundle:User:generatePasswords }
+    

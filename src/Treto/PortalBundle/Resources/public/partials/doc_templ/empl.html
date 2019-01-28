@@ -1,0 +1,33 @@
+﻿<div ng-controller="emplFormCtrl">
+  <ul class="list-unstyled">
+    <li ng-if="doc.fields.LastName"><span class="blue">NEW</span><span class="dark-grey"> Фамилия: </span>{{ doc.fields.LastName }}</li>
+    <li ng-if="doc.fields.name"><span class="blue">NEW</span><span class="dark-grey"> Имя: </span>{{ doc.fields.name }}</li>
+    <li ng-if="doc.fields.MiddleName"><span class="blue">NEW</span><span class="dark-grey"> Отчество: </span>{{ doc.fields.MiddleName }}</li>
+    <li ng-if="doc.fields.WorkGroup"><span class="blue">NEW</span><span class="dark-grey"> Должность: </span>{{ doc.fields.WorkGroup | arrOrStrOutput }}</li>
+    <li ng-if="doc.fields.RegionID"><span class="blue">NEW</span><span class="dark-grey"> Место работы (город): </span> {{ RegionIDDict.getRecordValue(doc.fields.RegionID) }}</li>
+    <li ng-if="doc.fields.Department"><span class="blue">NEW</span><span class="dark-grey"> Подразделение: </span> {{ departmentDict.getRecordValue(doc.fields.Department) }}</li>
+    <li ng-if="doc.fields.section"><span class="blue">NEW</span><span class="dark-grey"> Отдел: </span> {{ sectionDict.getRecordValues(doc.fields.section).join(', ') }}</li>
+    <li ng-if="doc.fields.DepSubmiss"><span class="blue">NEW</span><span class="dark-grey"> Зона отвественности: </span> {{ sectionSiteDict.getRecordValue(doc.fields.DepSubmiss[0] )}}</li>
+    <li ng-if="doc.fields.DtWork"><span class="blue">NEW</span><span class="dark-grey"> Дата приема на работу: </span> {{ doc.fields.DtWork | datetime }}</li>
+    <li ng-if="doc.fields.DtDismiss"><span class="blue">NEW</span><span class="dark-grey"> Дата увольнения: </span> {{ doc.fields.DtDismiss | datetime }}</li>
+    <li ng-if="doc.fields.SectionSite[0]"><span class="blue">NEW</span><span class="dark-grey"> Отдел сайта: </span> {{ sectionSiteDict.getRecordValue(doc.fields.SectionSite[0]) }}</li>
+
+    <li ng-if="doc.fields.ForeignPassport"><span class="blue">NEW</span><span class="dark-grey"> Загрн. паспорт: </span> {{ doc.fields.ForeignPassport }}</li>
+    
+    <li ng-if="doc.fields.Birthday"><span class="blue">NEW</span><span class="dark-grey"> Дата рождения: </span> {{ doc.fields.Birthday | datetime }}</li>
+
+    <li ng-if="doc.fields.ContactWithWorkAddress[0]"><span class="blue">NEW</span><span class="dark-grey"> Рабочий адрес: </span> {{ doc.fields.ContactWithWorkAddress[0] }}</li><!-- || '<span class="dark-grey"> Нет записи</span>'-->
+    <li ng-if="doc.fields.ContactWithWorkFhone[0]"><span class="blue">NEW</span><span class="dark-grey"> Рабочий телефон: </span> {{ doc.fields.ContactWithWorkFhone[0] }}</li>
+    <li ng-if="doc.fields.ContactWithWorkFhone[1]"><span class="blue">NEW</span><span class="dark-grey"> Домашний телефон: </span> {{ doc.fields.ContactWithWorkFhone[1] }}</li>
+    <li ng-if="doc.fields.ContactWithMobileFhone[0]"><span class="blue">NEW</span><span class="dark-grey"> Основной мобильный телефон: </span> {{ doc.fields.ContactWithMobileFhone[0] }}</li>
+    <li ng-if="doc.fields.ContactWithMobileFhone_1[0]"><span class="blue">NEW</span><span class="dark-grey"> Дополнительный мобильный телефон: </span> {{ doc.fields.ContactWithMobileFhone_1[0] }}
+  <span ng-if="doc.fields.ContactWithMobileFhone_1[0].length>0 && doc.fields.ContactWithMobileFhone_2[0].length>0">, </span>
+  {{ doc.fields.ContactWithMobileFhone_2[0] }}
+    </li>
+    <li ng-if="doc.fields.Email"><span class="blue">NEW</span><span class="dark-grey"> E-Mail: <a href="mailto:{{ doc.fields.Email }}" log-click="Дискуссии::Ссылка на <E-mail> сотрудника в дискуссии"><b>{{ doc.fields.Email.split('@')[0] }}</b>{{ (a = doc.fields.Email.split('@')[1]) ? '@'+a : '' }}</a></li>
+    <li ng-if="doc.fields.ICQ"><span class="blue">NEW</span><span class="dark-grey"> ICQ: </span> {{ doc.fields.ICQ }}</li>
+    <li ng-if="doc.fields.Skype"><span class="blue">NEW</span><span class="dark-grey"> Skype: </span> {{ doc.fields.Skype }}</li>
+    <li ng-if="doc.fields.companyName"><span class="blue">NEW</span><span class="dark-grey"> Имя компании: </span> {{companyNameDict.getRecordValue(doc.fields.companyName)}}</li>
+    <li ng-if="doc.fields.Sex"><span class="blue">NEW</span><span class="dark-grey"> Пол: </span> {{ doc.fields.Sex | sex }}</li>
+  </ul>
+</div>

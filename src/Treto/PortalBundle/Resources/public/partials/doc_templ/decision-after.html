@@ -1,0 +1,6 @@
+<div class="document">
+  <ul class="menu">
+    <span ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'"></span>
+  </ul>
+  <div ng-show="$parent.discus.expanded[doc.unid]" ng-init="doc.subject = doc.messageSubject" ng-bind-html="doc.body"></div>
+</div>

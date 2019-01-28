@@ -1,0 +1,20 @@
+<div class="container-fluid martop10">
+  <div class="row">
+    <div class="col-lg-24 bgwhite shadow">
+      <table class="table">
+        <th>Время</th>
+        <th>Тип</th>
+        <th>Время испонения</th>
+        <tr ng-repeat-start="log in logs" ng-click="ext=!ext">
+            <td>{{log.created | datetime}}</td>
+            <td>{{log.type}}</td>
+            <td>{{log.time}}</td>
+          </tr>
+          <tr ng-show="ext">
+            <td colspan="3"><div style="width:1000px; word-wrap:break-word;" ng-bind-html="log.text|nl2br"></div></td>
+          </tr>
+        <tr ng-repeat-end></tr>
+      </table>
+    </div>
+  </div>
+</div>

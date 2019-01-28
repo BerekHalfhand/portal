@@ -1,0 +1,36 @@
+.login .logo {
+    margin: 0 auto;
+    display: block;
+}
+
+.login .control-group {
+    width: 100%;
+}
+
+.login .input {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+}
+
+.login .btn-info, .login .input, .login legend {
+    width: 100%;
+    height: 42px;  
+    text-align:center;
+    font-size: 22px; 
+    font-family: Calibri, Candara, Segoe, "Segoe UI", Optima, Arial, sans-serif;
+    font-weight: 100;
+}
+
+.login legend {
+    font-size: 32px;
+}
+
+.login .form-horizontal {
+    min-width: 260px;
+}
+
+.profile .fieldname {
+  font-weight: bold;
+  color: #2F638E;
+}

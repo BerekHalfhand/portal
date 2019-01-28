@@ -1,0 +1,40 @@
+<title>Сброс пароля</title>
+<div class="vertical-center bgwhite">
+  <div id="login" class="container">
+    <div class="row">
+      <div class="col-lg-4 col-lg-offset-10">
+        <form ng-submit="submit()">
+          <img class="img-responsive center-block" src="/public/images/header/logo.png">
+          <h1 class="text-center">Сброс пароля</h1>
+          <p ng-show="user.username && !pwd.showPwd">ЛОГИН</p>
+          <input type="text" ng-if="!pwd.showPwd" placeholder="Логин" ng-model="user.username"
+                 log-click="Авторизация::Поле <Логин> на странице сброса пароля"/>
+          <input type="text" ng-if="token.showInput" placeholder="Код" ng-model="token.num"
+                 log-click="Авторизация::Поле <Код> на странице сброса пароля"/>
+          <input type="password" ng-if="pwd.showPwd" ng-change="validationInputPwdText(pwd.first)"
+                 placeholder="Новый пароль" ng-model="pwd.first"
+                 log-click="Авторизация::Поле <Новый пароль> на странице сброса пароля"/>
+          <input type="password" ng-if="pwd.showPwd" ng-model="pwd.second"
+                 ng-class="{redunderline:((pwd.first.length > 0) && (pwd.first != pwd.second))}"
+                 placeholder="Подтвердите пароль"
+                 log-click="Авторизация::Поле <Подтвердите пароль> на странице сброса пароля"/>
+          <div class="divider"></div>
+          <div ng-show="pwd.showPwd" ng-switch on="pwd.Strength" style="display: inline-block; margin-bottom: 10px;">
+            <span ng-switch-when="0" ng-show="pwd.first" class="red">Слабый</span>
+            <span ng-switch-when="1" ng-show="pwd.first" class="orange">Средний</span>
+            <span ng-switch-when="2" ng-show="pwd.first" class="green">Сильный</span>
+            <span class="badge touch" ng-click="pwdAlert()" ng-attr-title="{{pwd.Message}}">(?)</span>
+          </div>
+          <input type="submit" value="Сбросить" class="btn btn-info btn-md btn-block"
+                 ng-disabled="!user.username || ((pwd.first.length > 0) && (pwd.first != pwd.second)) || (pwd.first.length > 0 && pwd.Strength != 2)"
+                 log-click="Авторизация::Кнопка <Сбросить> на странице сброса пароля"/>
+        </form>
+      </div>
+      <div class="col-lg-10">
+        <alert ng-show="user.fail" type="danger" >{{ user.fail | localize }}</alert>
+        <alert ng-show="token.showInput" type="warning" >На ваш телефон отправлено SMS-сообщение с кодом подтверждения. Через час код станет недействителен.</alert>
+        <alert ng-show="pwd.success" type="info" >Ваш пароль успешно изменен.</alert>
+      </div>
+    </div>
+  </div>
+</div>

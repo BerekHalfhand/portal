@@ -1,0 +1,52 @@
+<div>
+  <div style="margin: -10px; position: relative;" ng-if="partDoc.security.privileges.read" ng-init="model.reads = discus.removeReadRoles(partDoc.security.privileges.read);discus.initDictionaries(partDoc)">
+    <div class="container-fluid">
+      <div class="row">
+        <div ng-init="showList = true;" class="col-lg-24 col-md-24 col-sm-24 col-xs-24 padtop10 padbot10">
+          <div>
+            <span class="grey">Участники ({{discus.tempParticipants.length + discus.countShareArr(discus.tempShareParticipants)}})</span>
+            <a href class="green"
+               ng-click="showList=!showList;"
+               log-click="Участники::Кнопка <Показать\скрыть> участников в блоке выбора участников">
+              {{showList ? 'скрыть' : 'показать'}}
+            </a>
+            <span class="grey"> | </span>
+            <a href class="green"
+               ng-click="discus.participantsModal.edit = false; discus.participantsModal.show=true;"
+               log-click="Участники::Кнопка <Добавить> участников в блоке выбора участников">
+              добавить
+            </a>
+            <md-checkbox
+                    no-ink-ripple
+                    aria-label="checked"
+                    id="tc_{{$index}}"
+                    ng-click="discus.current.isPublic?(discus.privateWarning() || discus.removeParticipant('all', 'role', partDoc, true)) : discus.addParticipant('all', 'role', partDoc);
+                      contact?(!discus.current.isPublic && contact.AccessOption==3?contact.AccessOption=1:(discus.current.isPublic && contact.AccessOption!=3?contact.AccessOption=3:'' ) ):'';"
+                    ng-checked="!discus.current.isPublic"
+                    style="margin: 5px 0 0 10px;"
+                    log-click="Участники::Галка <Только для участников> участников в блоке выбора участников">
+              Только для участников
+            </md-checkbox>
+          </div>
+          <div ng-show="showList" style="margin-top: 5px;">
+            <span ng-repeat="participant in discus.tempParticipants">
+              <strong>{{$root.users[participant].name}}</strong>
+              <span ng-if="$root.users[participant].WorkGroup"> (<span ng-repeat="group in $root.users[participant].WorkGroup">{{group}}<span ng-hide="$last">, </span></span>)</span>
+              <span ng-hide="$last">, </span>
+            </span>
+            <br/>
+            <span ng-repeat="(domain, values) in discus.tempShareParticipants">
+              <span ng-repeat="login in values">
+                <strong>{{discus.findShareDataByLogins('fullName', domain, login)}}</strong>
+                <span>({{::$root.shareUsers[domain].name}})</span>
+                <span ng-hide="$last">, </span>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div ng-if="discus.displayParticipants" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-group-participants.html'"></div> -->
+    <div class="participanrs-panel-wrapper bottom100" ng-if="discus.participantsModal.show" ng-include="'/bundles/tretoportal/partials/modals/participantsModal.html'"></div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<title>Ссылки</title>
+<div class="container-fluid bgwhite panel mar4">
+  <div class="row">
+    <div class="col-lg-12">
+        <h3>Ссылки</h3>
+        <ul class="list-unstyled">
+          <li ng-show="$root.role('PM') || ($root.user.portalData.section.indexOf('HR отдел') > -1)">
+            <span class="btn-group">
+              <a class="btn" href ui-sref="body.adaptation()"
+                 log-click="Ссылки::Ссылка <Адаптационный лист (сотрудники)> на странице ссылок">
+                 Адаптационный лист (сотрудники)
+              </a>
+              <a href class="btn pull-right" title="Создать сотрудника"
+                 ng-click="showForm('createAdapt')"
+                 log-click="Ссылки::Ссылка <Адаптационный лист (сотрудники)> на странице ссылок">
+                  <span class="green glyphicon glyphicon-plus"></span>
+              </a>
+            </span>
+          </li>
+          <li ng-repeat="link in links.records">
+            <a class="btn" ng-href="{{link.value}}"
+               ng-if="link.value.charAt(0) == '#'"
+               log-click="Ссылки::Ссылка <{{link.key}}> на странице ссылок">
+               {{link.key}}
+            </a>
+            <a class="btn" ng-href="{{link.value}}"
+               ng-if="link.value.charAt(0) !== '#'"
+               target="_blank" rel="noopener noreferrer"
+               log-click="Ссылки::Ссылка <{{link.key}}> на странице ссылок">
+               {{link.key}}
+            </a>
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>

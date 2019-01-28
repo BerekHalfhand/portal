@@ -1,0 +1,37 @@
+<div class="fast-reply-uploader-wrap" ng-init="pasteScreenShot=false;" uib-dropdown>
+    <md-button class="md-ink-ripple icon-btn add-btn" uib-dropdown-toggle
+               ng-disabled="sending" aria-label
+               log-click="Загрузка файлов::Меню <Прикрепить файл> в быстром ответе">
+                <md-icon class="material-icons">add</md-icon>
+    </md-button>
+    <ul class="plus-menu dropdown-menu up-dropdown marbot10 new" uib-dropdown-menu role="menu">
+        <li>
+            <a href ng-init="$root.uploader = uploader;"
+               onclick="document.getElementById('fastReplySelectedFile').click();"
+               title="Прикрепить файл"
+               log-click="Загрузка файлов::Кнопка <Прикрепить файл> в быстром ответе">
+               <span class="material-icons marright15">attachment</span>
+               <span>Прикрепить файл</span>
+            </a>
+        </li>
+        <input id="fastReplySelectedFile" type="file" nv-file-select uploader="uploader" ng-model="model" multiple size="1" style="display: none;">
+        <li>
+            <a href ng-click="pasteScreenShot = !pasteScreenShot"
+               title="Вставить скриншот"
+               log-click="Загрузка файлов::Кнопка <Вставить скриншот> в быстром ответе">
+               <span class="material-icons marright15">insert_photo</span>
+               <span>Вставить скриншот</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div id="imgPasteArea"
+     ng-if="pasteScreenShot"
+     focus-me="true"
+     contenteditable="true"
+     ng-paste="$parent.pasteScreenShot=false; pasteImg($event);"
+     ng-keyup="pasteKeyup($event)"
+     ng-keydown="pasteKeydown($event)"
+     log-click="Загрузка файлов::Зона для присоединения скриншота">
+    <span id="placeholder-span">Для вставки снимка экрана из буфера нажмите CTRL+V</span>
+</div>

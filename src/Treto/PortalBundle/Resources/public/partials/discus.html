@@ -1,0 +1,80 @@
+<title ng-if="!discus.main_doc && discus.current._id != 0">Загрузка...</title>
+<title ng-if="discus.main_doc">{{::(discus.main_doc.subject || discus.main_doc.ContactName)}}</title>
+<div id="discus" scroll-on-discus-links>
+  <div ng-if="!discus.progress && discus.private" class='access-denied text-center'>
+    <img src="/public/images/access_denied.png"/>
+  </div>
+  <div class="bgwhite discus-wrap" ng-if='discus.progress || (!discus.progress && discus.main_doc)'>
+    <div ng-if="discus.progress" class="padtop20 padbot20 text-center">
+      <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+    </div>
+
+    <div ng-if="!discus.progress && discus.main_doc" ng-class="{'theme-highlight': discus.main_doc.form == 'formTask'}" class="msg">
+      <div class="discus-floating-title-block-wrap"><div ng-init="doc=discus.main_doc; discus.joinDiscus()" floating-menu class="discus-floating-title-block" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/subj-menu.html'"></div>
+    </div>
+
+    <div highlighting-quote id="{{discus.main_doc.unid}}" ng-click="discus.removeNewPostLabel(doc);" class="cursor-initial main-doc">
+      <document doc="discus.main_doc"></document>
+      <div ng-init="discus.lastComment = doc; doc._meta.lastFullComment = doc;"></div>
+    </div>
+
+  </div>
+
+  <div ng-repeat="doc in discus.comments | orderBy:'created'" ng-cloak style="margin-top: 0;">
+    <div class="divider-text" ng-if="discus.archived[doc.unid].count>0" style="position: relative;">
+      <md-progress-linear ng-show="discus.archived[doc.unid].fetchingProgress > 0" md-mode="determinate" value="{{discus.archived[doc.unid].fetchingProgress}}" style="position: absolute;"></md-progress-linear>
+
+      <span ng-hide="discus.archived[doc.unid].fetchingProgress > 0" ng-click="discus.loadArchive(doc.unid);" class="btn" title="Показать архив сообщений" style="z-index: 0" log-click="Дискуссии::Кнопка <Показать архив сообщений> в дискуссии">В архиве: {{discus.archived[doc.unid]['count']}}</span>
+      <span ng-show="discus.archived[doc.unid].fetchingProgress > 0">Загрузка...</span>
+    </div>
+      <div highlighting-quote from-socket="{{doc.fromSocket}}" 
+         id="{{doc.unid}}" class="msg cursor-initial" ng-click="discus.removeNewPostLabel(doc);"
+         ng-init="previousComment = discus.lastComment;
+                  doc._meta.timeSinceLastComment = discus.tretoDateTime.iso8601.toDateTime(doc.created)
+                                                 - discus.tretoDateTime.iso8601.toDateTime(previousComment.created);
+                  doc._meta.sameAuthor = previousComment.authorLogin == doc.authorLogin &&
+                                         discus.main_doc.ToSite !== '1';
+                  doc._meta.lastFullComment = doc.form !== 'message' ||  
+                                              previousComment._meta.lastFullComment.form !== 'message' ||
+                                              !doc._meta.sameAuthor ||
+                                              doc._meta.timeSinceLastComment > 59999 ?
+                                                doc : previousComment._meta.lastFullComment;
+                  discus.lastComment = doc;"
+         ng-class="{'message-highlight': ($root.$state.params.id == doc.unid || $root.$state.params.id == doc._id),
+                    'theme-highlight': (doc.form!='message' && doc.form!='messagebb' && doc.form!='subTotal'),
+                    'light-message': doc._meta.lastFullComment.unid !== doc.unid && !doc.shareAuthorLogin,
+                    'full-message': doc._meta.lastFullComment.unid === doc.unid || doc.shareAuthorLogin}"
+         ng-show="doc._meta.lastFullComment.unid === doc.unid ||
+                  discus.expanded[doc._meta.lastFullComment.unid] === true || 
+                  discus.expanded[doc._meta.lastFullComment.unid] === 'attached' ||
+                  discus.expanded[doc._meta.lastFullComment.unid] === 'shown'">
+        <refresher condition="doc.modified">
+          <div ng-if="::(discus.main_doc.ToSite === '1')">
+            <!--<div class="divider-full"></div>-->
+            <div class="bold red-db4437 padtop10">Внимание! Публичный блог!</div>
+          </div>
+          <div ng-if="::(discus.main_doc.unid != doc.unid) && !discus.progress">
+            <!--<div class="divider-full"></div>-->
+            <div ng-if="doc.form!='message'&&doc.form!='messagebb'&&doc.form!='subTotal'">
+              <div ng-include="'/bundles/tretoportal/partials/doc_templ/menu/subj-menu.html'"></div>
+              <!--<div class="divider"></div>-->
+            </div>
+            <document doc="::doc"></document>
+          </div>
+        </refresher>
+      </div>
+    </div>
+  </div>
+  <!--<div class="divider" ng-if="discus.expandedLimit >= discus.commentsCount && discus.main_doc.form != 'formTask'"></div>-->
+  <fast-reply ng-if="!discus.progress && discus.main_doc && !discus.private"></fast-reply>
+</div>
+<!--<div id="addNewMessage" ng-click="discus.quote='';discus.showEditForm('message')" title="Добавить комментарий">+</div>-->
+<div ng-if="discus.selectedEditForm=='formTask'" ng-include="'/bundles/tretoportal/partials/modals/editTask.html'"></div>
+<div ng-if="discus.selectedEditForm=='formProcess'" ng-include="'/bundles/tretoportal/partials/modals/editFormProcess.html'"></div>
+<div ng-if="discus.selectedEditForm=='subTotal'" ng-include="'/bundles/tretoportal/partials/modals/createSubTotal.html'"></div>
+<div ng-if="discus.selectedEditForm=='message'||discus.selectedEditForm=='messagebb'"
+ng-include="'/bundles/tretoportal/partials/modals/editMessage.html'"></div>
+<div ng-if="discus.selectedEditForm=='Contact'&&discus.main_doc.DocumentType=='Person'" ng-include="'/bundles/tretoportal/partials/modals/editFormPerson.html'"></div>
+<div ng-if="discus.selectedEditForm=='Contact'&&discus.main_doc.DocumentType=='Organization'" ng-include="'/bundles/tretoportal/partials/modals/editFormOrganization.html'"></div>
+
+<!-- <div ng-if="discus.displayParticipants" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-group-participants.html'"></div> -->

@@ -1,0 +1,36 @@
+<div class="styledModal">
+  <div class="modal-header">
+    <span class="text-s16">
+      Связать с темой
+    </span>
+  </div>
+  <div class="modal-body">
+    <div>
+      <input placeholder="Скопируйте сюда ссылку темы к которой необходимо привязать"
+             ng-model="link"
+             log-click="Связать с темой::Поле <Связать с темой> в окне привязки к теме">
+      <div class="required-warning" style="width: 300px" ng-click="error = false" ng-show="error">
+        <span>{{error}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer no-border pad20">
+    <div class="row">
+      <div class="col-lg-24">
+        <a href class="blue"
+           ng-click="ok();"
+           style="display: inline-block; font-size: 14px;"
+           log-click="Связать с темой::Кнопка <Подтвердить> в окне привязки к теме">
+           ПОДТВЕРДИТЬ
+        </a>
+        <a href class="grey"
+           ng-click="cancel();"
+           style="display: inline-block; font-size: 14px; padding-left: 30px;"
+           log-click="Связать с темой::Кнопка <Отменить> в окне привязки к теме">
+           ОТМЕНИТЬ
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,80 @@
+//для удаления индекса
+db.Portal.dropIndex('ft_idx')
+
+db.Portal.dropIndex('ft_idx_ct')
+db.Contacts.ensureIndex({comment:"text",ContactName:"text", FullName:"text", Group: "text"},{default_language:'russian',name:'ft_idx_ct'})
+
+//для получения списка
+db.Portal.getIndices()
+
+//для создания текстового индекса
+db.Portal.createIndex({subject:"text", TaskBody:"text", body:"text"},{weights:{subject: 2, TaskBody:1, body:1},default_language:'russian',name:'ft_idx_pt'})
+db.Contacts.createIndex({comment:"text",ContactName:"text", FullName:"text", OtherName:"text", EmailValues:"text"}, {weights:{EmailValues:10, FullName:2, ContactName:2, comment:1}, default_language:'ru',name:'ft_idx_ct'})
+
+
+db.Portal.createIndex({status:1,section:1},{name:'status_idx_pt'})
+db.Portal.createIndex( {"created" : 1 } )
+db.Portal.createIndex( {"form" : 1 } )
+db.Files.createIndex( {"hash" : 1 } )
+db.Portal.createIndex( {"form" : 1, "DocType" : 1 } )
+db.Portal.createIndex( {"form" : 1, "DtDismiss" : 1 } )
+db.Portal.createIndex( {"form" : 1, "authorLogin" : 1 } )
+db.Portal.createIndex( {"form" : 1, "Login" : 1 } )
+db.Portal.createIndex( {"form" : 1, "FullName" : 1 } )
+db.Portal.createIndex( {"form" : 1, "modified" : 1 } )
+db.Portal.createIndex( {"modified" : 1, "form" : 1, "countMess" : 1 } )
+db.Portal.createIndex( {"modified" : 1, "authorLogin" : 1, "form" : 1, "countMess" : 1 } )
+db.Portal.createIndex( {"form" : 1, "Year" : 1, "Month" : 1, "FullName" : 1 } )
+db.Portal.createIndex( {"Login" : 1, "FullName" : 1, "form" : 1 } )
+db.Portal.createIndex( {"parentUnid" : 1 } )
+db.Portal.createIndex( {"parentUnid" : 1 , "subjectID": 1, "taskID": 1} )
+db.Portal.createIndex( {"parentUnid" : 1 , created : 1} )
+db.Portal.createIndex( {"subjectID" : 1 , created : 1} )
+db.Portal.createIndex( {"parentUnid" : 1 , AttachedDoc : 1} )
+db.Portal.createIndex( {"subjectID" : 1 , AttachedDoc : 1} )
+db.Portal.createIndex( {"form" : 1, "status" : 1, "DocType" : 1, "taskDateCompleted" : 1, "taskDateRealEnd" : 1, "taskDateRealEndH" : 1, "taskDateRealEndM" : 1 } )
+db.Portal.createIndex( {"form" : 1, "status" : 1, "subjectID": 1 })
+db.Portal.createIndex( {"form" : 1, "status" : 1, "parentUnid": 1 })
+
+db.Portal.createIndex( {"form" : 1, "dateLastMess" : 1, "modified": 1, "authorLogin": 1, "countMess": 1 })
+db.Portal.createIndex( {"form" : 1, "dateLastMess" : 1, "authorLogin": 1, "countMess": 1 })
+db.Portal.createIndex( {"dateLastMess" : 1, "modified": 1, "authorLogin": 1, "countMess": 1 })
+
+db.Portal.createIndex( {"form" : 1, "status" : 1, "DocType": 1, "taskDateCompleted": 1, "created": 1, "taskPerformerLat": 1, })
+
+db.Portal.createIndex( {"LikeNotDate": 1 })
+db.Portal.createIndex( {"Tags.name" : 1, "created" : 1 } )
+
+db.Portal.createIndex( {"unid" : 1 } )
+db.Portal.createIndex( {"SubID" : 1 } )
+db.Portal.createIndex( {"taskID": 1,  "typeDoc": 1, "created" : 1} )
+db.Portal.createIndex( {"linkedUNID": 1} )
+db.Portal.createIndex( {"form": 1, "CONVERTED": 1} )
+db.Portal.createIndex( {"parentID" : 1, "status" : 1, "form" : 1, "security.privileges.read.role" : 1, "C1" : 1, "created" : 1} )
+db.Portal.createIndex( {"parentID" : 1, "status" : 1, "form" : 1, "C1" : 1, "created" : 1, "security.privileges.read" : 1} )
+db.Portal.createIndex( {"parentID" : 1, "status" : 1, "form" : 1, "security.privileges.read.role" : 1, "type": 1, "created" : 1} )
+db.Portal.createIndex( {"parentID" : 1, "status" : 1, "form" : 1, "type": 1, "created" : 1, "security.privileges.read" : 1} )
+db.Contacts.createIndex( {"linkedUNID": 1} )
+db.Contacts.createIndex( {"SubID" : 1 } )
+db.Contacts.createIndex( {"OrganizationID" : 1 } )
+db.TaskHistory.createIndex( {"taskId" : 1 , "created": 1} )
+db.TaskHistory.createIndex( {"taskUnid" : 1 , "created": 1} )
+
+db.Portal.createIndex({"LikeUserList":1, "authorLogin":1, "AuthorFullNotesName":1})
+db.Portal.createIndex({"LikeNotUserList":1, "authorLogin":1, "AuthorFullNotesName":1})
+
+db.ChatMessage.createIndex({"type": 1, "date": 1, "to.id":1, "from.id":1});
+db.ChatMessage.createIndex({"date": 1, "to.id":1, "from.id":1});
+db.ChatMessage.createIndex({"type": 1, "date": 1, "to":1, "from":1});
+db.ChatMessage.createIndex({"date": 1, "to":1, "from":1});
+
+db.User.createIndex({"usernameCanonical": 1})
+db.User.createIndex({"emailCanonical": 1})
+db.Tag.createIndex({"name": 1})
+db.Tag.createIndex({"usedBy": 1})
+db.Tag.createIndex({"name": 1, "count": 1})
+db.Tag.createIndex({"name": 1, "usedBy": 1, "count": 1})
+
+db.Dictionaries.createIndex({"type" : 1})
+
+db.MainStat.createIndex({"type":1, "subType":1, "daysCount":1})

@@ -1,0 +1,206 @@
+<section class="subject-menu"
+         ng-init="show = {}; show.Tags = false; show.Linked = (doc.isLinked == 1 || doc.linkedUNID.length > 0);"
+         ng-class="{
+           'theme-top-menu': discus.main_doc.unid === doc.unid
+         }">
+  <div class="title-and-participants-wrap">
+    <div class="title-wrap">
+      <i class="red-db4437 material-icons"
+         ng-if="!discus.isPublic&&discus.main_doc.unid == doc.unid"
+         title="Обсуждение помечено приватным. Участвовать в нём могут только участники."
+         style="vertical-align:bottom;cursor:default;">
+        lock
+      </i>
+      <span ng-if="doc.form!='Contact'"
+            class="doc-subject"
+            ng-switch on="doc.form"
+            title="{{::(doc.subject || doc.subjVoting)}}">
+        <span quote-selection
+              ng-switch-when="formAdapt"
+              ng-class="discus.main_doc.unid===doc.unid?'black':'blue'"
+              ng-click="discus.main_doc.unid!==doc.unid?$root.$state.go('body.discus', { id: doc.unid, type: ''}):''"
+              log-click="Дискуссии::Ссылка на адаптационный лист в заголовке в сообщения">
+          Адаптационный лист: {{::doc.subject}}
+        </span>
+        <span quote-selection
+              ng-switch-when="formTask"
+              ng-class="discus.main_doc.unid===doc.unid?'black':((doc.taskPerformerLat.indexOf($root.user.username)==-1&&doc.taskPerformerLat.indexOf($root.user.portalData.FullName)==-1)?'dark-blue':'green')"
+              ng-click="discus.main_doc.unid!==doc.unid?$root.$state.go('body.discus', { id: doc.unid, type: ''}):''"
+              log-click="Дискуссии::Ссылка на просьбу в заголовке в сообщения">
+            Просьба: {{::doc.subject}}
+        </span>
+        <span quote-selection
+              ng-switch-when="formVoting"
+              ng-class="discus.main_doc.unid===doc.unid?'black':'light-green'"
+              ng-click="discus.main_doc.unid!==doc.unid?$root.$state.go('body.discus', { id: doc.unid, type: ''}):''"
+              log-click="Дискуссии::Ссылка на опрос в заголовке в сообщения">
+          <span ng-show="doc.PeriodPoll">Опрос: </span>
+          <span ng-show="!doc.PeriodPoll">Голосование: </span>
+          {{::(doc.subject || doc.subjVoting)}}<span ng-if="doc._meta.voting.closeDate"> (до {{::doc._meta.voting.closeDate | date}})</span>
+        </span>
+        <span quote-selection
+              ng-switch-when="formProcess"
+              ng-class="discus.main_doc.unid===doc.unid?'black':'dark-blue'"
+              ng-click="discus.main_doc.unid!==doc.unid?$root.$state.go('body.discus', { id: doc.unid, type: ''}):''"
+              log-click="Дискуссии::Ссылка на тему в заголовке в сообщения">
+          {{::((doc.type == 'Blog') ? ('Блог: '+doc.subject) : doc.subject)}}
+        </span>
+        <span quote-selection
+              ng-switch-default
+              title="{{::doc.subject}}"
+              ng-class="{'black': discus.main_doc.unid===doc.unid}"
+              ng-click="discus.main_doc.unid!==doc.unid?$root.$state.go('body.discus', { id: doc.unid, type: ''}):''"
+              log-click="Дискуссии::Ссылка на тему в заголовке в сообщения">
+          {{::doc.subject}}
+        </span>
+      </span>
+    </div>
+
+    <div class="contact-tabs-wrap"
+          ng-if="doc.form == 'Contact'"
+          ng-init="$parent.$parent.tab.name = 'name'">
+      <a href class="contact-tab"
+         ng-class="{'active':$parent.$parent.tab.name=='name'}"
+         ng-click="$parent.$parent.tab.name='name'"
+         log-click="Дискуссии::Вкладка с основной информацией о контакте <-имя контакта-> в меню контакта в дисскуссии">
+        {{::(doc.ContactName || doc.OtherName | defaultValue:doc.FullName || doc.subject)}}
+      </a>
+      <a href class="contact-tab"
+         ng-class="{'active':$parent.$parent.tab.name=='bank'}"
+         ng-click="$parent.$parent.tab.name='bank'"
+         ng-hide="doc.DocumentType=='Person'"
+         log-click="Дискуссии::Вкладка <Банковские реквизиты> в меню контакта в дисскуссии">
+        Банковские реквизиты
+      </a>
+      <a href class="contact-tab"
+         ng-class="{'active':$parent.$parent.tab.name=='conditions'}"
+         ng-click="$parent.$parent.tab.name='conditions'"
+         ng-hide="doc.DocumentType=='Person'"
+         log-click="Дискуссии::Вкладка <Условия работы> в меню контакта в дисскуссии">
+        Условия работы
+      </a>
+    </div>
+
+    <div ng-if="discus.main_doc.unid === doc.unid"
+         class="participants-wrap">
+      <div ng-init="discus.initDictionaries(); discus.participantsModal.showDsk=false; discus.include.shownThreadParticipants.refresh();">
+        <span class="text-s11 grey_a2a3a2">
+          Участники({{discus.include.shownThreadParticipants.subscribed.length+discus.include.shownThreadParticipants.shareSubscribed.length}}):
+          <a href class="blue"
+             ng-click="discus.show.Parts=!discus.show.Parts"
+             log-click="Дискуссии::Кнопка <Показать\скрыть участников> в списке участников дискуссии">
+            {{discus.show.Parts?'Скрыть':'Показать'}}
+          </a> |
+          <a href class="blue"
+             ng-click="discus.participantsModal.edit = true; discus.participantsModal.showDsk = true;"
+             log-click="Дискуссии::Кнопка <Добавить участников> в списке участников дискуссии">
+            Добавить
+          </a>
+        </span>
+        <div class="participanrs-panel-wrapper" ng-if="discus.participantsModal.showDsk"
+             ng-include="'/bundles/tretoportal/partials/modals/participantsModal.html'"></div>
+      </div>
+      <div ng-if="discus.show.Parts" class='discus_users'>
+        <span ng-if="discus.main_doc"
+              ng-init="doc = discus.main_doc;"
+              ng-include="'/bundles/tretoportal/partials/doc_templ/common/shown-thread-participants.html'"></span>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="discus.main_doc.unid == doc.unid"
+      class="fast-menu"
+      ng-init="doc.linked = discus.loadLinks(doc);">
+    <div class="text-meta-wrap">
+      <div ng-show="doc && doc.form == 'Contact' && doc.form == 'Contact' && doc.DocumentType == 'Person' && doc.Dismissed == '1'">
+        <span class="label label-danger" title="Сотрудник уволен">уволен</span>
+      </div>
+      <div ng-show="doc && doc.status == 'deleted' || doc.Deleted">
+        <span class="label label-danger" title="Документ поставлен в очередь на удаление">подлежит удалению</span>
+      </div>
+      <div ng-if="doc.form=='Contact'">{{::(doc.AuthorRus || discus.profile.translateName(doc.authorLogin) || doc.Author)}}</div>
+      <div ng-if="doc.form=='Contact'">
+        <span class="new-post"
+              ng-if="discus.isNew(doc) && doc.authorLogin != $root.user.username"
+              ng-init="discus.firstNew(doc.unid)">NEW</span>
+        <span>{{::doc.created | datetime}}
+          <span ng-if="doc.dateModified && (doc.dateModified | datetime) != (doc.created | datetime)">
+            (ред. {{::doc.dateModified | datetime}})
+          </span>
+        </span>
+      </div>
+    </div>
+    <div class="buttons-wrap">
+      <div ng-if="discus.main_doc.ToSite == '1'"
+          uib-dropdown style="position:relative; display: inline-block; margin-left: 10px;">
+        <md-button class="md-ink-ripple dropdown-toggle white locale-btn"
+                   uib-dropdown-toggle
+                   title="Показать все комментарии"
+                   log-click="Дискуссии::Меню <Показать комментарии все\для локали> в меню в дискуссии">
+          {{currentLocale?currentLocale:'Показать все'}}
+          <span class="marleft5 caret"></span>
+        </md-button>
+        <ul class="dropdown-menu new" role="menu">
+          <div title="Показать все комментарии">
+            <a ng-click="selectLocale('all')" class="text-s11 black">Показать все</a></div>
+          <div ng-repeat="record in locale.records" title="{{record.value}}">
+            <a ng-click="selectLocale(record.value)" class="text-s11 black">{{record.key}}</a>
+          </div>
+        </ul>
+      </div>
+      <div ng-if="discus.comments.length > 5">
+        <md-button ng-click="discus.switchExpanded(); readMoreState = false; expandTitle = discus.expanded.all ? 'Свернуть всё' : 'Развернуть всё';"
+                   ng-init="readMoreState = true; expandTitle = 'Развернуть <читать далее>'"
+                   class="md-icon-button md-ink-ripple discus-icon-btn collapse-all-comments-btn" ng-attr-title="{{expandTitle}}"
+                   ng-class="{active:!discus.expanded.all}"
+                   log-click="Дискуссии::Кнопка-стрелка <Свернуть\развернуть все сообщения> в дискуссии">
+          <md-icon class="material-icons md-36"
+                   ng-class="{'collapse-triangle-right':(!discus.expanded.all), 'read-more-state':readMoreState}">
+            arrow_drop_down
+          </md-icon>
+        </md-button>
+      </div>
+      <div ng-if="doc.linked && (doc.linked.Parent.unid !== doc.unid || doc.linked.ChildrenCount > 0)"
+           ng-include="'/bundles/tretoportal/partials/doc_templ/menu/linked-doc-dropdown.html'"></div>
+      <div ng-include="'/bundles/tretoportal/partials/doc_templ/menu/tags-dropdown.html'"
+           ng-if="doc.DocumentTypeGroup !== 'Contact'"
+           ng-init="doc.Tags.length>0 ? show.Tags = true : show.Tags = false;"></div>
+      <div ng-init="isActive = isFavorite(discus.main_doc.unid)">
+        <md-button ng-click="isActive=!isActive;!isFavorite(discus.main_doc.unid)?add_favorites(discus.main_doc.unid):del_favorites(discus.main_doc.unid);"
+                   class="md-icon-button md-ink-ripple discus-icon-btn"
+                   ng-attr-title="{{isActive?'Исключить из избранного':'Добавить в избранное'}}"
+                   ng-class="{'active':isActive}"
+                   log-click="Дискуссии::Кнопка <Добавить\убрать из избранного> в дискуссии">
+          <md-icon class="material-icons">star</md-icon>
+        </md-button>
+      </div>
+
+      <div>
+        <md-button ng-click="discus.isParticipant()?del_parts(discus.main_doc):add_parts(discus.main_doc);"
+                   class="md-icon-button md-ink-ripple discus-icon-btn"
+                   ng-attr-title="{{!discus.isParticipant()?'Подписаться':'Не уведомлять'}}"
+                   log-click="Дискуссии::Кнопка <Подписаться\Не уведомлять> в дискуссии">
+          <md-icon class="material-icons">{{discus.isParticipant()?'visibility_off':'visibility'}}</md-icon>
+        </md-button>
+      </div>
+
+      <div ng-if="doc.form==='Contact'"
+           ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"
+           id="{{doc.unid}}_dropmenu-wrap" class="dropmenu-wrap form-contact"></div>
+    </div>
+  </div>
+  <!--<article class="row" ng-if="show.Tags">
+    <div class="col-lg-24">
+      <div ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+    </div>
+  </article>-->
+
+  <!-- Temporarely disabled
+  <md-button class="blue md-raised" title="К непрочитанным постам" aria-label="К непрочитанным постам"
+             id="to-new-posts-up"
+             ng-click="discus.scrollToNewPost(true);"
+             ng-if="discus.main_doc.unid===doc.unid && discus._meta.hasNewPostsUpViewport">
+      <md-icon class="material-icon">arrow_upward</md-icon>
+      К непрочитанным постам
+  </md-button>-->
+</section>

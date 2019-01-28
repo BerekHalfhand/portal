@@ -1,0 +1,186 @@
+<nav class="left-head-menu">
+  <table id="bot-menu">
+  <tr>
+    <td uib-dropdown is-open="menus.links.isopen" ng-mouseover="cancelHideMenu('links');menus.links.isopen=true" ng-mouseleave="hideMenuTimeout(100, 'links')"
+    ng-class="{'selected-menu-item':($root.$state.current.name == 'body.links')}" style="width: 14%;">
+      <a href ui-sref="body.links"
+         log-click="Главное меню::Ссылка <Ссылки> в главном меню">
+        Ссылки <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-show="$root.role('PM') || ($root.user.portalData.section.indexOf('HR отдел') > -1)">
+          <a href ui-sref="body.adaptation()"
+             log-click="Главное меню::Ссылка <Ссылки: Адаптационный лист (сотрудники)> в главном меню">Адаптационный лист (сотрудники)</a>
+        </li>
+        <li ng-repeat="link in links.records">
+          <a ng-href="{{link.value}}"
+             ng-if="link.value.charAt(0) == '#'"
+             log-click="Главное меню::Ссылка <Ссылки: {{link.value}}> в главном меню">
+            {{link.key}}
+          </a>
+          <a ng-href="{{link.value}}"
+             ng-if="link.value.charAt(0) !== '#'"
+             target="_blank"
+             rel="noopener noreferrer"
+             log-click="Главное меню::Ссылка <Ссылки: {{link.value}}> в главном меню">
+            {{link.key}}
+          </a>
+        </li>
+      </ul>
+    </td>
+
+    <!--<li class="todo"><a href>КАЛЕНДАРЬ <span class="caret"></span></a></li>-->
+    <td ng-class="{'selected-menu-item':($root.$state.current.name == 'body.contacts')}" style="width: 16%;">
+      <a href ui-sref="body.contacts"
+         log-click="Главное меню::Ссылка <Контакты> в главном меню">Контакты</a>
+    </td>
+
+    <td uib-dropdown is-open="menus.tags.isopen"
+    ng-mouseover="cancelHideMenu('tags');menus.tags.isopen=true;getMyTags();menus.tags.busy=true;" ng-mouseleave="hideMenuTimeout(100, 'tags'); menus.tags.busy=false"
+    ng-class="{'selected-menu-item':($root.$state.current.name == 'body.tags')}" style="width: 14%;">
+      <a ui-sref="body.tags"
+         log-click="Главное меню::Ссылка <Теги> в главном меню">
+        Теги <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu" style="padding: 0px; margin: 0px;">
+        <li style="background: #F5F5F5; padding: 10px 20px; font-size: 12px; display: block;">
+          <b>Мои популярные</b>
+        </li>
+        <li ng-repeat="tag in myTags"
+            ng-click="$state.go('body.tags', {selectedTag: tag.name})"
+            style="padding: 0 10px;"
+            log-click="Главное меню::Ссылка <Теги: {{tag.name}}> в главном меню">
+          <a href class="black_33">{{tag.name}}</a>
+        </li>
+        <li ng-click="$state.go('body.tags', {})" style="padding: 0 10px;">
+          <a href ui-sref="body.tags" class="black_33"
+             log-click="Главное меню::Ссылка <Теги: ещё> в главном меню">...</a>
+        </li>
+      </ul>
+    </td>
+
+    <!-- <td>
+      <a href ui-sref="body.calendar()">
+        Календарь
+      </a>
+    </td> -->
+
+    <td uib-dropdown is-open="menus.tasks.isopen" ng-mouseover="cancelHideMenu('tasks');menus.tasks.isopen=true" ng-mouseleave="hideMenuTimeout(100, 'tasks')"
+    ng-class="{'selected-menu-item':($root.$state.current.name == 'body.tasks')}" style="width: 16%;">
+      <a href ui-sref="body.taskSearch(taskSearchLinks.myTasks)"
+         log-click="Главное меню::Ссылка <Просьбы> в главном меню">
+        Просьбы <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu drop_task" role="menu">
+        <li class="text-s12" style="line-height: 1.6;">
+          <ul class="pad0force" style="list-style: none;">
+            <li class="drop_task_title">
+              <a href ui-sref="body.taskSearch(taskSearchLinks.inTasksAll)"
+                 log-click="Главное меню::Ссылка <Просьбы: Входящие> в главном меню">
+                Входящие:
+              </a>
+            </li>
+            <li>
+              <a href ui-sref="body.taskSearch(taskSearchLinks.inTasksCompleted)"
+                 log-click="Главное меню::Ссылка <Просьбы: Входящие: Выполненные> в главном меню">
+                Выполненные
+              </a>
+            </li>
+            <li>
+              <a href ui-sref="body.taskSearch(taskSearchLinks.inTasksIncomplete)"
+                 log-click="Главное меню::Ссылка <Просьбы: Входящие: Не выполненные> в главном меню">
+                Не выполненные
+              </a>
+            </li>
+          </ul>
+          <ul class="pad0force" style="list-style: none;">
+            <li class="drop_task_title">
+              <a href ui-sref="body.taskSearch(taskSearchLinks.outTasksAll)"
+                 log-click="Главное меню::Ссылка <Просьбы: Исходящие> в главном меню">
+                Исходящие:
+              </a>
+            </li>
+            <li>
+              <a href ui-sref="body.taskSearch(taskSearchLinks.outTasksCompleted)"
+                 log-click="Главное меню::Ссылка <Просьбы: Исходящие: Выполненные> в главном меню">
+                Выполненные
+              </a>
+            </li>
+            <li>
+              <a href ui-sref="body.taskSearch(taskSearchLinks.outTasksIncomplete)"
+                 log-click="Главное меню::Ссылка <Просьбы: Исходящие: Не выполненные> в главном меню">
+                Не выполненные
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </td>
+
+    <td uib-dropdown is-open="menus.favorites.isopen" class="favorite-menu"
+    ng-mouseover="cancelHideMenu('favorites');menus.favorites.isopen=true;getFavorites();menus.favorites.busy=true;" ng-mouseleave="hideMenuTimeout(100, 'favorites'); menus.favorites.busy=false"
+    ng-class="{'selected-menu-item':($root.$state.current.name == 'body.favorites')}" style="width: 20%;">
+      <a href ui-sref="body.favorites"
+         log-click="Главное меню::Ссылка <Избранное> в главном меню">
+        Избранное <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="fav in favs | limitTo:20" class="nowrap" ng-mouseenter="removeVis=true" ng-mouseleave="removeVis=false">
+          <a href ui-sref="body.discus({id: fav.unid, type: fav.form=='Contact'?'contact':''})"
+             log-click="Главное меню::Ссылка на документ из меню <Избранное> в главном меню">
+            <span ng-if="fav.form=='Contact'">{{fav.DocumentType=='Person' ? ('Персона: ' + fav.ContactName) : ('Организация: ' + fav.ContactName) }}</span>
+            <span ng-if="fav.form=='formProcess'">{{fav.subject}}</span>
+            <span ng-if="fav.form=='formTask'">Просьба: {{fav.subject}}</span>
+            <span ng-if="fav.form=='formVoting'">Голосовалка: {{fav.subjVoting}}</span>
+          </a>
+          <i ng-class="{opac1:removeVis, opac0:!removeVis}"
+             ng-click="delFavorites(fav); $event.stopPropagation();"
+             class="material-icons text-s17 va-middle blue touch"
+             title="Удалить"
+             log-click="Главное меню::Кнопка <Удалить из избранного> в меню <Избранное> в главном меню">
+            close
+          </i>
+        </li>
+        <li>
+          <a href ui-sref="body.favorites" class="black_33"
+             log-click="Главное меню::Ссылка <Избранное: ещё> в главном меню">...</a>
+        </li>
+      </ul>
+    </td>
+
+    <!--<li class="todo"><a href>ЗАМЕТКИ <span class="caret"></span></a></li>-->
+
+    <td uib-dropdown is-open="menus.history.isopen"
+    ng-mouseover="cancelHideMenu('history');menus.history.isopen=true;getHistory();menus.history.busy=true;" ng-mouseleave="hideMenuTimeout(100, 'history');menus.history.busy=false"
+    ng-class="{'selected-menu-item':($root.$state.current.name == 'body.logList')}" style="width: 20%;">
+      <a href ui-sref="body.logList"
+         log-click="Главное меню::Ссылка <Посещения> в главном меню">
+        Посещения <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu left-dropdown" role="menu">
+        <li ng-repeat="logItem in history">
+          <!--<a href="#/discus/{{logItem.stateParams.id?logItem.stateParams.id:logItem.stateParams.unid}}/{{logItem.stateParams.type}}"  ng-click="$state.go(logItem.state, logItem.stateParams)">{{logItem.label || 'Без темы'}}</a>-->
+          <a ng-if="logItem.state == 'body.discus'"
+             href ui-sref="body.discus({ id: logItem.stateParams.id, type: logItem.stateParams.type})"
+             class="black_33"
+             log-click="Главное меню::Ссылка на документ в меню <Посещения> в главном меню">
+            {{logItem.label || 'Без темы'}}
+          </a>
+          <a ng-if="logItem.state == 'body.profileDisplay'"
+             href ui-sref="body.profileDisplay({ id: logItem.stateParams.id, type: ''})"
+             class="black_33"
+             log-click="Главное меню::Ссылка на документ в меню <Посещения> в главном меню">
+            {{logItem.label || 'Без темы'}}
+          </a>
+        </li>
+        <li>
+          <a href ui-sref="body.logList" class="black_33"
+             log-click="Главное меню::Ссылка <Посещения: ещё> в главном меню">...</a>
+        </li>
+      </ul>
+    </td>
+  </tr>
+  </table>
+</nav>
+
+<head-search ng-init="$root.show.Search = false;" ng-class="{'pull-right': windowWidth <= 640}"></head-search>

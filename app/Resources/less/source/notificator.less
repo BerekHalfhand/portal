@@ -1,0 +1,610 @@
+body.notificator {
+  background: @notificator-bg-color;
+}
+
+.notif-icon {
+  color: @notification-icon-color;
+
+  &.urgent {
+    color: @notification-urgent-icon-color;
+
+    & + md-checkbox.notif-check {
+      display: none !important;
+    }
+  }
+}
+
+#notificator {
+  color: @font-color;
+
+  @media all and (min-width: 720px) {
+    padding: 20px 30px 25px;
+  }
+
+  @media all and (max-width: 719px) {
+    padding: 25px 15px;
+  }
+
+  h1 {
+    color: @notificator-h1-color;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .notifications-wrap {
+    padding-top: 2px;
+
+    h5.title {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 21px;
+      margin: 10px 20px;
+    }
+
+    .notifications:first-child {
+      margin-top: 10px;
+    }
+  }
+
+  .themes-counter {
+    &::before {
+      content: "(";
+    }
+
+    &::after {
+      content: ")";
+    }
+  }
+
+  .empty-notification {
+    text-align: center;
+
+    @media all and (min-height: 480px) {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      margin-top: -85px;
+      margin-left: -119px;
+    }
+    
+    @media all and (max-height: 479px) {
+      padding-top: 50px;
+    }
+
+    .empty-notification-icon-wrap {
+      .circle;
+      height: 150px;
+      width: 150px;
+      background-color: @grey_f3;
+      box-shadow: 0 4px 14px 0 fade(@black, 25%);
+      position: relative;
+      display: flex;
+      margin: 0 auto;
+
+      &::before {
+        .rotate(-45deg);
+        transform-origin: right top;
+        background: linear-gradient(top, @light-grey, transparent);
+        content: "";
+        display: block;
+        position: absolute;
+        right: 50%;
+        top: 50%;
+        height: 76px;
+        width: 53px;
+        margin: -27px -3px 0px 0;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        right: 50%;
+        bottom: 50%;
+        height: 38px;
+        width: 58px;
+        background: @grey_f3;
+        margin: 0 -13px -21px 0;
+      }
+
+      md-icon {
+        font-size: 72px;
+        height: 72px;
+        width: 72px;
+        z-index: 1;
+        color: @blue;
+      }
+    }
+
+    .empty-notification-label {
+      font-size: 22px;
+      color: @darker-grey;
+      margin-top: 48px;
+    }
+  }
+
+  ul.notifications {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+
+    &.updating li.notification {
+      transition: none !important;
+    }
+
+    li.notification {
+      .animate;
+      transition-property: margin;
+      display: block;
+      margin: 1px 0;
+      background: @notification-bg-color;
+      position: relative;
+
+      .notif-menu {
+        display: flex;
+        flex-wrap: nowrap;
+        align-content: center;
+        align-items: center;
+        justify-content: flex-end;
+        background: @notification-bg-color;
+
+        @media all and (min-width: 720px) {
+          padding: 6px 14px 6px 25px;
+        }
+
+        @media all and (max-width: 719px) {
+          padding: 6px 9px 6px 15px;
+        }
+
+        &.fixed {
+          position: fixed;
+          z-index: 4;
+
+          @media all and (min-width: 720px) {
+            left: 15px;
+            right: 15px;
+          }
+
+          @media all and (max-width: 719px) {
+            left: 0;
+            right: 0;
+          }
+        }
+
+        &::before {
+          .pos-cover;
+          content: "";
+          right: initial;
+          width: 4px;
+          background: @notification-bg-color;
+        }
+
+        .edit-wrap-in-drop-menu {
+          display: none !important;
+        }
+
+        .md-button.icon-btn,
+        .md-button.discus-icon-btn {
+          height: initial;
+          width: initial;
+        }
+      }
+
+      .notif-thread {
+        position: relative;
+
+        @media all and (min-width: 720px) {
+          padding: 0 14px 0 25px;
+        }
+
+        @media all and (max-width: 719px) {
+          padding: 0 9px 0 15px;
+        }
+
+        .msg {
+          @media all and (min-width: 720px) {
+            padding-left: 25px;
+            padding-right: 14px;
+            margin-left: -25px;
+            margin-right: -14px;
+          }
+
+          @media all and (max-width: 719px) {
+            padding-left: 15px;
+            padding-right: 15px;
+            margin-left: -12px;
+            margin-right: -9px;
+          }
+
+          .msg-main,
+          .task-footer {
+            padding-right: 11px;
+          }
+
+          &.theme-highlight {
+            &:first-child {
+              border-top-width: 0;
+            }
+
+            &:last-child {
+              border-bottom-width: 0;
+            }
+          }
+        }
+      }
+
+      .icon-wrap {
+        font-size: 0;
+        flex: none;
+
+        md-checkbox.notif-check {
+          margin: 2px;
+
+          .md-label {
+            display: none;
+          }
+        }
+
+        &:hover {
+          md-icon.notif-icon:not(.urgent) {
+            display: none;
+          }
+        }
+
+        &:not(:hover) {
+          md-checkbox.notif-check {
+            display: none;
+          }
+        }
+      }
+
+      &.checked {
+        .icon-wrap md-icon.notif-icon { display: none; }
+        .icon-wrap md-checkbox.notif-check { display: inline-block; }
+      }
+
+      .msg-expand-btn-wrap {
+        flex: none;
+
+        md-progress-circular {
+          margin: 5px;
+        }
+      }
+
+      .user-and-theme-title-wrap {
+        flex: auto;
+        
+
+        @media all and (min-width: 720px) {
+          display: flex;
+          flex-wrap: nowrap;
+          align-content: center;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .user-wrap {
+          .animate;
+          transition-property: width;
+          flex: none;
+          display: flex;
+          flex-wrap: nowrap;
+          align-content: center;
+          align-items: center;
+          // overflow: hidden;
+
+          @media all and (min-width: 720px) {
+            // width: 190px;
+            order: 1;
+            justify-content: flex-end;
+          }
+
+          @media all and (max-width: 719px) {
+            justify-content: flex-start;
+          }
+
+          // .user-avatar {
+          //   border-radius: 2px;
+          //   height: 28px;
+          //   width: 28px;
+          //   object-fit: cover;
+          //   background: url(/public/images/default-avatar.png) no-repeat center / cover @white;
+          //   flex: none;
+          //   position: relative;
+          //   cursor: default;
+
+          //   @media all and (max-width: 719px) {
+          //     display: none;
+          //   }
+
+          //   .pic {
+          //     .pos-cover;
+          //     border-radius: 2px;
+          //     background: no-repeat center / cover;
+          //   }
+          // }
+
+          .user-status {
+            .circle;
+            height: 9px;
+            width: 9px;
+            border: 2px solid @notification-user-status-offline-color;
+            flex: none;
+            margin-right: 3px;
+            margin-top: -2px;
+            cursor: default;
+
+            &.online {
+              border-color: @notification-user-status-online-color;
+            }
+
+            &.online-in-theme {
+              border-color: @notification-user-status-online-color;
+              background: @notification-user-status-online-color;
+            }
+          }
+
+          .username-wrap {
+            flex: none;
+            line-height: 19px;
+
+            .username {
+              color: @notification-user-name-color;
+              font-weight: 700;
+            }
+          }
+
+          .created-date {
+            white-space: nowrap;
+            margin-left: 10px;
+            flex: none;
+            color: @dark-grey;
+            font-size: 12px;
+            // margin-top: 2px;
+          }
+        }
+
+        .theme-title-wrap {
+          flex: auto;
+
+          .main-notif-link {
+            color: @notification-link-color;
+
+            &:hover {
+              color: @notification-link-hover-color;
+            }
+          }
+
+          .subnotif-title-wrap {
+            line-height: 14px;
+          }
+
+          .sub-notif-link {
+            color: @notification-subtask-link-color;
+            font-size: 11px;
+            line-height: 14px;
+
+            &:hover {
+              color: @notification-link-hover-color;
+            }
+          }
+        }
+      }
+
+      .more-btn-wrap {
+        flex: none;
+        margin-left: 10px;
+      }
+
+      * ~ .fast-reply-wrap {
+        margin-top: 10px;
+      }
+
+      .fast-reply {
+        margin: 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        @media all and (min-width: 720px) {
+          padding: 0 25px;
+        }
+
+        @media all and (max-width: 719px) {
+          padding: 0 15px;
+        }
+
+        &.fixed {
+          position: fixed;
+
+          @media all and (min-width: 720px) {
+            left: 15px;
+            right: 15px;
+          }
+
+          @media all and (max-width: 719px) {
+            left: 0;
+            right: 0;
+          }
+        }
+      }
+
+      &:not(.expanded) {
+        .msg-expand-btn md-icon {
+          .rotate(-90deg);
+        }
+
+        .notif-thread {
+          display: none;
+        }
+      }
+
+      & + li.notification.expanded {
+        margin-top: 10px;
+      }
+
+      &.expanded {
+        margin-left: -15px;
+        margin-right: -15px;
+
+        & + li.notification {
+          margin-top: 10px;
+        }
+
+        &:not(.loading) {
+          &.task {
+            .notif-menu,
+            .notif-menu::before {
+              background-color: @theme-highlight-color;
+            }
+          }
+
+          .user-wrap {
+            width: 0;
+            display: none;
+          }
+
+          .subnotif-title-wrap,
+          .more-btn-wrap {
+            display: none;
+          }
+        }
+
+        .notif-menu.fixed::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 1px;
+          background: @border-color;
+        }
+      }
+
+      &.loading {
+        .msg-expand-btn {
+          display: none;
+        }
+      }
+
+      &:not(.loading) {
+        .msg-expand-btn-wrap md-progress-circular {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .floating-controlls {
+    .animate;
+    background: @notificator-menu-bg-color;
+    box-shadow: @notificator-menu-shadow;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 15px 30px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 6;
+
+    @media all and (min-width: 769px) {
+      min-height: 56px;
+    }
+
+    @media all and (max-width: 768px) {
+      min-height: 64px;
+    }
+
+    &:not(.shown) {
+      .translate(0,-120%);
+    }
+
+    & > * {
+      flex: none;
+    }
+
+    .md-button {
+      transition: none;
+      padding: 0;
+      margin: 0;
+      border: none !important;
+      background: none !important;
+      line-height: 1;
+      font-size: 15px;
+      font-weight: 400;
+      color: @notificator-menu-btn-font-color;
+
+      @media all and (min-width: 1100px) {
+        margin-left: 30px;
+      }
+
+      @media all and (min-width: 961px) and (max-width: 1099px) {
+        margin-left: 25px;
+      }
+
+      @media all and (max-width: 960px) {
+        margin-left: 20px;
+      }
+
+      @media all and (min-width: 681px) and (max-width: 768px) {
+        font-size: 13px;
+      }
+
+      @media all and (max-width: 680px) {
+        font-size: 0 !important;
+      }
+
+      md-progress-circular {
+        margin: 3px;
+      }
+
+      md-icon {
+        color: @notificator-menu-btn-font-color;
+      }
+
+      md-icon,
+      .btn-label {
+        vertical-align: middle;
+      }
+
+      &:hover,
+      &:active {
+        &,
+        md-icon {
+          color: @notificator-menu-btn-hover-font-color;
+        }
+      }
+
+      &.back-btn {
+        font-size: 19px;
+        font-weight: 400;
+        color: @black;
+        margin-left: -14px;
+
+        @media all and (min-width: 961px) {
+          margin-right: 30px;
+        }
+
+        @media all and (min-width: 769px) and (max-width: 960px) {
+          margin-right: 25px;
+        }
+
+        @media all and (max-width: 768px) {
+          margin-right: 20px;
+          font-size: 17px;
+        }
+
+        md-icon {
+          color: @black;
+        }
+      }
+    }
+  }
+}

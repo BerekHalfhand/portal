@@ -1,0 +1,21 @@
+<div>
+  <ul class="list-inline" ng-if="titletext">
+    <li class="black text-s15">{{::titletext}}</li>
+    <li ng-if="titlelink && titlesidetext">
+      <a href class="blue"
+         ui-sref="{{titlelink}}"
+         log-click="Галлерея::Ссылка на все фотографии из галлереи">
+        {{::titlesidetext}}
+      </a>
+    </li>
+  </ul>
+  <a ng-if="link && description"
+     href class="black"
+     ui-sref="{{link}}"
+     log-click="Галлерея::Ссылка на альбом из галлереи">
+    <div ng-bind-html="::description"></div><br>
+    <img ng-if="source" style="width:100%;" src="{{source}}">
+  </a>
+  <span ng-if="!link && description" ng-bind-html="::description"></span>
+  <img ng-if="!(link && description) && source" style="width:100%;" src="{{source}}">
+</div>

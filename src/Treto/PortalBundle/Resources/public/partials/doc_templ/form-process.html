@@ -1,0 +1,48 @@
+<article ng-init="discus = $parent.discus;">
+  <div ng-init="$root.$state.current.name=='body.notifications' ? discus.expanded[doc.unid] = true : false">
+    <div class="msg-wrap clearfix">
+      <div class="msg-head"
+           ng-if="$root.$state.current.name!='body.notifications' || doc.unid != discus.main_doc.unid"
+           ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'">
+      </div>
+      <div class="msg-main">
+        <tags-list model="doc.Tags"></tags-list>
+        <div ng-show="(discus.expanded[doc.unid] === true || 
+                       discus.expanded[doc.unid] === 'attached' ||
+                       discus.expanded[doc.unid] === 'shown' ||
+                       doc.AttachedDoc) && (doc.status != 'deleted')"
+             class="animate-show" quote-selection>
+          <div ng-if="discus.expanded[doc.unid] !== 'attached' && discus.comments.length > 4"
+               dd-text-collapse dd-text-collapse-max-height="57" class="text-content" >
+              <div ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml"
+                   class="ddColl"></div>
+            </div>
+          <div ng-if="discus.expanded[doc.unid] === 'attached' || discus.comments.length < 5"
+               ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml"
+               class="text-content"></div>
+          <div ng-if="doc.SelectRegion"><br><b>Регионы:</b>
+          <span ng-repeat="r in doc.SelectRegion track by $index">
+            {{$parent.$parent.$parent.discus.vacancyRegionDict.getRecordValue(r) + (($index+1 < doc.SelectRegion.length) ? ', ' : '')}}</span></div>
+          <div ng-if="doc.VacAnnotation"><b>Аннотация к вакансии:</b> {{::doc.VacAnnotation}} </div>
+          <div ng-if="doc.VacManager"><b>Менеджер:</b> {{::doc.VacManager.join(', ')}} </div>
+          <div ng-if="doc.archiveVacUnid">
+            <b>Архивная вакансия:</b>
+            <a ui-sref="body.discus({id: doc.archiveVacUnid, type:''})"
+               log-click="Дискуссии::Ссылка на архивную вакансию в дискуссии">
+              {{::doc.archiveVacUnid}}
+            </a>
+          </div>
+          <upload-list model="doc.attachments"></upload-list>
+        </div>
+      
+      <div ng-if="!discus.fastReplyMsg" class="blue martop10">
+        <span class="touch"
+              ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+              log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+          Ответить
+        </span>
+      </div>
+      </div>
+    </div>
+  </div>
+</article>

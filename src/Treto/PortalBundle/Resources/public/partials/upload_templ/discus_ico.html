@@ -1,0 +1,61 @@
+<!-- <div class="marside10" style="height: 24px;width: 24px;display: -webkit-inline-box;position: relative;margin-bottom: -8px;overflow: hidden;display: inline;" title="Прикрепить файл">
+  <span class="ico click clip" ng-init="$root.uploader = uploader;"></span>
+  <input class="touch" type="file" nv-file-select uploader="uploader" ng-model="model" multiple size="1" 
+  style="-moz-opacity: 0; filter: alpha(opacity=0); opacity: 0;position: absolute;top: 0px;left: 0px;width: 24px;height: 24px;">
+</div> -->
+
+<span ng-init="pasteScreenShot=$parent.pasteScreenShot || {value: false}">
+  <div id="imgPasteArea"
+       ng-if="pasteScreenShot.value"
+       focus-me="true"
+       contenteditable="true"
+       ng-paste="pasteImg($event)"
+       log-click="Загрузка файлов::Зона для присоединения скриншота в окне редактирования комментария">
+    <span id="placeholder-span" ng-click="removePlaceholder()">Для вставки снимка экрана из буфера нажмите CTRL+V</span>
+  </div>
+
+  <span>
+    <md-button class="discus-icon-btn" title="Прикрепить файл" aria-label="Прикрепить файл"
+              ng-init="$root.uploader = uploader;"
+              onclick="document.getElementById('selectedFile').click();"
+              log-click="Загрузка файлов::Кнопка <Прикрепить файл> в окне редактирования комментария">
+      <md-icon class="material-icons">attachment</md-icon>
+    </md-button>
+    <input id="selectedFile" type="file" nv-file-select uploader="uploader" ng-model="model" multiple size="1" style="display: none;">
+
+    <md-button class="discus-icon-btn" title="Добавить теги" aria-label="Добавить теги"
+              ng-click="$parent.$parent.showTags = !$parent.$parent.showTags; $parent.showTags = $parent.$parent.showTags"
+              log-click="Загрузка файлов::Кнопка <Добавить теги>">
+      <md-icon class="material-icons">local_offer</md-icon>
+    </md-button>
+
+    <md-button class="discus-icon-btn" title="Вставить скриншот" aria-label="Вставить скриншот"
+              ng-click="pasteScreenShot.value = !pasteScreenShot.value"
+              log-click="Загрузка файлов::Кнопка <Вставить скриншот> в окне редактирования комментария">
+      <md-icon class="material-icons">insert_photo</md-icon>
+    </md-button>
+  </span>
+</span>
+<!--<a ng-init="pasteScreenShot=false" href ng-click="pasteScreenShot = !pasteScreenShot">Вставить скриншот</a>-->
+
+<!-- 
+  <div class="col-md-12 file-upload-template">
+    <a ng-init="pasteScreenShot=false" href ng-click="pasteScreenShot = !pasteScreenShot">Вставить скриншот</a>
+    <div class="other-drop-zone" ng-show="pasteScreenShot" contenteditable="true" ng-paste="pasteImg($event)">Вставьте сюда картинку</div>
+    <div nv-file-drop="" nv-file-over="" 
+      uploader="uploader" over-class="other-over-zone" 
+      class="content other-drop-zone" > 
+      <input type="file" nv-file-select="" uploader="uploader" ng-model="model"
+      multiple filters="customFilter"></input>
+    </div>
+    <span ng-if="uploader.queue.length">
+    <div>
+      <div>
+        Идет загрузка файлов:
+        <div class="progress" style="">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+        </div>
+      </div>
+    </div>
+  </span>
+ -->

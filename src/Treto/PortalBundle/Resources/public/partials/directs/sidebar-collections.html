@@ -1,0 +1,70 @@
+<div ng-init="collapseTECol=getBlockState('collapseTECol');">
+  <div class="side-header">
+    <div ng-click="collapseTECol=getBlockState('collapseTECol', true);"
+         class="side-collapse touch"
+         log-click="Главная::Кнопка-стрелка <Показать\скрыть> блок <Коллекции> на главной">
+      <i ng-hide="collapseTECol" class="material-icons">arrow_drop_down</i>
+      <i ng-show="collapseTECol" class="material-icons">arrow_drop_up</i>
+    </div>
+    <ul class="list-inline">
+      <li class="text-s12">
+        <a href class="black" ui-sref="body.teCollectionList({type: 'publication', period: 'week'})"
+           log-click="Главная::Ссылка <Коллекции> на страницу коллекций в блоке <Коллекции> на главной">
+          Коллекции
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="side-body" ng-show="collapseTECol">
+    <div class="pad5 padbot0 text-s11">
+      <table ng-if="teCollection.lastThree.publication.count || teCollection.lastThree.delivery.count" class="TECollections">
+        <tbody>
+          <tr valign="top" ng-if="teCollection.lastThree.publication.count">
+            <td class="pad5 padright0" align="right">+</td>
+            <td class="pad5">
+              <div ng-repeat="collection in teCollection.lastThree.publication.collections | orderBy: 'dateOutput' : true">
+                <a href="https://adm.tile.expert{{::collection.url}}"
+                   class="blue"
+                   target="_blank"
+                   title="{{'Коллекция: '+ collection.name +'&#010Фабрика: '+ collection.fname}}"
+                   log-click="Главная::Ссылка на страницу коллекцию на сайте из блока <Коллекции> на главной">
+                  {{::(collection.name + ' | ' + collection.fname)}}
+                </a>
+              </div>
+            </td>
+          </tr>
+          <tr valign="top" ng-if="teCollection.lastThree.delivery.count">
+            <td class="pad5 padright0" align="right">-</td>
+            <td class="pad5">
+              <div ng-repeat="collection in teCollection.lastThree.delivery.collections | orderBy: 'dateOutput' : true">
+                <a href="https://adm.tile.expert{{::collection.url}}"
+                   class="blue"
+                   target="_blank"
+                   title="{{'Коллекция: '+ collection.name +'&#010Фабрика: '+ collection.fname}}"
+                   log-click="Главная::Ссылка на страницу коллекцию на сайте из блока <Коллекции> на главной">
+                  {{::(collection.name + ' | ' + collection.fname)}}
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="martop5 marbot10 text-center">
+        <div ng-if="!teCollection.lastThree.publication || !teCollection.lastThree.delivery"><i class="spinner"></i></div>
+        <div ng-if="teCollection.lastThree.publication.success === false || teCollection.lastThree.delivery.success === false">Не удалось получить все или часть данных</div>
+      </div>
+      <div class="text-s11 marbot10 marleft5">
+        <a href class="blue"
+           ui-sref="body.teCollectionList({type: 'publication', period: 'week'})"
+           log-click="Главная::Ссылка <Ещё> на страницу коллекций в блоке <Коллекции> на главной">
+          ещё
+        </a>
+      </div>
+      <!--<div class="text-s11 marbot10">
+        <a href class="blue" ng-click="subscriber('33')">
+          {{user.portalData.Subscribe.indexOf('33') > -1 ? 'не уведомлять' : 'следить'}}
+        </a>
+      </div>-->
+    </div>
+  </div>
+</div>

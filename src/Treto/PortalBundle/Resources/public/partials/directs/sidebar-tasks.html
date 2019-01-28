@@ -1,0 +1,103 @@
+<div ng-init="collapseTasks = getBlockState('collapseTasks');">
+  <div class="side-header">
+    {{vkl}}
+    <div ng-click="collapseTasks = getBlockState('collapseTasks', true)"
+         class="side-collapse touch"
+         log-click="Главная::Кнопка-стрелка <Показать\скрыть> блок <Входящие просьбы> на главной">
+      <i ng-hide="collapseTasks" class="material-icons">arrow_drop_down</i>
+      <i ng-show="collapseTasks" class="material-icons">arrow_drop_up</i>
+    </div>
+    <ul class="list-inline">
+      <li class="text-s12">Входящие просьбы</li>
+    </ul>
+  </div>
+  <div class="side-body" ng-show="collapseTasks">
+    <ul class="text-s11 taskListStatus martop10">
+      <li class="no-bord-bot">
+        <a href ng-class="{'active':(orderCurrentTitle==='Priority')}"
+           ng-click="order('Priority', false);"
+           log-click="Главная::Вкладка <Приоритет> в блоке <Входящие просьбы> на главной">
+          Приоритет
+        </a>
+      </li>
+      <li class="no-bord-bot">
+        <a href ng-class="{'active':(orderCurrentTitle==='taskDateRealEnd')}"
+           ng-click="order('taskDateRealEnd', false);"
+           log-click="Главная::Вкладка <Срок> в блоке <Входящие просьбы> на главной">
+          Срок
+        </a>
+      </li>
+      <li class="no-bord-bot">
+        <a href ng-class="{'active':(orderCurrentTitle==='tags')}"
+           ng-click="order('tags', false);"
+           log-click="Главная::Вкладка <Теги> в блоке <Входящие просьбы> на главной">
+          Теги
+        </a>
+      </li>
+    </ul>
+    <div ng-if="!myTasks.saved" class="text-center padtop10"><i class="spinner"></i></div>
+    <ul class="list-unstyled taskListUl">
+      <li ng-if="orderCurrentTitle === 'Priority'" ng-repeat="n in myTasks.records | orderBy : orderCurrent" ng-init="new = daysAgo(n.taskDateRealEnd, 1)">
+        <span class="blood-red pull-left" ng-if="!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10" ng-attr-title="{{::(!n.taskDateRealEnd ? 'Не принято!' : 'Просрочено!')}}">
+          <i class="material-icons text-s15">assignment_late</i>
+        </span>
+        <span class="badge pull-right" title="Приоритет {{::n.Priority}}">{{::n.Priority}}</span>
+        <a ng-class="{'blood-red':(!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10), 'force-blue':(n.TaskStateCurrent == 10)}"
+           ui-sref="body.discus({ id: n.unid, type:'' })"
+           title="{{::n.subject}}"
+           log-click="Главная::Ссылка на просьбу в блоке <Входящие просьбы> на главной">
+          {{::n.subject}}
+        </a>
+      </li>
+      <li ng-if="orderCurrentTitle === 'taskDateRealEnd'"
+          ng-repeat="(key, value) in myTasks.records | orderBy : orderCurrent | groupBy: 'taskDateRealEnd'"
+          ng-click="showItem(key)"
+          ng-init="new = daysAgo(key, 1)"
+          class="touch"
+          log-click="Главная::Кнопка-стрелка <Показать\скрыть> просьбы по дате выполнения в блоке <Входящие просьбы> на главной">
+        <span ng-class="(itemID.indexOf(key)!=-1)?'glyphicon-triangle-bottom'
+        :'glyphicon-triangle-right'" class="glyphicon" ng-attr-title="{{(itemID.indexOf(key)!=-1)?'Свернуть':'Развернуть'}}"></span>
+        <span ng-class="{blood-red:!new || !key}">{{::key | datetime}} ({{::value.length}})</span>
+        <ul ng-show="itemID.indexOf(key) != -1">
+          <li ng-repeat="n in value" ng-init="new = daysAgo(n.taskDateRealEnd, 1)">
+            <span class="blood-red pull-left" ng-if="!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10" ng-attr-title="{{::(!n.taskDateRealEnd ? 'Не принято!' : 'Просрочено!')}}">
+              <i class="material-icons text-s15">assignment_late</i>
+            </span>
+            <span class="badge pull-right">{{::n.Priority}}</span>
+            <a ng-class="{'blood-red':(!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10), 'force-blue':(n.TaskStateCurrent == 10)}"
+               class="col3"
+               ui-sref="body.discus({ id: n.unid, type:'' })"
+               title="{{::n.subject}}"
+               log-click="Главная::Ссылка на просьбу в блоке <Входящие просьбы> на главной">
+              {{::n.subject}}
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li ng-if="orderCurrentTitle === 'tags'"
+          ng-repeat="(key, value) in myTasks.Tags"
+          ng-init="expand = false"
+          ng-click="expand = !expand"
+          class="touch"
+          log-click="Главная::Кнопка-стрелка <Показать\скрыть> просьбы по тегу в блоке <Входящие просьбы> на главной">
+        <span ng-class="(expand == true)?'glyphicon-triangle-bottom':'glyphicon-triangle-right'" class="glyphicon" ng-attr-title="{{(expand == true)?'Свернуть':'Развернуть'}}"></span>
+        {{::key}} ({{::value.length}})
+        <ul ng-show="expand == true">
+          <li ng-repeat="n in value" ng-init="new = daysAgo(n.taskDateRealEnd, 1)">
+            <span class="blood-red pull-left" ng-if="!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10" ng-attr-title="{{::(!n.taskDateRealEnd ? 'Не принято!' : 'Просрочено!')}}">
+              <i class="material-icons text-s15">assignment_late</i>
+            </span>
+            <span class="badge pull-right">{{::n.Priority}}</span>
+            <a ng-class="{'blood-red':(!(new && n.taskDateRealEnd) && n.TaskStateCurrent != 10), 'force-blue':(n.TaskStateCurrent == 10)}"
+               class="col3"
+               ui-sref="body.discus({ id: n.unid, type:'' })"
+               title="{{::n.subject}}"
+               log-click="Главная::Ссылка на просьбу в блоке <Входящие просьбы> на главной">
+              {{::n.subject}}
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

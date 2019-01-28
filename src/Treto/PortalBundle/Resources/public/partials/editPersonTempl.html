@@ -1,0 +1,650 @@
+<div class="modal-header" style="overflow-y:auto;overflow-x:hidden;">
+    <div class="row">
+        <div class="col-lg-24 text-s16">
+            Персона
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input class="form-control input-sm"
+                   type="text"
+                   placeholder="Фамилия"
+                   ng-model="contact.LastName"
+                   ng-change="discus.generateLdapNameForContacts(contact)"
+                   log-click="Контакты::Поле <Фамилия> во всплывающем окне редактирования персоны"/>
+        </div>
+        <div class="col-lg-12">
+            <input class="form-control input-sm"
+                   type="text"
+                   placeholder="Имя"
+                   ng-model="contact.FirstName"
+                   ng-change="discus.generateLdapNameForContacts(contact)"
+                   log-click="Контакты::Поле <Имя> во всплывающем окне редактирования персоны"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <input class="form-control input-sm"
+                   type="text"
+                   placeholder="Отчество"
+                   ng-model="contact.MiddleName"
+                   ng-change="discus.generateLdapNameForContacts(contact)"
+                   log-click="Контакты::Поле <Отчество> во всплывающем окне редактирования персоны"/>
+        </div>
+        <div class="col-lg-12" uib-dropdown auto-close="outsideClick" ng-if="contact.ContactStatus.indexOf(6) !== -1 || contact.ContactStatus.indexOf('6') !== -1 && (contact.ContactStatus.indexOf(14) === -1 && contact.ContactStatus.indexOf('14') === -1)">
+            <button type="button"
+                    uib-tooltip="Минимум одна должность должна быть выбрана."
+                    tooltip-trigger="none"
+                    tooltip-is-open="WorkGroupTooltip"
+                    tooltip-placement="top-left"
+                    class="btn btn-default dropdown-toggle dropdown-style"
+                    data-toggle="dropdown"
+                    uib-dropdown-toggle
+                    log-click="Контакты::Меню <Должность> во всплывающем окне редактирования персоны">
+                {{ contact.Rank.join(', ') || 'Должность' }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto" uib-dropdown-menu>
+                <li ng-repeat="s in positionsDict.records">
+                    <md-checkbox  ng-init="WorkGroupModel = contact.Rank.indexOf(s.value) !== -1"
+                           ng-click="WorkGroupModel = dropdownCheckboxChange(s.value, WorkGroupModel, 'Rank')"
+                           ng-model="WorkGroupModel"
+                           id="WorkGroup-s-{{$index}}"
+                           ng-checked="contact.Rank.indexOf(s.value) !== -1"
+                           class="in-dropdown"> {{ s.value }} </md-checkbox>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-12" uib-dropdown auto-close="outsideClick" ng-if="contact.ContactStatus.indexOf(6) !== -1 || contact.ContactStatus.indexOf('6') !== -1 && (contact.ContactStatus.indexOf(14) === -1 && contact.ContactStatus.indexOf('14') === -1)">
+            <button type="button"
+                    uib-tooltip="Минимум один отдел должен быть выбрана."
+                    tooltip-trigger="none"
+                    tooltip-is-open="WorkGroupTooltip"
+                    tooltip-placement="top-left"
+                    class="btn btn-default dropdown-toggle dropdown-style"
+                    data-toggle="dropdown"
+                    uib-dropdown-toggle
+                    log-click="Контакты::Меню <Отдел> во всплывающем окне редактирования персоны">
+                {{ contact.section.join(', ') || 'Отдел не выбрана' }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto" uib-dropdown-menu>
+                <li ng-repeat="s in sectionDict.records">
+                    <md-checkbox ng-init="sectionModel = contact.section.indexOf(s.value) !== -1"
+                           ng-click=" sectionModel = dropdownCheckboxChange(s.value, sectionModel, 'section')"
+                           ng-model="sectionModel"
+                           id="Section-s-{{$index}}"
+                           ng-checked="contact.section.indexOf(s.value) !== -1"
+                           class="in-dropdown"  for="Section-s-{{$index}}">{{ s.value }} </md-checkbox >
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-12" ng-if="contact.ContactStatus.indexOf(14) !== -1 || contact.ContactStatus.indexOf('14') !== -1">
+            <div class="width100per height27 btn-group" uib-dropdown>
+                <button id="companyName"
+                        type="button"
+                        class="btn btn-default dropdown-toggle dropdown-style"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        log-click="Контакты::Меню <Имя компании> во всплывающем окне редактирования персоны">
+                    {{ companyNameDict.getRecordValue(contact.companyName) || 'Имя компании'}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu text-s11">
+                    <li ng-repeat="d in companyNameDict.records">
+                        <a title="{{d.value}}"
+                           href
+                           ng-click="contact.companyName = d.key">
+                           {{ d.value }}
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                        <a target="_blank"
+                           href ui-sref="body.adminDictionary({ type: 'companyName' })"
+                           log-click="Контакты::Ссылка <Администрирование словаря> имён компаний во всплывающем окне редактирования персоны">
+                           Администрирование словаря
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <input ng-change="contact.OrganizationID = '';"
+                       class="form-control input-sm"
+                       type="text"
+                       placeholder="Работает в компании"
+                       ng-model="contact.Organization"
+                       uib-typeahead="company.name as company.name for company in autoComplete.companies($viewValue)"
+                       typeahead-loading="loadingNames"
+                       typeahead-wait-ms="400"
+                       typeahead-on-select="contact.Organization = [$item.name]; contact.OrganizationID = [$item.unid]"
+                       log-click="Контакты::Поле <Работает в компании> во всплывающем окне редактирования персоны"/>
+                <div class="required-warning" ng-if="error.orgId" ng-click="error.orgId = false">
+                    <span>Компания должна быть выбрана из выпадающего списка.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <input class="form-control input-sm"
+                       type="text"
+                       placeholder="Оклад"
+                       ng-model="contact.Salary"
+                       log-click="Контакты::Поле <Оклад> во всплывающем окне редактирования персоны"/>
+                <div class="required-warning" ng-if="error.Salary" ng-click="error.Salary = false">
+                    <span>Оклад должен быть числом.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <textarea class="form-control input-sm"
+                          placeholder="Комментарий"
+                          rows="5"
+                          ng-model="contact.Comment"
+                          log-click="Контакты::Поле <Комментарий> во всплывающем окне редактирования персоны">
+                </textarea>
+            </div>
+            <div class="col-lg-12" uib-dropdown>
+                <button id="Currency"
+                        type="button"
+                        class="btn btn-default dropdown-toggle dropdown-style"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        log-click="Контакты::Меню <Валюта> во всплывающем окне редактирования персоны">
+                    {{ currencyDict.getRecordValue(contact.currency) || 'Валюта'}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu text-s11">
+                    <li ng-repeat="d in currencyDict.records">
+                        <a title="{{d.value}}"
+                           href
+                           ng-click="contact.currency = d.key">
+                           {{ d.value }}
+                    </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                        <a target="_blank"
+                           href ui-sref="body.adminDictionary({ type: 'Currency' })"
+                           log-click="Контакты::Ссылка <Администрирование словаря> валюты во всплывающем окне редактирования персоны">
+                           Администрирование словаря
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row martop10">
+            <div class="col-lg-4 blue">Тип контакта</div>
+            <div class="col-lg-20">
+                <div class="bord-bot" uib-dropdown>
+                    <span ng-repeat="c in contact.ContactStatus">
+                        {{statusListDict.getRecordValue(c)}}
+                        <a href
+                           class="black"
+                           style="padding-left:5px;padding-right:15px;" ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', c)"
+                           log-click="Контакты::Кнопка <Удалить тип контакта> во всплывающем окне редактирования персоны">
+                           &times;
+                        </a>
+                    </span>
+                    <a href
+                       class="green"
+                       uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать тип контакта> во всплывающем окне редактирования персоны">
+                       Выбрать
+                    </a>
+                    <div class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                        <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value'" ng-if="record.subtype.person && record.subtype.show === '1' && !record.parentKey">
+                            <md-checkbox
+                                ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', record.key)"
+                                ng-checked="contact.ContactStatus.indexOf(record.key)!=-1">
+                                {{ record.value }}
+                            </md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 blue">Профиль деятельности</div>
+            <div class="col-lg-20">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <span ng-repeat="g in contact.Group">
+                        {{g}}
+                        <a href
+                           class="black"
+                           style="padding-left:5px;padding-right:15px;" ng-click="multiselectHelper.selectCheckbox(contact, 'Group', g)"
+                           log-click="Контакты::Кнопка <Удалить профиль деятельности> во всплывающем окне редактирования персоны">
+                           &times;
+                        </a>
+                    </span>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать профиль деятельности> во всплывающем окне редактирования персоны">
+                       Выбрать
+                    </a>
+                    <div class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                        <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value' " ng-if="contact.ContactStatus.length ? contact.ContactStatus.indexOf(record.parentKey) > -1 : true">
+                            <md-checkbox
+                                ng-click="multiselectHelper.selectCheckbox(contact, 'Group', record.value)"
+                                ng-checked="contact.Group.indexOf(record.value)!=-1">
+                                {{ record.value }}
+                            </md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 blue">Источник информации</div>
+            <div class="col-lg-20">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <span ng-repeat="c in contact.InformationSource">
+                        {{infoSourceDict.getRecordValue(c)}}
+                        <a href
+                           class="black"
+                           style="padding-left:5px;padding-right:15px;" ng-click="multiselectHelper.selectCheckbox(contact, 'InformationSource', c)"
+                           log-click="Контакты::Кнопка <Удалить источник информации> во всплывающем окне редактирования персоны">
+                           &times;
+                        </a>
+                    </span>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать источник информации> во всплывающем окне редактирования персоны">
+                       Выбрать
+                    </a>
+                    <div class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                        <div ng-repeat="(key,record) in infoSourceDict.records | orderObjectBy:'value'">
+                            <md-checkbox
+                                ng-click="multiselectHelper.selectCheckbox(contact, 'InformationSource', record.key)"
+                                ng-checked="contact.InformationSource.indexOf(record.key)!=-1">
+                                {{ record.value }}
+                            </md-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 martop10 blue">Страна</div>
+            <div class="col-lg-20">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать страну> во всплывающем окне редактирования персоны">
+                       {{contact.Country.length && organizationCountries.getRecordValue(contact.Country[0])?organizationCountries.getRecordValue(contact.Country[0]):"Выбрать"}}</a>
+                    <ul class="dropdown-menu" role="menu" style="padding:12px;height:300px;width:auto;overflow:auto">
+                        <li ng-repeat="(key,record) in organizationCountries.records | orderObjectBy:'value'">
+                            <a href ng-click="contact.Country = [record.key]">
+                               {{ record.value }}
+                            </a>
+                        </li>
+                    </ul>
+                    <div ng-show="submitted && !contact.Country && (contact.ContactStatus.indexOf(14) !== -1 || contact.ContactStatus.indexOf('14') !== -1)" class="required-warning" ng-click="submitted = false">
+                        <span>Страна должна быть указана.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="(contact.ContactStatus.indexOf(7) !== -1 || contact.ContactStatus.indexOf('7') !== -1)">
+            <div class="col-lg-4 blue martop10">Язык</div>
+            <div class="col-lg-20">
+                <div class="bord-bot martop10" uib-dropdown>
+                    <a href class="green" uib-dropdown-toggle
+                       log-click="Контакты::Меню <Выбрать язык> во всплывающем окне редактирования персоны">
+                        {{contact.Language.length && contactLanguages.getRecordValue(contact.Language[0])?contactLanguages.getRecordValue(contact.Language[0]):"Выбрать"}}</a>
+                    <ul class="dropdown-menu" role="menu" style="padding:12px;height:300px;width:auto;overflow:auto">
+                        <li ng-repeat="(key,record) in contactLanguages.records | orderObjectBy:'value'">
+                            <a href ng-click="contact.Language = [record.key]">
+                                {{ record.value }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24">
+                <span>Дата рождения</span>
+                <p class="p-underlined bgr-calendar" style="width:160px; display: inline-block;">
+                    <new-datepicker date-min-limit="1900/01/01">
+                        <input prevent-keyboard-input
+                               ng-model="dateBirthView"
+                               type="text"
+                               ng-change="contact.BirthDay = $root.convertObjDateToStr(dateBirthView); dateBirthView=$root.localizeDate(dateBirthView);"
+                               log-click="Контакты::Выбор даты <Дата рождения> во всплывающем окне редактирования персоны"/>
+                    </new-datepicker>
+                </p>
+	     <span class="pull-right">
+          <span ng-init="contact.Sex=contact.Sex?contact.Sex:1">Пол</span>
+          <input type="radio" name="sex" id="sex-men" ng-model="contact.Sex" value="1"
+                 log-click="Контакты::Переключатель <Пол> во всплывающем окне редактирования персоны"/>
+          <label for="sex-men">Мужской</label>
+          <input type="radio" name="sex" id="sex-women" ng-model="contact.Sex" value="2"
+                 log-click="Контакты::Переключатель <Пол> во всплывающем окне редактирования персоны"/>
+          <label for="sex-women">Женский</label>
+        </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-24">
+                <input type="text" placeholder="Ответственный менеджер" class="form-control input-sm"
+                       ng-model="contact.ResponsibleManager"
+                       uib-typeahead="user.name as user.name for user in autoComplete.users($viewValue.substring($viewValue.lastIndexOf(',')+1).trim())"
+                       typeahead-loading="loadingNames"
+                       typeahead-wait-ms="400"
+                       typeahead-on-select="contact.ResponsibleManager = (oldRM && (oldRM+', ')) + ($item.name);oldRM = contact.ResponsibleManager;  changeBM($item)"
+                       log-click="Контакты::Поле <Ответственный менеджер> во всплывающем окне редактирования персоны"/>
+            </div>
+        </div>
+        <div class="row" ng-init="tab.name='connect'">
+            <div class="col-lg-24">
+                <span class="doc-subject" >
+                <a href
+                   class="text-s14 contact-tab"
+                   ng-class="{active:tab.name=='connect'}"
+                   ng-click="tab.name='connect'"
+                   log-click="Контакты::Вкладка <Для связи> во всплывающем окне редактирования персоны">
+                   Для связи
+                </a>
+                <a href
+                   class="text-s14 contact-tab"
+                   ng-class="{active:tab.name=='properties'}"
+                   ng-click="tab.name='properties'"
+                   log-click="Контакты::Вкладка <Настройки> во всплывающем окне редактирования персоны">
+                   Настройки
+                </a>
+                </span>
+                <div class="divider" style="margin-top:10px"></div>
+            </div>
+        </div>
+        <div ng-show="tab.name=='connect'">
+            <div class="row">
+                <div class="col-lg-8" ng-init="!contact.PhoneCellValues ? contact.PhoneCellValues = ['']:''; !phonesCell ? phonesCell = []:'';">
+                <span ng-repeat="phone in contact.PhoneCellValues track by $index" >
+                    <span ng-init="phonesCell[$index] = phone" ng-show="contact.PhoneCellValues[$index]">
+                        {{contact.PhoneCellValues[$index]}}
+                    </span>
+                    <input ng-hide="contact.PhoneCellValues[$index]"
+                           style="width: initial;"
+                           type="text"
+                           placeholder="Телефон"
+                           ng-model="phonesCell[$index]"
+                           ng-blur="contact.PhoneCellValues[$index] = phonesCell[$index];"
+                           log-click="Контакты::Поле <Телефон> во всплывающем окне редактирования персоны"/>
+                    <a href
+                       ng-click="contact.PhoneCellValues.splice($index,1); phonesCell.splice($index,1);"
+                       log-click="Контакты::Кнопка <Удалить телефон> во всплывающем окне редактирования персоны">
+                       &times;
+                    </a>
+                </span>
+                <span>
+                    <a href ng-click="contact.PhoneCellValues[contact.PhoneCellValues.length]=''"
+                       log-click="Контакты::Кнопка <Добавить (+)> телефон во всплывающем окне редактирования персоны">
+                       +
+                    </a>
+                </span>
+                <div class="divider"></div>
+            </div>
+        <div class="col-lg-8" ng-init="!phones ? phones=[]:'';">
+          <span ng-repeat="phone in contact.PhoneValues track by $index" >
+            <span ng-init="phones[$index] = phone" ng-show="contact.PhoneValues[$index]">
+                {{contact.PhoneValues[$index]}}
+            </span>
+            <input ng-hide="contact.PhoneValues[$index]"
+                   style="width: initial;"
+                   type="text"
+                   placeholder="Рабочий телефон"
+                   ng-model="phones[$index]"
+                   ng-blur="contact.PhoneValues[$index] = phones[$index];"
+                   log-click="Контакты::Поле <Рабочий телефон> во всплывающем окне редактирования персоны"/>
+            <a href ng-click="contact.PhoneValues.splice($index,1);phones.splice($index,1);"
+               log-click="Контакты::Кнопка <Удалить рабочий телефон> во всплывающем окне редактирования персоны">
+               &times;
+            </a>
+          </span>
+          <span>
+              <a href ng-click="contact.PhoneValues[contact.PhoneValues.length]=''"
+                 log-click="Контакты::Кнопка <добавить (+)> рабочий телефон во всплывающем окне редактирования персоны">
+                 +
+              </a>
+          </span>
+          <div class="divider"></div>
+        </div>
+        <div class="col-lg-8" ng-init="!emails ? emails = []:'';">
+          <span ng-repeat="email in contact.EmailValues track by $index" >
+            <span ng-show="contact.EmailValues[$index]"
+                  ng-click="contact.MainEmail = contact.EmailValues[$index]"
+                  ng-style="contact.MainEmail == contact.EmailValues[$index] ? {'font-weight':'bold'} : {cursor:'pointer'}"
+                  log-click="Контакты::Отметить <e-mail> как основной во всплывающем окне редактирования персоны">
+                {{contact.EmailValues[$index]}}
+            </span>
+            <input ng-hide="contact.EmailValues[$index]"
+                   style="width: initial;" type="text" placeholder="Почта"
+                   ng-model="emails[$index]"
+                   ng-blur="contact.EmailValues[$index] = emails[$index];"
+                   log-click="Контакты::Поле <Почта> во всплывающем окне редактирования персоны"/>
+            <a href ng-click="contact.MainEmail == contact.EmailValues[$index]?contact.MainEmail='':'';
+               contact.EmailValues.splice($index,1); emails.splice($index,1);"
+               log-click="Контакты::Кнопка <Удалить почту> во всплывающем окне редактирования персоны">
+               &times;
+            </a>
+          </span>
+          <span>
+              <a href ng-click="contact.EmailValues[contact.EmailValues.length]=''"
+                 log-click="Контакты::Кнопка <Добавить (+)> почту во всплывающем окне редактирования персоны">
+                 +
+              </a>
+          </span>
+        <div class="divider"></div>
+        <div class="required-warning" ng-if="error.Email" ng-click="error.Email = false">
+            <span>Не валидный e-mail.</span>
+        </div>
+        </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <span class="blue">Адрес регистрации</span>
+                </div>
+                <div class="col-lg-4">
+                    <input type="text"
+                           placeholder="Индекс"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressZipCode_Actual"
+                           log-click="Контакты::Поле <Адрес регистрации: Индекс> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Город/Населенный пункт"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressCityName_Actual"
+                           log-click="Контакты::Поле <Адрес регистрации: Город/Населенный пункт> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Улица"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressStreetName_Actual"
+                           log-click="Контакты::Поле <Адрес регистрации: Улица> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Дом</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressHouseNumber_Actual"
+                               log-click="Контакты::Поле <Адрес регистрации: Дом> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Корпус</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressBlockNumber_Actual"
+                               log-click="Контакты::Поле <Адрес регистрации: Корпус> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Квартира</span>
+                        <input type="text" class="form-control input-sm" ng-model="contact.AddressOfficeSuiteNumber_Actual"
+                        log-click="Контакты::Поле <Адрес регистрации: Квартира> во всплывающем окне редактирования персоны"/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <span class="blue">Паспортные данные</span>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Серия</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.PassportSeries"
+                               log-click="Контакты::Поле <Паспортные данные: Серия> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Номер</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.PassportNubmer"
+                               log-click="Контакты::Поле <Паспортные данные: Номер> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Когда выдан</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.PassportDateIssued"
+                               log-click="Контакты::Поле <Паспортные данные: Когда выдан> во всплывающем окне редактирования персоны"/>
+                    </div>
+                </div>
+                <div class="col-lg-24 form-horizontal">
+                    <div class="form-group">
+                        <span class="col-lg-3" style="padding-top:7px;">Кем выдан</span>
+                        <div class="col-lg-21">
+                            <input type="text"
+                                   class="form-control input-sm"
+                                   ng-model="contact.PassportIssuedByOrg"
+                                   log-click="Контакты::Поле <Паспортные данные: Кем выдан> во всплывающем окне редактирования персоны"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <span class="blue">Представление адреса: {{contact | addressActual }}</span>
+                </div>
+                <div class="col-lg-24 martop10">
+                    <span ng-class="{grey:!contact.DeliveryAddressIsDiff, blue:contact.DeliveryAddressIsDiff}">Адрес доставки</span>
+                    <md-checkbox ng-checked="contact.DeliveryAddressIsDiff"
+                                 ng-click="contact.DeliveryAddressIsDiff = contact.DeliveryAddressIsDiff?false:true;"
+                                 name="three"
+                                 log-click="Контакты::Галка <Адрес доставки: Отличен от фактического> во всплывающем окне редактирования персоны">
+                        Отличен от фактического
+                    </md-checkbox >
+                </div>
+            </div>
+            <div class="row" ng-show="contact.DeliveryAddressIsDiff">
+                <div class="col-lg-4">
+                    <input type="text"
+                           placeholder="Индекс"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressZipCode_ForDelivery"
+                           log-click="Контакты::Поле <Адрес доставки: Индекс> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Город/Населенный пункт"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressCityName_ForDelivery"
+                           log-click="Контакты::Поле <Адрес доставки: Город/Населенный пункт> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-10">
+                    <input type="text"
+                           placeholder="Улица"
+                           class="form-control input-sm"
+                           ng-model="contact.AddressStreetName_ForDelivery"
+                           log-click="Контакты::Поле <Адрес доставки: Улица> во всплывающем окне редактирования персоны"/>
+                </div>
+                <div class="col-lg-24 form-inline">
+                    <div class="form-group">
+                        <span>Дом</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressHouseNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Дом> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Корпус</span>
+                        <input type="text"
+                               class="form-control input-sm"
+                               ng-model="contact.AddressBlockNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Корпус> во всплывающем окне редактирования персоны"/>
+                    </div>
+                    <div class="form-group">
+                        <span>Квартира</span>
+                        <input type="text"
+                               class="form-control input-sm" 
+                               ng-model="contact.AddressOfficeSuiteNumber_ForDelivery"
+                               log-click="Контакты::Поле <Адрес доставки: Квартира> во всплывающем окне редактирования персоны"/>
+                    </div>
+                </div>
+                <div class="col-lg-24">
+                    <span class="blue">Представление: {{contact | addressDelivery }}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-show="tab.name=='properties'">
+            <div class="row">
+                <div class="col-lg-24">
+                    <input class="form-control input-sm"
+                           type="text" placeholder="Notes-имя"
+                           ng-model="contact.UserNotesName"
+                           log-click="Контакты::Поле <Notes-имя> во всплывающем окне редактирования персоны"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-24">
+                    <input class="form-control input-sm"
+                           type="text"
+                           placeholder="Рег.e-mail"
+                           ng-model="contact.Auth_Email"
+                           log-click="Контакты::Поле <Рег.e-mail> во всплывающем окне редактирования персоны"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <md-checkbox
+                        name="properties"
+                        checked="checked"
+                        ng-model="contact.Auth_Active"
+                        log-click="Контакты::Галка <Сотрудник> во всплывающем окне редактирования персоны">
+                        Сотрудник
+                    </md-checkbox>
+                    <md-checkbox
+                        name="properties"
+                        ng-checked="contact.isHomeOrganization == 1"
+                        ng-click="contact.isHomeOrganization = contact.isHomeOrganization == 1?'':1"
+                        log-click="Контакты::Галка <Сотрудник ТРЕТО> во всплывающем окне редактирования персоны">
+                        Сотрудник ТРЕТО
+                    </md-checkbox >
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body" ng-if="contact && contact.DocumentType">
+        <div ng-init="partDoc = contact" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+    </div>
+    <div class="modal-footer">
+        <a href
+           class="blue"
+           ng-class="{disabled:(!contact.LastName || !contact.FirstName || !contact.ContactStatus.length)}"
+           ng-click="ok(); submitted = true;"
+           log-click="Контакты::Кнопка <Сохранить> во всплывающем окне редактирования персоны">
+           СОХРАНИТЬ
+        </a>
+        <a href
+           class="black"
+           ng-click="close()"
+           log-click="Контакты::Кнопка <Отмена> во всплывающем окне редактирования персоны">
+           ОТМЕНА
+        </a>
+    </div>
+</div>

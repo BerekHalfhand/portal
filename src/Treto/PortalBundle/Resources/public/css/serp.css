@@ -1,0 +1,8 @@
+.data-carry {
+  text-align:left;
+  overflow:hidden;
+  text-overflow:clip;
+  font-size:12px;
+  padding:10px;
+  display: inline;
+}

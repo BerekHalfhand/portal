@@ -1,0 +1,113 @@
+<style>
+  body, html, .main-div{
+    overflow: hidden;
+    height: 100%;
+  }
+</style>
+<div id="chatMessages" ng-click="context.show=false;">
+  <div class="tablerow head-chat" style="background-color: rgba(64, 64, 64, 1);">
+    <!-- <i class="material-icons md-light touch">forum</i> -->
+    <span ng-show="$chatWindow.toType=='empl'" class="ico sms click touch marleft10 martop5" ng-class="!sms?'active':''" ng-click="sms=!sms" style="margin-bottom: 0px;" title="Отправить копию по СМС"></span>
+    <span class="ico chat-history touch marleft10 martop5" style="margin-bottom: 0px;" ng-click="showHistory();" title="История"></span>
+  </div>
+  <div class="tablerow head-chat bgwhite bordbot_cc shadow">
+    <ul class="nav nav-pills martop10 marbot5 marleft10 marright10">
+      <li ng-repeat="(id, usr) in $chatWindow.messageUsers" class="shadow marbot10 marright5" ng-class="id==$chatWindow.toUserId?'active':''">
+        <a href ng-click="selectUser(id, usr.name, usr.type)" ng-right-click="contextShow($event)">
+          <span ng-if="usr.type=='empl'" class="ico chat-status{{$chatWindow.users[id].status.id}}" title="{{$chatWindow.statusDesc[$chatWindow.users[id].status.id]}}"></span>
+          <span ng-if="usr.type=='Conf'" class="ico chat-conf" title="Конференция"></span>
+          <span>{{usr.name}}</span>
+          <sup>
+            <span ng-if="usr.type=='Conf'" class="badge">{{$chatWindow.confs[id].unread_messages==0?'':$chatWindow.confs[id].unread_messages}}</span>
+            <span ng-if="usr.type=='empl'" class="badge">{{$chatWindow.users[id].unread_messages==0?'':$chatWindow.users[id].unread_messages}}</span>
+            <span ng-if="usr.type=='guest'" class="badge">{{$chatWindow.users[id].unread_messages==0?'':$chatWindow.users[id].unread_messages}}</span>
+          </sup>
+          <span ng-show="usr.type=='empl'" ng-click="openInfo(id)" class="glyphicon glyphicon-info-sign" aria-hidden="true" title="Информация"></span>
+          <i class="material-icons touch text-s11" ng-class="id==$chatWindow.toUserId?'white':''" ng-click="$event.preventDefault();removeMessageUsers(id);">close</i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="tablerow body-chat">
+    <div class="tablecell">
+      <div class="body-messages">
+        <div class="hide-over"></div>
+        <div class="scroll-over container-fluid padtop10" id="chatMessagesScrollable">
+          <div class="row marbot10" ng-repeat="message in $chatWindow.chatMessages[$chatWindow.toUserId] | orderBy:'date' track by $index">
+            <div ng-if="message.user.id!=$chatWindow.user.portalData.Login">
+              <div class="col-xs-offset-2 col-xs-22 dark-grey">
+                <span ng-bind-html="message.user.name | shortNameFilter"></span>
+              </div>
+              <div class="col-xs-3">
+                <img ng-src="/public/img_site/{{$root.environment}}/thumb_{{message.user.id}}.jpeg" class="round-photo-32">
+              </div>
+              <div class="col-xs-16 left block">
+                <span ng-bind-html="message.message | linkCreate"></span>
+              </div>
+              <div class="col-xs-offset-1 col-xs-4">
+                <span class="pull-right dark-grey">{{message.date | date:"HH:mm"}}<i class="material-icons text-s16 touch" tooltip-placement="left" uib-tooltip="Цитировать" ng-click="quote(message)">format_quote</i></span>
+              </div>
+            </div>
+            <div ng-if="message.user.id==$chatWindow.user.portalData.Login">
+              <div class="col-xs-offset-4 col-xs-16 right block">
+                <span ng-bind-html="message.message | linkCreate"></span>
+              </div>
+              <div class="col-xs-4">
+                <span class="pull-right dark-grey">{{message.date | date:"HH:mm"}}<i class="material-icons text-s16 touch" tooltip-placement="left" uib-tooltip="Цитировать" ng-click="quote(message)">format_quote</i></span>
+              </div>
+            </div>
+            <div ng-if="$last" ng-init="scrollBottom();"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tablerow head-chat">
+    <div ng-if="$chatWindow.toType=='Conf'">
+      <div class="col-xs-24">
+        <ul class="list-inline mar0">
+          <li style="position:relative;">
+            <i class="material-icons text-s16 touch" ng-click="showAddPerson.status=true">person_add</i>
+            <div ng-show="showAddPerson.status" class="panel" style="position:absolute;bottom: 0px;width: 200px;">
+              <div class="modal-body">
+                <input required type="text" ng-model="confAddUser" placeholder="Добавить"
+                   uib-typeahead="user.name for user in userNames() | filter:$viewValue"
+                   typeahead-on-select="addUserToConf($item.id);confAddUser=''">
+              </div>
+              <div class="modal-footer">
+                <a href class="blue" ng-click="showAddPerson.status=false;">Закрыть</a>
+              </div>
+            </div>
+          </li>
+          <li class="text-s11">
+            <span>Участники конференции: </span>
+            <span class="green marleft5" ng-repeat="usr in $chatWindow.confs[$chatWindow.toUserId].members">{{usr.name}}</span>
+          </li>
+          <li class="pull-right"><i class="material-icons text-s16 touch" ng-click="leaveConf()">exit_to_app</i></li>
+        </ul>
+      </div>
+    </div>
+    <div class="row bgwhite bordtop_cc">
+      <div class="col-lg-24">
+        <table width="100%">
+          <tr>
+            <td class="narrow">
+              <upload-box auto="true" upload-options="{collection:'Chat', unid:'chat'}" multiple="false" model="files" templ="chat.html"></upload-box>
+            </td>
+            <td>
+              <div id="messageText" ctrl-enter="send()" contenteditable="true" placeholder="Отправьте сообщение"></div>
+<!--                 <textarea name="chatText" rows="3" class="form-control text-s12" ng-model="chat.text" ctrl-enter="send()" style="border-bottom: none;box-shadow: none;resize:none;" placeholder="Отправьте сообщение"></textarea> -->
+            </td>
+            <td class="narrow">
+              <i class="material-icons touch marleft10 marright10 martop5" ng-click="send()" title="Отправить">send</i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="chat-context" class="list-group positionabsolute" ng-show="context.show">
+    <a href class="list-group-item" ng-click="showHistory(); context.show=false;">История</a>
+  </div>
+</div>
+

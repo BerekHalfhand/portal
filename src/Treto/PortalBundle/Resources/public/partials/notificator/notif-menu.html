@@ -1,0 +1,119 @@
+<div class="notif-menu">
+
+  <div class="icon-wrap" ng-switch on="::notif.urgency">
+    <md-icon class="notif-icon material-icons"
+             ng-switch-when="-1">
+      <span>update</span>
+    </md-icon>
+    <md-icon class="notif-icon material-icons"
+             ng-switch-when="0"
+             ng-switch on="::notif.parentForm">
+      <span ng-switch-when="formTask">{{notif.isPublic==1?'assignment':'lock'}}</span>
+      <span ng-switch-when="messagebb">{{notif.isPublic==1?'assignment':'lock'}}</span>
+      <span ng-switch-when="formVoting">{{notif.isPublic==1?'sort':'lock'}}</span> 
+      <span ng-switch-when="formAdapt">{{notif.isPublic==1?'create_new_folder':'lock'}}</span>
+      <span ng-switch-when="Empl">{{notif.isPublic==1?'folder_shared':'lock'}}</span>
+      <span ng-switch-when="Contact" ng-if="notif.documentType == 'Person'">{{notif.isPublic==1?'folder_shared':'lock'}}</span>
+      <span ng-switch-when="Contact" ng-if="notif.documentType == 'Organization'">{{notif.isPublic==1?'business':'lock'}}</span>
+      <span ng-switch-default>{{notif.isPublic==1?'create_new_folder':'lock'}}</span>
+    </md-icon>
+    <md-icon class="notif-icon urgent material-icons"
+             ng-switch-default
+             title="Требуется действие">
+      {{notif.isPublic==1?'assignment_late':'lock'}}
+    </md-icon>
+    <md-checkbox
+        md-no-ink
+        class="notif-check"
+        aria-label="checked"
+        ng-click="changeCheckedState(notif.parentUnid)"
+        ng-checked="checkedDocs[notif.parentUnid]"
+        ng-attr-title="{{notif.urgency < 0 ? 'Перенос срока исполнения' : 
+                         notif.parentForm == 'formTask' ? 'Просьба' :
+                         notif.parentForm == 'formVoting' ? 'Опрос' :
+                         notif.parentForm == 'Contact' ? 'Контакт' :
+                         notif.parentForm == 'formProcess' ? 'Тема' : 'Отметить'}}"
+        log-click="Информатор::Галка <Отметить> у темы в информаторе">
+    </md-checkbox>
+  </div>
+
+  <div class="msg-expand-btn-wrap">
+    <md-progress-circular md-mode="indeterminate" md-diameter="16"></md-progress-circular>
+    <md-button
+        md-no-ink
+        class="icon-btn msg-expand-btn"
+        ng-click="notif.toggleExpand()"
+        ng-attr-title="{{notif.expanded ? 'Свернуть' : 'Развернуть'}}"
+        log-click="Информатор::Кнопка-стрелка <Развернуть/Свернуть> уведомление в информаторе">
+      <md-icon class="material-icons">arrow_drop_down</md-icon>
+    </md-button>
+  </div>
+
+  <div class="user-and-theme-title-wrap">
+    <div class="user-wrap">
+      <!--<div class="user-avatar">
+        <div class="pic" style="background-image: url('{{::avatarUrl}}');"></div>
+      </div>-->
+      <div class="user-status"
+           ng-class="{
+                      'online': 1 === $root.users[notif.AuthorLogin].status.id,
+                      'online-in-theme': discus.discusUsers[notif.AuthorLogin]
+                     }">
+      </div>
+      <div class="username-wrap">
+        <involvement username="notif.AuthorLogin"
+                     ng-if="$root.users && $root.$state.current.name!=='body.index' && ((notif.AuthorLogin == $root.user.username) || $root.users[notif.AuthorLogin].involvement!==100)"></involvement>
+        <a class="username"
+           ui-sref="body.profileDisplay({id:notif.AuthorLogin})"
+           target="_blank"
+           log-click="Информатор::Ссылка на профиль автора темы в уведомлении в информаторе"
+           ng-attr-title="{{::(getShareName('fullName', notif.sendShareFrom, notif.shareAuthorLogin) || $root.users[notif.AuthorLogin].WorkGroup.join(', ') || notif.Author)}}">
+           {{::((getShareName('fullName', notif.sendShareFrom, notif.shareAuthorLogin) || $root.users[notif.AuthorLogin].name || notif.Author)|shortName:true)}}
+        </a>
+      </div>
+      <div class="created-date" title="Дата записи">{{::notif.created|dateonly}}</div>
+    </div>
+      <div class="theme-title-wrap">
+        <div class="notif-title-wrap">
+            <a ui-sref="body.discus({id: notif.parentUnid, type: notif.parentForm === 'Contact' ? 'contact' : ''})"
+               target="_blank"
+               title="{{::(notif.subject || notif.subjVoting ||'(неопознанная тема '+$index+')')}}"
+               class="main-notif-link"
+               log-click="Информатор::Ссылка на тему в уведомлении в информаторе">
+              <span>
+              <!--<span ng-switch on="::notif.parentForm">
+                <span ng-switch-when="formTask">ПРОСЬБА:</span>
+                <span ng-switch-when="messagebb">ПРОСЬБА:</span>
+                <span ng-switch-when="formVoting">ОПРОС:</span>
+                <span ng-switch-when="formAdapt">АДАПТАЦИОННЫЙ ЛИСТ:</span>
+                <span ng-switch-when="Empl">ПРОФИЛЬ:</span>
+                <span ng-switch-when="Contact" ng-if="notif.documentType == 'Person'">Контакт персона:</span>
+                <span ng-switch-when="Contact" ng-if="notif.documentType == 'Organization'">Контакт организация:</span>-->
+                  {{::(notif.subject || notif.subjVoting ||'(неопознанная тема '+$index+')')}}{{::(notif.flag ? ' '+notif.flag : '')}}
+                </span>
+                <span ng-show="discus&&discus.main_notif.ToSite == '1'&&notif.parentForm!='Empl'">
+                  Внимание! Публичный блог!
+                </span>
+            </a>
+        </div>
+        <div class="subnotif-title-wrap"
+             ng-repeat="(unid, subnotif) in ::notif.docs">
+          <a ui-sref="body.discus({ id: unid, type: ''})"
+             target="_blank"
+             ng-if="::(unid!=notif.parentUnid && notif.docs[unid]['urgency'] > 0)"
+             class="sub-notif-link"
+             title="Перейти к подтеме"
+             log-click="Информатор::Ссылка на подтему в уведомлении в информаторе">
+            {{::subnotif.subject}}
+          </a>
+        </div>
+      </div>
+  </div>
+
+  <div class="more-btn-wrap">
+    <span ng-init="doc = notif; isNotifMenu = true;"
+          ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"
+          class="dropmenu-wrap"></span>
+  </div>
+
+</div>

@@ -1,0 +1,49 @@
+<article ng-init="discus = $parent.discus;">
+  <div class="msg-wrap clearfix"
+       ng-init="$root.$state.current.name==='body.notifications' ? discus.expanded[doc.unid] = 'attached' : false">
+    <div class="msg-head" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'"></div>
+    <div class="msg-main">
+      <tags-list model="doc.Tags"></tags-list>
+      <div class="title-wrap" quote-selection>
+        <a href ng-click="discus.scrollUnid(doc.taskID)" class="blue"
+           log-click="Дискуссии::Ссылка на просьбу в заголовке в сообщении дискуссии">
+          <span ng-if="doc.subject || doc.messageSubject">{{::(doc.subject || doc.messageSubject)}}</span>
+          <span ng-if="doc.taskID && !doc.subject && !doc.messageSubject" ng-switch on="doc.typeDoc">
+            <span ng-init="discus.tasksSubjects[doc.taskID] = discus.getByUnid(doc.taskID, true).subject"></span>
+            <span ng-switch-when="task" ng-if="!doc.action">Уточнение к задаче "{{ ::discus.tasksSubjects[doc.taskID] }}"</span>
+            <span ng-switch-when="task" ng-if="doc.action=='reject'">Просьба "{{ ::discus.tasksSubjects[doc.taskID] }}" возвращена на доработку.</span>
+            <span ng-switch-when="task" ng-if="doc.action=='check'">Просьба "{{ ::discus.tasksSubjects[doc.taskID] }}" передана на проверку. Проверяющий: {{::discus.profile.translateName(doc.CheckerLat, doc.shareChecker)}}</span>
+            <span ng-switch-when="changes">Изменения задачи "{{ ::discus.tasksSubjects[doc.taskID] }}"</span>
+            <span ng-switch-when="result">Результат выполнения задачи "{{ ::discus.tasksSubjects[doc.taskID] }}"</span>
+            <span ng-switch-default>Уточнение к задаче "{{ ::discus.tasksSubjects[doc.taskID] }}"</span>
+          </span>
+        </a>
+      </div>
+      <div ng-show="discus.expanded[doc.unid] === true ||
+                    discus.expanded[doc.unid] === 'attached' ||
+                    discus.expanded[doc.unid] === 'shown'"
+            class="animate-show" quote-selection>
+
+        <div ng-if="discus.expanded[doc.unid] !== 'attached' && discus.comments.length > 4"
+             dd-text-collapse dd-text-collapse-max-height="57" class="text-content">
+          <div ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml"
+               class="ddColl"></div>
+        </div>
+
+        <div ng-if="discus.expanded[doc.unid] === 'attached' || discus.comments.length < 5"
+             ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml"
+             class="text-content"></div>
+
+        <upload-list model="doc.attachments"></upload-list>
+      </div>
+
+      <div ng-if="!discus.fastReplyMsg && !(nomenu === 'true')" class="blue martop10">
+        <span class="touch"
+              ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+              log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+          Ответить
+        </span>
+      </div>
+    </div>
+  </div>
+</article>

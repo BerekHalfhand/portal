@@ -1,0 +1,119 @@
+<div class="container" ng-if="role('PM') && availableTypes">
+  <div class="row martop10">
+    <div class="col-lg-24 panel">
+      <div class="row">
+        <div class="color-panel" style="border-top-color: rgb(126, 240, 40);">
+          <uib-tabset class="dictionaries onerow" ng-init="dactive={index:0}" active="dactive.index">
+            <uib-tab ng-init="(avtype == dict.type)?dactive.index = $index:''"
+              index = "$index"
+              ng-repeat="(avtype, value) in availableTypes"
+              heading="{{value}}"
+              ui-sref="body.adminDictionary({type:avtype})">
+              <table class="table table-unborded" ng-if="(avtype == dict.type)"><tbody>
+                <tr>
+                  <th>Код</th>
+                  <th>Значение</th>
+                  <th ng-if="dict.nested">Код родителя</th>
+                  <th ng-if="dict.type == 'StatusList'">Предназначается</th>
+                  <th ng-if="dict.type == 'StatusList'">Вкл/Выкл</th>
+                </tr>
+                <tr class="record" ng-repeat="record in dict.records">
+                  <td class="key" ng-init="oldkey = record.key">
+                    <input ng-if="!(dict.type == 'role' && (record.key == 'PM' || record.key == 'all'))"
+                           type="text"
+                           on-focus-select
+                           class="input input-sm form-control"
+                           ng-model="record.key"
+                           title="modified at {{record.modified.sec | date}}"
+                           placeholder="(БУДЕТ УДАЛЕНА)"
+                           log-click="Админка::Поле <Код> в консоли алминистратора"/>
+                    <span ng-if="dict.type == 'role' && (record.key == 'PM' || record.key == 'all')"
+                          title="Ключ является системным и его изменение приведёт к неработоспособности системы">{{record.key}}</span>
+                    <div ng-if="dict.nested && (record.key != oldkey)" class="alert-warning">
+                      Удаляя/Изменяя код элемента, нужно позаботиться обо всех его потомках (с кодом родителя "<b>{{ oldkey }}</b>")!
+                    </div>
+                  </td>
+                  <td class="val">
+                    <input type="text"
+                           class="input input-sm form-control"
+                           ng-model="record.value"
+                           log-click="Админка::Поле <Значение> в консоли алминистратора"/>
+                  </td>
+                  <td class="pkey" ng-if="dict.nested">
+                    <input type="text"
+                           on-focus-select
+                           class="input input-sm form-control"
+                           ng-model="record.parentKey"
+                           placeholder="(корневой элемент)"
+                           log-click="Админка::Поле <Код родителя> в консоли алминистратора"/></td>
+                  <td ng-if="dict.type == 'StatusList'">
+                    <span ng-if="!record.parentKey">
+                      для
+                      <md-checkbox id="subtype_p_{{record.key}}"
+                                   class="input form-control"
+                                   ng-model="record.subtype.person"
+                                   log-click="Админка::Галка <Для персон> в консоли алминистратора">
+                        персон
+                      </md-checkbox>
+                      <md-checkbox id="subtype_o_{{record.key}}"
+                                   class="input form-control"
+                                   ng-model="record.subtype.organization"
+                                   log-click="Админка::Галка <Для организаций> в консоли алминистратора">
+                        организаций
+                      </md-checkbox>
+                    </span>
+                    <span ng-if="record.parentKey" class="label label-default"
+                          uib-popover="Параметры наследуются у родительского элемента" popover-trigger="mouseenter">наследуются</span>
+                  </td>
+                  <td ng-if="dict.type == 'StatusList'">
+                    <label class="btn btn-default" ng-class="{active:record.subtype.show === '1'}" >
+                      <input type="radio"
+                             name="options"
+                             ng-model="record.subtype.show"
+                             value="1"
+                             log-click="Админка::Переключатель <Вкл\Выкл> в консоли алминистратора"/>Вкл.
+                    </label>
+                    <label class="btn btn-default" ng-class="{active:record.subtype.show === '0'}">
+                      <input type="radio"
+                             name="options"
+                             ng-model="record.subtype.show"
+                             value="0"
+                             log-click="Админка::Переключатель <Вкл\Выкл> в консоли алминистратора"/>Выкл.
+                    </label>
+                  </td>
+                </tr>
+              </tbody></table>
+              <br>
+            </uib-tab>
+          </uib-tabset>
+          <div class="row">
+            <div class="col-lg-20">
+              <span class="well well-sm">Чтобы удалить запись, очистите поле "Код"</span>
+              <button type="button"
+                      class="btn btn-info"
+                      ng-click="dict.addRecord()"
+                      log-click="Админка::Кнопка <Добавить ещё значение> в консоли алминистратора">
+                Добавить ещё значение
+              </button>
+              <button type="button"
+                      class="btn btn-primary"
+                      ng-click="dict.addDictionaryModal()"
+                      log-click="Админка::Кнопка <Добавить словарь> в консоли алминистратора">
+                Добавить словарь
+              </button>
+              <button type="button"
+                      class="btn btn-primary"
+                      ng-click="dict.saveRecords()"
+                      ng-disabled="!dict.saved"
+                      log-click="Админка::Кнопка <Сохранить> в консоли алминистратора">
+                СОХРАНИТЬ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul>
+  </ul>
+</div>

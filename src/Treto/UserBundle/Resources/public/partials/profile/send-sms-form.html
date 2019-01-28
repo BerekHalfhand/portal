@@ -1,0 +1,30 @@
+<a href ng-click="sms.showPopup = true;"
+   title="Отправить SMS пользователю"
+   class="white inline-block marright5"
+   log-click="Профиль пользователя::Кнопка <Отправить SMS пользователя> в меню профиля">
+    <i class="material-icons">sms</i>
+</a>
+<div class="darkmatter" ng-show="sms.showPopup" ng-click="sms.showPopup = false;"></div>
+<div id="send-sms-to-user" ng-show="sms.showPopup" class="grey bgwhite absolute">
+    От: <span class="black">{{sms.from}}</span><br/>
+    Кому: <span class="black">{{sms.to}}</span><br/>
+    <div class="text-wrap">
+        Сообщение: <br/>
+        <textarea type="text"
+                  ng-model="sms.text"
+                  class="width100per black"
+                  log-click="Профиль пользователя::Поле <Сообщение> во всплвающем окне отправки SMS в меню профиля"></textarea>
+    </div>
+    <div class="martop10">
+        <a class="blue uppercase button inlineblock marright10"
+           href ng-click="sendSMS(); sms.showPopup = false; sms.text = '';"
+           log-click="Профиль пользователя::Кнопка <Отправить> во всплвающем окне отправки SMS в меню профиля">
+            Отправить
+        </a>
+        <a class="grey uppercase button inlineblock"
+           href ng-click="sms.showPopup = false;"
+           log-click="Профиль пользователя::Кнопка <Отмена> во всплвающем окне отправки SMS в меню профиля">
+            Отмена
+        </a>
+    </div>
+</div>

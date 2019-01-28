@@ -1,0 +1,43 @@
+<div ng-init="collapsed=getBlockState(state);">
+  <div class="side-header">
+    <div ng-click="collapsed=getBlockState(state, true);" class="side-collapse touch"
+         log-click="Главная::Кнопка-стрелка <Показать\скрыть> блок <{{::title}}> на главной">
+      <i ng-hide="collapsed" class="material-icons">arrow_drop_down</i>
+      <i ng-show="collapsed" class="material-icons">arrow_drop_up</i>
+    </div>
+    <ul class="list-inline">
+      <li class="text-s12">
+        <a href class="black" ui-sref="body.discusList({category: category})"
+           log-click="Главная::Ссылка <{{::title}}> в блоке <{{::title}}> на главной">
+          {{::title}}
+        </a>
+      </li>
+      <li ng-if="upperbtn" class="pull-right">
+        <a href ng-click="upperButtonFunction()" class="blue text-s11"
+           log-click="Главная::Кнопка <{{::upperbtn}}> в блоке <{{::title}}> на главной">
+          {{::upperbtn}}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="side-body" ng-show="collapsed">
+    <ul class="list-unstyled">
+      <li ng-repeat="n in data" ng-init="new = daysAgo(n.created, 1)">
+        <a ui-sref="body.discus({ id: n.unid, type:'' })"
+           title="{{::n.subject}}"
+           log-click="Главная::Ссылка в блоке <{{::title}}> на главной">
+          {{::n.created | limitTo:15 | date:'dd.MM' }}&nbsp{{::n.subject}}
+        </a>
+        &nbsp<span class="new-post discus-label" ng-if="new && category!='Новые темы'" style="margin-top: -12px;">NEW</span>
+      </li>
+    </ul>
+    <div ng-if="listDiscus.loading[category]" class="text-center"><i class="spinner"></i></div>
+    <div ng-if="!listDiscus.loading[category] && data.length == 0" style="margin-bottom: 10px; text-align: center;"><small>Нет активных обсуждений</small></div>
+    <div ng-if="lowerbtn" class="marleft10 text-s11 marbot10">
+      <a href class="blue" ng-click="lowerButtonFunction()"
+         log-click="Главная::Кнопка <{{$root.user.portalData.Subscribe.indexOf(index) > -1 ? 'не уведомлять' : 'следить'}}> в блоке <{{::title}}> на главной">
+        {{$root.user.portalData.Subscribe.indexOf(index) > -1 ? 'не уведомлять' : 'следить'}}
+      </a>
+    </div>
+  </div>
+</div>

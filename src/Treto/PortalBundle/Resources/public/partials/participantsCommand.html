@@ -1,0 +1,36 @@
+<!-- controller is "departmentsTeams" directive -->
+<div class="parent-list" ng-if="ngdiscus.shareEnable">
+  <md-checkbox ng-checked="allportal.checked" ng-click="allportal.checked = !allportal.checked; ngdiscus.changeAllSharePushArray(ngdiscus.shareTree, allportal.checked); updateUserInfo();" log-click="Участники::Галка <Добавить всех сотрудников другого портала> в окне <Добавить сотрудников>" aria-label="checked"></md-checkbox>
+  <span class="checkbox-label" ng-click="portal.open = !portal.open" log-click="Участники::Кнопка <Показать\скрыть сотрудников Других команд> в окне <Добавить сотрудников>">
+    <span class="minus-plus" ng-class="{active:!portal.open}"></span>Все команды
+  </span>
+
+  <ul class="child-list" ng-show="portal.open">
+  	<li ng-repeat="(portalDomain, portal) in ngdiscus.shareTree">
+  		<md-checkbox aria-label="checked" type="checkbox" id="fsc_{{$index}}" ng-init="portal.checked = false;" ng-click="portal.checked = !portal.checked; ngdiscus.changeSharePushArray('portal', portalDomain, portal); updateUserInfo();" ng-checked="portal.checked" log-click="Участники::Галка <Добавить сотрудников другого портала> в окне <Добавить сотрудников>"></md-checkbox>
+
+      <span class="checkbox-label" ng-click="section.open = !section.open" log-click="Участники::Кнопка <Показать\скрыть отделы другого портала> в окне <Добавить сотрудников>">
+        <span class="minus-plus" ng-class="{active:!section.open}"></span>{{::portal.name}}
+      </span>
+
+      <ul ng-show="section.open" class="child-list">
+        <li ng-repeat="(sectionName, section) in portal.data">
+          <md-checkbox aria-label="checked" type="checkbox" id="ssc_{{$index}}" ng-init="section.checked = false;" ng-click="section.checked = !section.checked; ngdiscus.changeSharePushArray('section', portalDomain, section); updateUserInfo();" ng-checked="section.checked" log-click="Участники::Галка <Добавить сотрудников отдела другого портала> в окне <Добавить сотрудников>"></md-checkbox>
+          <span class="checkbox-label" ng-click="empl.open = !empl.open" log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела другого портала> в окне <Добавить сотрудников>">
+            <span class="minus-plus" ng-class="{active:!empl.open}"></span>{{::sectionName}}
+          </span>
+
+
+          <ul class="child-list" ng-show="empl.open">
+            <li ng-repeat="empl in section.data">
+              <md-checkbox aria-label="checked" type="checkbox" id="tsc_{{$index}}" ng-init="empl.checked = false;" ng-click="empl.checked = !empl.checked; ngdiscus.changeSharePushArray('empl', portalDomain, empl); updateUserInfo();" ng-checked="empl.checked" log-click="Участники::Галка <Добавить сотрудника другого портала> в окне <Добавить сотрудников>">
+                <span class="bold" ng-bind="empl.LastName+' '+empl.name"></span>,
+                <span ng-bind="empl.WorkGroup.join(', ')"></span>
+              </md-checkbox>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

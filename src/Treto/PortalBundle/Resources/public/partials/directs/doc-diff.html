@@ -1,0 +1,30 @@
+<section class="dropdown-menu doc-diff-menu padbot15">
+  <div class="marleft15 marbot10 martop5 marright15 bold">
+    Хронология изменений
+  </div>
+  <div class="divider"></div>
+  <div ng-switch on="status" class="marleft15 marright15">
+    <div ng-switch-when="loading">Загрузка...</div>
+    <div ng-switch-when="error">Ошибка!</div>
+    <div ng-switch-when="empty">История редактирования отсутствует</div>
+    <div ng-switch-when="ok">
+      <div ng-repeat="oldVersion in oldVersions | orderBy:'created'">
+        <div>
+          <a href target="_blank"
+            class="user-name-link text-s13" ng-if="$root.$state.current.name!=='body.index'"
+            ui-sref="body.profileDisplay({ id: oldVersion.authorLogin })"
+            title="{{$root.users[oldVersion.authorLogin].WorkGroup.join(', ')}}"
+            log-click="Дискуссии::Ссылка на профиль автора сообщения в дискуссии">
+            {{::($root.usersAll[oldVersion.authorLogin].name)}}
+          </a>
+          <span class="dark-grey pull-right text-s12 padtop2">{{oldVersion.created | datetime}}</span>
+        </div>
+        <div class="text-s13">
+          <rich-text-diff left="oldVersion.doc.body" right="oldVersion.newVersion.body"></rich-text-diff>
+          <upload-list model="oldVersion.attachesAdded" difftype="'added'"></upload-list>
+          <upload-list model="oldVersion.attachesRemoved" difftype="'deleted'"></upload-list>
+        </div>
+        <div class="divider" ng-hide="$last" style="margin: 10px -15px;"></div>
+    </div>
+  </div>
+</section>

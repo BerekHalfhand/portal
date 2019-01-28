@@ -1,0 +1,17 @@
+<div id="{{doc.unid}}_tags_dropdown" class="relative" uib-dropdown auto-close="outsideClick" 
+     ng-init="doc._meta.loadTagsPages = false;"
+     keep-in-viewport=".dropdown-menu.tags-menu" on-toggle="place()">
+  <md-button uib-dropdown-toggle
+             onClick="jQuery('.vs-viewport').trigger('resizeScroll');"
+             ng-click="doc._meta.loadTagsPages = true;"
+             class="md-icon-button md-ink-ripple discus-icon-btn" title="Теги"
+             log-click="Теги::Кнопка <Теги> в меню сообщения в дискуссии">
+      <md-icon class="material-icons">local_offer</md-icon>
+  </md-button>
+  <div uib-dropdown-menu id="{{doc.unid}}_tags_menu"
+       class="dropdown-menu tags-menu"
+       ng-include="'/bundles/tretoportal/partials/doc_templ/common/tags-window.html'"
+       ng-controller="tagsCtrl"
+       role="menu">
+  </div>
+</div>

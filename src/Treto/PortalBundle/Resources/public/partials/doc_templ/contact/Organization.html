@@ -1,0 +1,452 @@
+<div class="row" ng-show="$parent.tab.name=='name' || $root.$state.current.name==='body.notifications'"
+ng-init="doc.isLoaded = true;">
+
+  <div class="col-lg-12">
+    <p>
+      <span class="dark-grey">Официальное название:</span>
+      <span ng-class="{'grey':!doc.OtherName}" ng-bind="(doc.OtherName|defaultValue:doc.FullName) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Полное название для поисковиков:</span>
+      <span ng-class="{'grey':!doc.SiteName}" ng-bind="(doc.SiteName) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Название юрлица на инвойсах:</span>
+      <span ng-class="{'grey':!doc.NameCompany}" ng-bind="(doc.NameCompany) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Группа компаний:</span>
+      <span ng-bind="(doc.CompanyGroup)"></span>
+      <span>
+        <a href class="green"
+           log-click="Контакты::Кнопка <Выбрать группу компаний> в карточке организации в контактах">
+          Выбрать
+        </a>
+      </span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Комментарий:</span>
+      <span ng-class="{'grey':!(doc.Comment | trim | stripTags)}" ng-bind="(doc.Comment | trim | stripTags) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Сотрудники компании:</span>
+      <span ng-repeat="(key, value) in doc.Employee track by $index">
+        <a href ui-sref="body.discus($parent.$parent.getContactParams(doc.EmployeeId[key]))"
+           log-click="Контакты::Ссылка на сотрудника компании в карточке организации в контактах">
+          {{value}}
+        </a>
+        <span ng-click="$parent.$parent.removeEmplFromCompany(doc.unid, doc.EmployeeId[key]); doc.Employee.splice(key, 1);"
+              style="cursor: pointer;"
+              log-click="Контакты::Кнопка <Удатить сотрудника компании> в карточке организации в контактах">x</span>
+      </span>
+      <span>
+        <a href class="green"
+           ng-click="$parent.$parent.showFormEmit('person', false, false, false, false, false, {organization:doc.ContactName||doc.OtherName||doc.MainName, organizationId:doc.unid});"
+           log-click="Контакты::Кнопка <Создать сотрудника компании> в карточке организации в контактах">
+          создать
+        </a>
+      </span>
+      <span>
+        <a ng-init="showAddEmpl = false;"
+           ng-click="showAddEmpl = true;"
+           href class="green"
+           log-click="Контакты::Кнопка <Выбрать сотрудника компании> в карточке организации в контактах">
+          выбрать
+        </a>
+      </span>
+      <div ng-show="showAddEmpl" class="panel" style="position:absolute;left: 63px;max-width: 550px;">
+        <div class="modal-body" ng-init="companyEmpl = ''; companyEmplId = ''; companyEmplSub = false;">
+          <input type="text" placeholder="Сотрудник компании" class="form-control input-sm"
+                 ng-init="companyEmpl = '';"
+                 ng-model="companyEmpl"
+                 uib-typeahead="user.name as user.name for user in $root.autoComplete.persons($viewValue.substring($viewValue.lastIndexOf(',')+1).trim())"
+                 typeahead-loading="loadingNames"
+                 typeahead-wait-ms="400"
+                 typeahead-on-select="companyEmpl = $item.name; companyEmplId = $item.unid;"
+                 log-click="Контакты::Поле <Сотрудник компании> во всплывающем окне <Выбрать сотрудника компании> в карточке организации в контактах"/>
+          <div ng-show="companyEmplSub && (!companyEmpl || !companyEmplId)" class="required-warning" ng-click="companyEmplSub = false;">
+            <span>Контакт должен быть выбран из выпадающего списка.</span>
+          </div>
+          <div class="text-left" style="padding-top: 10px;">
+            <a href class="blue"
+               ng-click="$parent.$parent.addEmplToCompany(doc.unid, companyEmplId); companyEmplSub = true; showAddEmpl = !(companyEmpl && companyEmplId); doc.isLoaded = companyEmpl && companyEmplId;"
+               log-click="Контакты::Кнопка <Добавить> во всплывающем окне <Выбрать сотрудника компании> в карточке организации в контактах">
+              Добавить
+            </a>
+            <a href class="black"
+               ng-click="showAddEmpl = false; companyEmpl = ''; companyEmplId = ''; companyEmplSub = false;"
+               log-click="Контакты::Кнопка <Закрыть> во всплывающем окне <Выбрать сотрудника компании> в карточке организации в контактах">
+              Закрыть
+            </a>
+          </div>
+        </div>
+      </div>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Тип контакта:</span>
+      <span ng-class="{'grey':!doc.ContactStatus}" ng-bind="(statusListDict.getRecordValues(doc.ContactStatus)|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Профиль деятельности:</span>
+      <span ng-class="{'grey':!(doc.Group|join)}" ng-bind="(doc.Group|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Бренд менеджер:</span>
+      <span ng-class="{'grey':!doc.ResponsibleManager}" ng-bind="doc.ResponsibleManager || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Место регистрации:</span>
+      <span>Сайт</span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">История изменений:</span>
+      <span ng-class="{'grey':!doc.ChangeLog}" ng-bind="(doc.ChangeLog|lastChange) || 'Нет записи'"></span>
+      <a href class="green" ng-click="showhistoryPopup=true"
+         log-click="Контакты::Кнопка <История изменений: Подробнее> в контактах">
+        Подробнее
+      </a>
+      <div ng-if="showhistoryPopup" ng-init="contact=doc" ng-include="'/bundles/tretoportal/partials/modals/contactHistory.html'"></div>
+    </p>
+  </div>
+  <div class="col-lg-12">
+    <p ng-if="doc.ContactStatus.indexOf('11') > -1 || doc.ContactStatus.indexOf('9') > -1">
+      <span class="dark-grey">Образцы поштучно:</span>
+      <span>
+        {{::doc.individuallySamples.indexOf('bg') > -1?'фон':''}}
+        {{::doc.individuallySamples.indexOf('dc') > -1?'декор':''}}
+        {{::doc.individuallySamples.indexOf('or') > -1?'по запросу':''}}
+        {{::doc.individuallySamples.length < 1?'-':''}}
+      </span>
+    </p>
+    <div class="divider" ng-if="doc.ContactStatus.indexOf('11') > -1 || doc.ContactStatus.indexOf('9') > -1"></div>
+    <p ng-if="doc.ContactStatus.indexOf('11') > -1 || doc.ContactStatus.indexOf('9') > -1">
+      <span class="dark-grey">Метод оплаты:</span>
+      <span>
+        {{::doc.payMethod[0] == 1?'Оплата всего по готовности':''||
+        doc.payMethod[0] == 2?'Предоплата всего':''||
+        doc.payMethod[0] == 3?'Предоплата только производства':''||'Нет записи'}}
+      </span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Телефон:</span>
+      <span ng-class="{'grey':!(doc.PhoneValues || doc.Phone |join)}" ng-bind="(doc.PhoneValues || doc.Phone |join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">E-mail:</span>
+      <a ng-repeat="mail in (doc.EmailValues || doc.Email)"
+         ng-href="mailto://{{mail}}" target="_blank"
+         log-click="Контакты::Ссылка на <e-mail> организации в контактах">
+        {{mail}}
+      </a>
+      <span ng-hide="(doc.EmailValues || doc.Email | join)">Нет записи</span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Сайт:</span>
+      <span ng-class="{'grey':!(doc.SiteValues || doc.Site)}" ng-bind="(doc.SiteValues || doc.Site |join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Страна:</span>
+      <span ng-class="{'grey':!doc.Country}" ng-bind="(countryDict.getRecordValues([doc.Country])|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Адрес фактический:</span> 
+      <span ng-class="{'grey':!((doc | addressContact:'Actual') || doc.ActualAddress)}"
+            ng-bind="(doc | addressContact:'Actual') || doc.ActualAddress || 'Нет записи'"></span>
+    </p>
+    <div class="devider"></div>
+    <p>
+      <span class="dark-grey">Адрес доставки:</span>
+      <span ng-class="{'grey':!((doc | addressContact:'ForDelivery') || (doc | addressContact:'Actual') || doc.DeliveryAddress)}"
+            ng-bind="(doc | addressContact:'ForDelivery') || (doc | addressContact:'Actual') || doc.DeliveryAddress || 'Нет записи'"></span>
+    </p>
+    <div class="devider"></div>
+    <p>
+      <span class="dark-grey">Адрес юридический:</span>
+      <span ng-class="{'grey':!((doc | addressContact:'ForLegal') || (doc | addressContact:'Actual') || doc.LegalAddress)}"
+            ng-bind="(doc | addressContact:'ForLegal') || (doc | addressContact:'Actual') || doc.LegalAddress || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Дилеры:</span>
+      <span>
+        <a href class="green"
+           log-click="Контакты::Кнопка <Создать диллера> в карточке организации в контактах">
+          создать
+        </a>
+      </span>
+      <span>
+        <a href class="green"
+           log-click="Контакты::Кнопка <Выбрать диллера> в карточке организации в контактах">
+          выбрать
+        </a>
+      </span>
+    </p>
+    <div class="divider"></div>
+  </div>
+</div>
+<div class="row" ng-show="$parent.tab.name=='bank'">
+  <div class="col-lg-12">
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">ОГРН:</span>
+      <span ng-class="{'grey':!doc.OGRN}" ng-bind="doc.OGRN || 'Нет записи'"></span>
+    </p>
+    <p ng-if="doc.FormOwnership === '6'">
+      <span class="dark-grey">Reg. No.:</span>
+      <span ng-class="{'grey':!doc.RegNo}" ng-bind="doc.RegNo || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">ОКПО:</span>
+      <span ng-class="{'grey':!doc.OKPO}" ng-bind="doc.OKPO || 'Нет записи'"></span>
+    </p>
+    <p ng-if="doc.FormOwnership === '6'">
+      <span class="dark-grey">VAT No.:</span>
+      <span ng-class="{'grey':!doc.VATNo}" ng-bind="doc.VATNo || 'Нет записи'"></span>
+    </p>
+    <div ng-if="doc.FormOwnership !== '6'" class="divider"></div>
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">ИНН:</span>
+      <span ng-class="{'grey':!doc.INN}" ng-bind="doc.INN || 'Нет записи'"></span>
+    </p>
+    <div ng-if="doc.FormOwnership !== '6'" class="divider"></div>
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">КПП:</span>
+      <span ng-class="{'grey':!doc.KPP}" ng-bind="doc.KPP || 'Нет записи'"></span>
+    </p>
+    <div ng-if="doc.FormOwnership !== '6'" class="divider"></div>
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">Корр.счет:</span>
+      <span ng-class="{'grey':!doc.CorrespondentAccount}" ng-bind="doc.CorrespondentAccount || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Расч.счет:</span>
+      <span ng-class="{'grey':!doc.CurrentAccount}" ng-bind="doc.CurrentAccount || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+  </div>
+  <div class="col-lg-12">
+    <p>
+      <span class="dark-grey">Банк:</span>
+      <span ng-class="{'grey':!doc.Bank}" ng-bind="doc.Bank || 'Нет записи'"></span>
+    </p>
+    <div ng-if="doc.FormOwnership !== '6'" class="divider"></div>
+    <p ng-if="doc.FormOwnership !== '6'">
+      <span class="dark-grey">БИК:</span>
+      <span ng-class="{'grey':!doc.Bick}" ng-bind="doc.Bick || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Swift:</span>
+      <span ng-class="{'grey':!doc.Swift}" ng-bind="doc.Swift || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">ФИО руководителя:</span>
+      <span ng-class="{'grey':!doc.BossFIO}" ng-bind="doc.BossFIO || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Должность руководителя:</span>
+      <span ng-class="{'grey':!doc.BossRank}" ng-bind="doc.BossRank || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">ФИО бухгалтера:</span>
+      <span ng-class="{'grey':!doc.BookerFIO}" ng-bind="doc.BookerFIO || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+  </div>
+</div>
+<div class="row" ng-show="$parent.tab.name=='conditions'">
+  <div class="col-lg-12">
+    <p>
+      <span class="dark-grey">Работаем от:</span>
+      <span ng-class="{'grey':(!doc.ContactWorkFrom||!doc.ContactWorkFrom[0])}"
+            ng-bind="doc.ContactWorkFrom[0]?doc.ContactWorkFrom.join(', '):'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Мин. срок поставки (дни):</span>
+      <span ng-class="{'grey':!doc.MinDeliveryTerm}" ng-bind="doc.MinDeliveryTerm || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Мин. сумма заказа (евро):</span>
+      <span ng-class="{'grey':!doc.MinOrderSum}" ng-bind="doc.MinOrderSum || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Cрок накопления заказов для вывоза(дни):</span>
+      <span ng-class="{'grey':!doc.DaysObtainOrders}" ng-bind="doc.DaysObtainOrders || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Порог дробления заказов (евро):</span>
+      <span ng-class="{'grey':!doc.SumOrdersMax}" ng-bind="doc.SumOrdersMax || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p ng-show="doc.IsPackageOnly">
+      <span class="dark-grey">Заказы принимаются кратно упаковкам<span ng-show="doc.IsPackageWithConditions">, с условиями</span></span>
+    </p>
+    <table class="table table-bordered" ng-show="doc.IsPackageOnly && doc.IsPackageWithConditions && doc.PackageMeasureUnit && doc.PackageMeasureUnit[0]">
+      <thead>
+        <th>Единицы измерения</th>
+        <th>Размер (x*y)</th>
+        <th>Кратность</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="package in doc.PackageMeasureUnit track by $index">
+          <td class="col-md-5">{{doc.PackageMeasureUnit[$index]}}</td>
+          <td class="col-md-5">{{doc.PackageSize[$index]}}</td>
+          <td class="col-md-5">{{doc.PackageFactor[$index]}}</td>
+        </p>
+      </tbody>
+    </table>
+    <div class="divider" ng-show="doc.IsPackageOnly"></div>
+    <p>
+      <span class="dark-grey">Нерегулярная фабрика:</span>
+      <span ng-bind="(doc.IsIrregularFabric === '1' ? 'да' : 'нет')"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Стоимость заезда (евро):</span>
+      <span ng-class="{'grey':!doc.CallCost}" ng-bind="doc.CallCost || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Стоимость экспортной декларации (евро):</span>
+      <span ng-class="{'grey':!doc.ExportDeclarationCost}" ng-bind="doc.ExportDeclarationCost || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+  </div>
+
+  <div class="col-lg-12">
+    <p>
+      <span class="dark-grey">Условия оплаты:</span>
+      <span ng-class="{'grey':!doc.PayType}" ng-bind="doc.PayType == '1'?'кредит':doc.PayType == '2'?'предоплата':'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Скидка за предоплату (%):</span>
+      <span ng-class="{'grey':!doc.PrepaymentDiscount}" ng-bind="doc.PrepaymentDiscount || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Каникулы:</span>
+      <span ng-repeat="holiday in doc.inHoliday" class="red bold">
+        {{(doc.inHoliday[$index] | datetime)+' - '+(doc.outHoliday[$index] | datetime)}}
+        <span ng-hide="$last">, </span>
+      </span>
+      <span ng-if="!doc.inHoliday || doc.inHoliday.length == 0" class="grey">Нет записи</span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span class="dark-grey">Скидки</span>
+      <span ng-class="{'green':doc.DiscountAccepted === '1', 'red':doc.DiscountAccepted !== '1'}" ng-bind="(doc.DiscountAccepted === '1' ? '(акцептованы: ' + doc.DiscountAcceptor + ' ' + (doc.DiscountAcceptedDate | datetime)+'):':'не заполнены:')"></span>
+      <span>
+        <a href class="green"
+           ng-show="!doc.DiscountAccepted || doc.DiscountAccepted === '0'"
+           ng-click="$root.acceptedDiscounts()"
+           log-click="Контакты::Кнопка <Акцептовать скидки> в карточке организации в контактах">
+          Акцептовать
+        </a>
+      </span>
+      <span>
+        <a href class="green"
+           ng-click="$root.currDiscount = false;$root.showCreateDiscount = !$root.showCreateDiscount"
+           log-click="Контакты::Кнопка <Добавить скидки> в карточке организации в контактах">
+          Добавить
+        </a>
+      </span>
+    </p>
+  </div>
+</div>
+<div class="row" ng-show="$parent.tab.name=='conditions' && $root.discounts.length>0">
+  <div class="col-lg-24">
+    <table class="table table-bordered">
+      <tr class="border">
+        <th class="col-lg-1">№</th>
+        <th class="col-lg-6">Применяется</th>
+        <th class="col-lg-10">Скидка</th>
+        <th class="col-lg-2">Образец</th>
+        <th class="col-lg-2">Срок</th>
+        <th class="col-lg-1"></th>
+        <th class="col-lg-1"></th>
+        <th class="col-lg-1"></th>
+      </tr>
+      <tr class="border-top" ng-repeat-start="(key, value) in $root.discounts | groupBy: 'ObjectDiscount'" ng-init="show[key]=true">
+        <td colspan="8">
+          <a href ng-click="show[key]=!show[key]"
+             log-click="Контакты::Кнопка <Показать\скрыть> подробности скидки в таблице скидок в карточке организации в контактах">
+            <span class="ico plus-minus" ng-class="{active:!show[key]}"></span>
+          </a> {{$root.ObjectDiscount[key]}}
+        </td>
+      </tr>
+        <tr ng-repeat="(key1, discount) in value" ng-show="showDiscount&&show[key]" ng-init="showDiscount = true">
+          <td class="col-lg-1">{{1 + key1}}</td>
+          <td class="col-lg-6">{{$root.UseDiscount[discount.UseDiscount]}}</td>
+          <td class="col-lg-9">
+            {{
+              discount.BasicDiscount ?
+                $root.ConditionDiscount5[$root.parseInt(discount.ConditionDiscount_5)] + ' ' + discount.ConditionDiscount_6 :
+                'Если ' +
+                $root.ConditionDiscount1[$root.parseInt(discount.ConditionDiscount_1)] + ' ' +
+                $root.ConditionDiscount2[$root.parseInt(discount.ConditionDiscount_2)] + ' ' +
+                discount.ConditionDiscount_3 + ' ' +
+                $root.ConditionDiscount4[$root.parseInt(discount.ConditionDiscount_4)] + ' ' +
+                $root.ConditionDiscount5[$root.parseInt(discount.ConditionDiscount_5)] + ' ' +
+                discount.ConditionDiscount_6 + ' ' +
+                $root.symbols[$root.parseInt(discount.ConditionDiscount_5)]
+            }}
+          </td>
+          <td class="col-lg-2">{{discount.SampleDiscount ? 'образцы':''}}</td>
+          <td class="col-lg-3">{{discount.conditionunlimited ? 'без срока':
+                               (discount.FromDate ? ('c ' + (discount.FromDate | datetime)) : '') +
+                               (discount.ConditionDuration ? (' по ' + (discount.ConditionDuration | datetime)) : '') }}</td>
+          <td class="col-lg-1">
+            <a href ng-click="$root.currDiscount = discount; $root.showCreateDiscount = true"
+               class="glyphicon glyphicon-pencil grey"
+               log-click="Контакты::Кнопка <Редактировать скидку> в таблице скидок в карточке организации в контактах">
+            </a>
+          </td>
+          <td class="col-lg-1">
+            <a href ng-click="$root.discountSetOld(discount.id)"
+               class="glyphicon glyphicon-flag grey"
+               log-click="Контакты::Кнопка <Отметить устаревшей скидку> в таблице скидок в карточке организации в контактах">
+            </a>
+          </td>
+          <td class="col-lg-1">
+            <a href ng-click="$root.contactDelete(discount.id, true); showDiscount = false;"
+               class="glyphicon glyphicon-remove grey"
+               log-click="Контакты::Кнопка <Удалить скидку> в таблице скидок в карточке организации в контактах">
+            </a>
+          </td>
+        </tr>
+      <tr ng-repeat-end></tr>
+    </table>
+  </div>
+</div>
+<div class="green martop10">
+  <span class="touch"
+        ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+        log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+    Ответить
+  </span>
+</div>
+<ng-include ng-if="$root.showCreateDiscount" ng-init="discount = $root.currDiscount; contact = doc;" src="'/bundles/tretoportal/partials/modals/createDiscount.html'"></ng-include>

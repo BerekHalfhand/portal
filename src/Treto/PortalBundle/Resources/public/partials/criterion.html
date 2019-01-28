@@ -1,0 +1,53 @@
+<title ng-if="!criterion">Загрузка...</title>
+<title ng-if="criterion">{{criterion.name}}</title>
+<div class="martop10">
+  <a href ui-sref="body.criterions" class="green"
+     log-click="Банк вопросов::Кнопка <Назад> на странице критерия">Назад</a>
+  <div class="pull-right">
+    <a href class="green" ng-click="changeCrit=!changeCrit"
+       log-click="Банк вопросов::Кнопка <Изменить> критерий на странице критерия">Изменить</a>
+    <a href ui-sref="body.criterions.questionCreate({unid: criterion.unid})"
+       class="green marleft5"
+       log-click="Банк вопросов::Кнопка <Новый вопрос> на странице критерия">Новый вопрос</a>
+    <a href class="green marleft5" ng-click="delete()"
+       log-click="Банк вопросов::Кнопка <Удалить> критерий на странице критерия">Удалить</a>
+  </div>
+</div>
+
+<div>
+  <table class="width100per">
+    <tr class="text-s16">
+      <td class="narrow">Критерий: </td>
+      <td ng-hide="changeCrit"><span ng-bind="criterion.name"></span></td>
+      <td ng-show="changeCrit">
+        <input type="text" ng-model="criterion.name" class="form-control input-sm"
+               log-click="Банк вопросов::Поле <Критерий> на странице критерия"/>
+      </td>
+    </tr>
+    <tr>
+      <td class="narrow">Описание:</td>
+      <td ng-hide="changeCrit"><span ng-bind="criterion.Description"></span></td>
+      <td ng-show="changeCrit">
+        <textarea rows="3" ng-model="criterion.Description" class="form-control input-sm"
+                  log-click="Банк вопросов::Поле <Описание> на странице критерия"></textarea>
+      </td>
+    </tr>
+  </table>
+</div>
+<a href class="blue martop10" ng-show="changeCrit" ng-click="save()"
+   log-click="Банк вопросов::Кнопка <Сохранить> на странице критерия">Сохранить</a>
+<br>
+<h3>Вопросы:</h3>
+
+<table class="table table-striped">
+  <th>Вопрос</th>
+  <th>Описание</th>
+  <tr ng-repeat="quest in criterion.questions">
+    <td>
+      <a href ui-sref="body.criterions.question({critunid: criterion.unid, unid: quest.unid})"
+         ng-bind-html="quest.name | break2br | nl2br"
+         log-click="Банк вопросов::Ссылка на вопрос в таблице вопросов на странице критерия"></a>
+    </td>
+    <td ng-bind-html="quest.Description | break2br | nl2br"></td>
+  </tr>
+</table>

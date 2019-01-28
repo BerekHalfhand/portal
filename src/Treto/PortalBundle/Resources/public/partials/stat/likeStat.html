@@ -1,0 +1,149 @@
+<section class="full-page-container">
+    <form class="stat-controlls">
+        <div class="period-datapickers-wrap">
+            <md-datepicker
+                ng-model="period.start"
+                md-min-date="minDate"
+                md-max-date="period.end || maxDate"
+                ng-change="period.type = 'custom'; getDailyStat();"
+                md-open-on-focus
+                md-placeholder="с"
+                log-click="Статистика::Выбор даты периода <c> числа для отбора статистики">
+            </md-datepicker>
+
+            <md-datepicker
+                ng-model="period.end"
+                md-min-date="period.start || minDate"
+                md-max-date="maxDate"
+                ng-change="period.type = 'custom'; getDailyStat();"
+                md-open-on-focus
+                md-placeholder="по"
+                log-click="Статистика::Выбор даты периода <по> число для отбора статистики">
+            </md-datepicker>
+        </div>
+
+        <div class="period-thumbler-wrap">
+            <ul class="period-thumbler">
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'day'}"
+                    ng-click="stat.fastSelectPeriod('day'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за вчера> на странице статистики">за вчера</a>,
+            </li>
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'week'}"
+                    ng-click="stat.fastSelectPeriod('week'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за неделю> на странице статистики">неделю</a>,
+            </li>
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'month'}"
+                    ng-click="stat.fastSelectPeriod('month'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за месяц> на странице статистики">месяц</a>,
+            </li>
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'quarter'}"
+                    ng-click="stat.fastSelectPeriod('quarter'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за квартал> на странице статистики">квартал</a>,
+            </li>
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'year'}"
+                    ng-click="stat.fastSelectPeriod('year'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за год> на странице статистики">год</a>,
+            </li>
+            <li>
+                <a href class="blue radio-link"
+                    ng-class="{active: period.type === 'full'}"
+                    ng-click="stat.fastSelectPeriod('full'); getDailyStat();"
+                    log-click="Статистика::Переклюатель периода <за весь период> на странице статистики">весь период</a>
+            </li>
+            </ul>
+        </div>
+
+        <div class="thumbler martop10">
+            <span class="dark-grey">Показать: </span>
+            <a href
+                ng-click="isLikes = true; table.likeDataset = table.likes; sortBy('likes');"
+                ng-class="{active: isLikes}"
+                class="blue radio-link"
+                log-click="Статистика::Переключатель таблицы лайков на <лайки> на странице статистики">
+                лайк
+            </a>,
+            <a href
+                ng-click="isLikes = false; table.likeDataset = table.dislikes; sortBy('dislikes');"
+                ng-class="{active: !isLikes}"
+                class="blue radio-link"
+                log-click="Статистика::Переключатель таблицы лайков на <нелайки> на странице статистики">
+                нелайк
+            </a>
+        </div>
+    </form>
+
+    <div ng-show="!loadingDailyStat">
+        <table class="modern-table table-fixed like-stat-table"
+               ng-init="initialSortProp = isLikes ? 'likes' : 'dislikes'; sort.property !== initialSortProp ? sortBy(initialSortProp) : ''">
+            <thead>
+                <tr>
+                    <th ng-click="sortBy('subject')"
+                        log-click="Статистика::Сортировка таблицы <лайк\нелайк> на странице статистики по заголовку\комментарию">
+                        Название
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='subject'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('likes')"
+                        log-click="Статистика::Сортировка таблицы <лайк\нелайк> на странице статистики по количеству лайков">
+                        Лайк
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='likes'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('dislikes')"
+                        log-click="Статистика::Сортировка таблицы <лайк\нелайк> на странице статистики по количеству нелайков">
+                        Нелайк
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='dislikes'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('name')"
+                        log-click="Статистика::Сортировка таблицы <лайк\нелайк> на странице статистики по автору">
+                        Автор
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='name'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('created')"
+                        log-click="Статистика::Сортировка таблицы <лайк\нелайк> на странице статистики по дате комментария">
+                        Дата создания
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='created'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="like in table.likeDataset | orderBy: sort.property : sort.reverse">
+                    <td>
+                        <a href ui-sref="body.discus({ id: like.unid, type:''  })"
+                            title="{{::like.name}} ({{::like.created | datetime}})&#010;{{ ::like.body }}"
+                            log-click="Статистика::Ссылка на комментарий с лайком\нелайком в таблице <лайк\нелайк> на странице статистики">
+                            {{::(like.parsedSubject === '' ? '[без текста]' : like.parsedSubject)}}
+                        </a>
+                    </td>
+                    <td>{{::like.likes}}</td>
+                    <td>{{::like.dislikes}}</td>
+                    <td>{{::like.name}}</td>
+                    <td>{{::like.created | datetime}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

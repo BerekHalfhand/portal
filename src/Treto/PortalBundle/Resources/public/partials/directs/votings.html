@@ -1,0 +1,44 @@
+  <div class="interview">
+    <ul class="list-inline martop10">
+      <li class="black text-s15">Опрос</li>
+      <li>
+        <a href class="blue"
+           ng-click="showForm('createVote', 'index')"
+           log-click="Дискуссии::Кнопка <Новый опрос> на главной">
+          новый
+        </a>
+      </li>
+      <li>
+        <a href class="blue"
+           ui-sref="body.voting"
+           log-click="Дискуссии::Ссылка на <прошедшие> опросы на главной">
+          прошедшие
+        </a>
+      </li>
+      <!--<li><a href class="blue">следить</a></li>-->
+    </ul>
+    <div class="thirds-wrap" ng-if="votes.length">
+      <div class="thirds">
+        <div class="one-vote" ng-repeat="(index, vote) in votes" ng-if="index % 3 == 0">
+          <div class="pad10 bglight-grey">
+            <div ng-include="'vote.html'"></div>
+          </div>
+        </div>
+      </div>
+      <div class="thirds">
+        <div class="one-vote" ng-repeat="(index, vote) in votes" ng-if="index % 3 == 1">
+          <div class="pad10 bglight-grey">
+            <div ng-include="'vote.html'"></div>
+          </div>
+        </div>
+      </div>
+      <div class="thirds">
+        <div class="one-vote" ng-repeat="(index, vote) in votes" ng-if="index % 3 == 2">
+          <div class="pad10 bglight-grey">
+            <div ng-include="'vote.html'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ng-if="$root.listDiscus.loading['voting']" class="text-center padbot10"><i class="spinner"></i></div>
+  </div>

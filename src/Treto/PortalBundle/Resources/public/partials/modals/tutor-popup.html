@@ -1,0 +1,19 @@
+<div ctrl-enter="popup.ok()" class ='styledModal'>
+    <div class="modal-header {{ popup.style }}" ng-show="popup.title">
+      <h3 class="modal-title">{{ popup.title }}</h3>
+      <a class="close pull-right marright5" ng-click="popup.cancel()" style="position: absolute;top: 5px;right: 0;z-index: 1001" title="Закрыть" log-click="Дискуссии::Кнопка <Закрыть> в окне предупреждения">
+        <i class="material-icons">close</i>
+      </a>
+    </div>
+    <div class="modal-body" ng-bind-html="popup.message"></div>
+    <div class="modal-footer">
+        <button class="btn btn-primary"
+                ng-click="popup.ok()"
+                ng-bind-html="popup.buttonTitles.ok || 'Понял'"
+                log-click="Всплывающее окно::Кнопка <Понял> в окне предупреждения">
+        </button>
+        
+        <md-checkbox id="checkDismiss" ng-model="popup.dismiss" class="pull-right" style="margin: 5px 0 5px 0;"
+                     log-click="Дискуссии::Галка <Больше не показывать> в окне предупреждения">Больше не показывать</md-checkbox>
+    </div>
+</div>

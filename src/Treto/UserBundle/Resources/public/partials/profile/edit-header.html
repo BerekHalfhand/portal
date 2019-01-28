@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+    <div class="top-left-corner-15 touch" style="top: -5px;">
+      <a href ui-sref="body.profileDisplay({ id: theUser.username, force: 'force-display'})"
+         log-click="Профиль пользователя::Кнопка <Назад: Выйти из режима редактирования> в профиле пользователя">
+        <i class="material-icons white" style="font-size: 16px;">arrow_back</i>
+      </a>
+    </div>
+    <div class="inline-block relative" ng-include="'/bundles/tretouser/partials/profile/send-sms-form.html'"></div>
+    <a ui-sref="logout" class="white marright5 inline-block" title="Выйти"
+       log-click="Профиль пользователя::Кнопка <Выйти> в профиле пользователя">
+      <i class="material-icons">power_settings_new</i>
+    </a>
+    <div class="header-photo round-photo-48 pull-left">
+      <img class="round-photo-48" ng-if="theUser.portalData.attachments.length == 0" ng-src='/public/img_site/{{$root.environment}}/thumb_{{theUser.username}}.jpeg' />
+      <img class="round-photo-48" ng-if="theUser.portalData.attachments.length > 0" ng-src='{{theUser.portalData.attachments[0][0].thumbnail}}' />
+      <div class="user-photo-wrapper round-photo-48 touch" title="Если после загрузки нового фото отображется старое, нажмите Ctrl+F5 или очистите кэш браузера" style="top: 0;">
+        <upload-box upload-options="{ collection: 'Portal', unid: theUser.portalData.unid }" auto="true" model="theUser.portalData.attachments" one="true" ></upload-box>
+      </div>
+    </div>
+    <div class="pull-left marright5">
+      <big class="white">{{ theUser.portalData.FullNameInRus }}</big>&nbsp;<span ng-show="theUser.portalData.DtDismiss" class="white label label-danger">Уволен</span><br/>
+      <p class="white text-s14">{{ theUser.portalData.FullNameRaw }}</p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <nav class="martop10">
+    <ul class="nav nav-tabs text-uppercase pink-bottom">
+      <li class="active" style="padding-left: 10px;"><a href class="white">Редактирование</a></li>
+    </ul>
+  </nav>
+</div>

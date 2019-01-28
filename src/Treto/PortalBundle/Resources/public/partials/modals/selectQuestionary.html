@@ -1,0 +1,45 @@
+<div class="edit-doc center">
+  <div class="container panel">
+    <div class="modal-body" ng-if="!doc.questionaries[0]">
+      <p>Подождите...</p>
+      <a href class="black"
+        ng-click="$parent.$parent.$parent.showSelectQuestionary=false"
+        log-click="Запроса на опрос::Кнопка <ОТМЕНА> в окне <Отправка запроса на опрос> в карточке контакта">ОТМЕНА</a>
+    </div>
+    <div class="modal-body" ng-if="doc.questionaries[0]" ng-init="q = doc.questionaries[0]">
+      <p class="text-s14">Отправка запроса на опрос</p>
+      <p class="blue">Опрос:</p>
+      <span uib-dropdown  style="position:relative;">
+        <a href class="black" uib-dropdown-toggle
+           log-click="Запроса на опрос::Меню <Опрос> в окне <Отправка запроса на опрос> в карточке контакта">
+           {{q.name}} <span class="caret pull-right"></span>
+        </a>
+
+        <ul class="dropdown-menu" role="menu" style="max-height: 200px;overflow-y: auto;">
+          <li ng-repeat="quest in doc.questionaries | orderBy:'name'"> 
+            <!-- <a href ng-click="doc.sendQuestionary(doc, quest, hitlist)" ng-bind="quest.name"></a>  -->
+            <a href ng-click="$parent.q = quest" class="text-s12">{{quest.name}}</a>
+          </li>
+        </ul>
+        <!-- <label ng-init="hitlist=true" class="btn btn-default btn-xs" ng-model="hitlist" btn-checkbox><span ng-show="hitlist">+</span><span ng-hide="hitlist">-</span>хит лист</label> -->
+      </span>
+      <div class="divider"></div>
+      <a href class="blue"
+         ng-click="doc.sendQuestionary(doc, q, hitlist);$parent.$parent.$parent.showSelectQuestionary=false"
+         log-click="Запроса на опрос::Кнопка <Отправить> в окне <Отправка запроса на опрос> в карточке контакта">
+         ОТПРАВИТЬ
+      </a>
+      <a href class="black"
+         ng-click="$parent.$parent.$parent.showSelectQuestionary=false"
+         log-click="Запроса на опрос::Кнопка <Отмена> в окне <Отправка запроса на опрос> в карточке контакта">
+         ОТМЕНА
+      </a>
+      <md-checkbox
+        ng-init="hitlist=true"
+        ng-model="hitlist"
+        log-click="Запроса на опрос::Галка <Хитлист> в окне <Отправка запроса на опрос> в карточке контакта">
+        и хитлист
+      </md-checkbox>
+    </div>
+  </div>
+</div>

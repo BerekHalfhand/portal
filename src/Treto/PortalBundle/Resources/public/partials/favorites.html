@@ -1,0 +1,68 @@
+<title>Избранное</title>
+<div id="favorites" >
+  <div class="container martop15">
+    <div class="row">
+      <div class="col-lg-24 panel pad0force">
+        <div infinite-scroll="requestMore()" infinite-scroll-distance="1" infinite-scroll-disabled="busy">
+          <div class="pad0_15">
+            <h5 class="martop20">Избранное({{favs.length}}):</h5>
+            <hr class="bordtop_e6">
+          </div>
+          <table class="table table-striped marbot0 bordtop_ed">
+            <tr ng-repeat="fav in favs">
+              <td class="bordtop_ed">
+                <!--<ng-include src=fav.form></ng-include>-->
+                <div class="fav-link">
+                  <a class="black_33"
+                     ng-if="fav.form=='Contact'"
+                     href ui-sref="body.discus({id: fav.unid, type: 'contact'})"
+                     log-click="Избранное::Ссылка на контакт в избранном">
+                    {{fav.DocumentType=='Person' ? ('Персона: ' + fav.ContactName) : ('Организация: ' + fav.ContactName) }}
+                  </a>
+                  <a class="black_33"
+                     ng-if="fav.form=='formProcess'"
+                     href ui-sref="body.discus({id: fav.unid, type:'' })"
+                     log-click="Избранное::Ссылка на тему в избранном">
+                     {{fav.subject}}
+                  </a>
+                  <a class="black_33"
+                     ng-if="fav.form=='formTask'"
+                     href ui-sref="body.discus({id: fav.unid, type:'' })"
+                     log-click="Избранное::Ссылка на просьбу в избранном">
+                     Просьба: {{fav.subject}}
+                  </a>
+                  <a class="black_33"
+                     ng-if="fav.form=='formVoting'"
+                     href ui-sref="body.discus({id: fav.unid, type:'' })"
+                     log-click="Избранное::Ссылка на голосовалку в избранном">
+                     Голосовалка: {{fav.subject}}
+                  </a>
+                  <a class="black_33"
+                     ng-if="fav.form=='message'"
+                     href ui-sref="body.discus({id: fav.unid, type:'' })"
+                     log-click="Избранное::Ссылка на сообщение в избранном">
+                     Сообщение: {{fav.subject}}
+                  </a>
+                  <a class="black_33"
+                     ng-if="fav.form=='formAdapt'"
+                     href ui-sref="body.discus({id: fav.unid, type:'' })"
+                     log-click="Избранное::Ссылка на адаптационный лист в избранном">
+                     Адаптационный лист: {{fav.subject}}
+                  </a>
+                </div>
+                <a class="pull-right black_33"
+                   href
+                   ng-click="del(fav)"
+                   title="Удалить"
+                   log-click="Избранное::Кнопка <удалить из избранного> в избранном">
+                   <span class="ico click list-remove"></span>
+                </a>
+              </td>
+            </tr>
+          </table>
+          <div ng-if="status!=''" class="fav-status">{{status}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

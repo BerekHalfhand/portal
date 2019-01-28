@@ -1,0 +1,561 @@
+<title ng-if="!theUser">Загрузка...</title>
+<title ng-if="theUser">Редактирование: {{theUser.portalData.FullNameInRus}}</title>
+<section class="user-container mar4 panel no-border" ng-if="theUser && role('PM')">
+  <header ng-include="'/bundles/tretouser/partials/profile/edit-header.html'"></header>
+  <input type="text" style="display:none">
+  <input type="password" style="display:none">
+  <section class="container-fluid" style="padding: 0 25px;">
+    <article class="row">
+      <div class="col-lg-12 col-xs-24">
+        <div class="martop20 text-s14">
+					<a href ng-click="pwd.show = !pwd.show"
+						 class="blue"
+						 log-click="Профиль пользователя::Кнопка <Сменить пароль> в профиле пользователя">
+						СМЕНИТЬ ПАРОЛЬ
+					</a>
+				</div>
+        <involvement ng-if="$root.users" username="theUser.username" profile-mode></involvement>
+        <div ng-if="pwd.show" ng-include="'/bundles/tretouser/partials/profile/change-password.html'"></div>
+				<div class="input-group underlined">
+					<label for="last-name" class="input-group-addon no-border no-background text-s12 padleft0">Фамилия:</label>
+					<input type="text"
+								 ng-model="theUser.portalData.LastName"
+								 id="last-name"
+								 class="form-control text-s12 no-border"
+								 log-click="Профиль пользователя::Поле <Фамилия> в профиле пользователя"/>
+				</div>
+				<div class="input-group underlined">
+					<label for="first-name" class="input-group-addon no-border no-background text-s12 padleft0">Имя:</label>
+					<input type="text"
+								 ng-model="theUser.portalData.name"
+								 id="first-name"
+								 class="form-control text-s12 no-border"
+								 log-click="Профиль пользователя::Поле <Имя> в профиле пользователя"/>
+				</div>
+				<div class="input-group underlined">
+					<label for="middle-name" class="input-group-addon no-border no-background text-s12 padleft0">Отчество:</label>
+					<input type="text"
+								 ng-model="theUser.portalData.MiddleName"
+								 id="middle-name"
+								 class="form-control text-s12 no-border"
+								 log-click="Профиль пользователя::Поле <Отчество> в профиле пользователя"/>
+				</div>
+				<div class="row martop15">
+					<div class="col-lg-12 col-xs-24">
+							<span class="no-border no-background text-s12 padleft0">Логин:</span>
+							<b>{{theUser.portalData.Login}}</b>
+					</div>
+					<div class="col-lg-12 col-xs-24"
+						 ng-init="theUser.portalData.Sex = theUser.portalData.Sex?theUser.portalData.Sex:0">
+						<span>Пол</span>
+						<input type="radio"
+									 name="sex"
+									 id="sex-men"
+									 value="1"
+									 ng-model="theUser.portalData.Sex"
+									 log-click="Профиль пользователя::Переключатель <Пол> в профиле пользователя"/>
+						<label for="sex-men">Мужской</label>
+						<input type="radio"
+									 name="sex"
+									 id="sex-women"
+									 value="2"
+									 ng-model="theUser.portalData.Sex"
+									 log-click="Профиль пользователя::Переключатель <Пол> в профиле пользователя"/>
+						<label for="sex-women">Женский</label>
+					</div>
+				</div>
+				<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Должность:</label>
+					<div class="width100per height27 btn-group" uib-dropdown auto-close="outsideClick">
+						<button type="button"
+										uib-tooltip="Минимум одна должность должна быть выбрана."
+										tooltip-trigger="none"
+										tooltip-is-open="WorkGroupTooltip"
+										tooltip-placement="top-left"
+										class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Должность> в профиле пользователя">
+							{{ theUser.portalData.WorkGroup.join(', ') }} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto" uib-dropdown-menu>
+							<li ng-repeat="s in positionsDict.records">
+							<md-checkbox ng-click="multiselectHelper.selectCheckbox(theUser.portalData, 'WorkGroup', s)"
+										ng-checked="theUser.portalData.WorkGroup.indexOf(s.value) !== -1">{{ s.value }}</md-checkbox>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank"
+									 href ui-sref="body.adminDictionary({ type: 'SectionSite' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Должность> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="input-group martop10">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Дата рождения:</label>
+					<p class="p-underlined bgr-calendar">
+					<new-datepicker date-min-limit="1900/01/01">
+						<input prevent-keyboard-input
+									 ng-model="DtBirth"
+									 type="text"
+									 ng-init="DtBirth=(theUser.portalData.Birthday ? $root.convertStrToLocaleDate(theUser.portalData.Birthday) : null)"
+									 ng-change="theUser.portalData.Birthday=DtBirth ? $root.convertObjDateToStr(DtBirth) : ''; DtBirth=DtBirth ? $root.localizeDate(DtBirth) : '';"
+									 log-click="Профиль пользователя::Выбор даты <Дата рождения> в профиле пользователя"/>
+					</new-datepicker>
+					</p>
+				</div>
+				<div class="input-group martop10">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Дата приёма на работу:</label>
+						<p class="p-underlined bgr-calendar">
+						<new-datepicker date-min-limit="1990/01/01">
+							<input prevent-keyboard-input
+										 ng-model="DtWork"
+										 type="text"
+										 ng-init="DtWork=(theUser.portalData.DtWork ? $root.convertStrToLocaleDate(theUser.portalData.DtWork) : null)"
+										 ng-change="theUser.portalData.DtWork=DtWork ? $root.convertObjDateToStr(DtWork) : ''; DtWork=DtWork ? $root.localizeDate(DtWork) : '';"
+										 log-click="Профиль пользователя::Выбор даты <Дата приёма на работу> в профиле пользователя"/>
+						</new-datepicker>
+						</p>
+				</div>
+				<div class="input-group martop10">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">
+						Дата увольнения
+						<a style="cursor: pointer;"
+							 ng-show="DtDismiss"
+							 ng-click="DtDismiss = ''; theUser.portalData.DtDismiss = '';"
+							 log-click="Профиль пользователя::Кнопка <Восстановить уволенного сотрудника> в профиле пользователя">
+							(восстановить)
+						</a>:
+					</label>
+					<p class="p-underlined bgr-calendar">
+						<new-datepicker date-min-limit="1990/01/01">
+						<input prevent-keyboard-input
+									 ng-model="DtDismiss"
+									 type="text"
+									 ng-init="DtDismiss=(theUser.portalData.DtDismiss ? $root.convertStrToLocaleDate(theUser.portalData.DtDismiss) : null)"
+									 ng-change="theUser.portalData.DtDismiss = DtDismiss?$root.convertObjDateToStr(DtDismiss):''; DtDismiss = DtDismiss?$root.localizeDate(DtDismiss):'';"
+									 log-click="Профиль пользователя::Выбор даты <Дата увольнения> в профиле пользователя"/>
+						</new-datepicker>
+					</p>
+				</div>
+	 
+	    <div class="row">
+		<div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		  <div class="input-group">
+		    <label for="work-address" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Рабочий адрес:</label>
+		    <input type="text"
+							 ng-model="theUser.portalData.ContactWithWorkAddress[0]"
+							 id="work-address"
+							 class="form-control text-s12 no-border"
+							 log-click="Профиль пользователя::Поле <Рабочий адрес> в профиле пользователя"/>
+		  </div>
+		</div>
+		<div class="col-lg-7 col-xs-7 sidepad5">
+			<md-checkbox ng-model="theUser.portalData.AddressToSite"
+									 ng-true-value="'1'"
+									 ng-false-value="'0'"
+									 log-click="Профиль пользователя::Галка <Показывать на сайте рабочий адрес> в профиле пользователя">
+				Показывать на сайте
+			</md-checkbox>
+		</div>
+	      </div>
+	      <div class="row">
+		<div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		  <div class="input-group">
+		    <label for="work-phone" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Рабочий телефон:</label>
+		    <input type="text"
+							 ng-model="theUser.portalData.ContactWithWorkFhone[0]"
+							 id="work-phone"
+							 class="form-control text-s12 no-border"
+							 log-click="Профиль пользователя::Поле <Рабочий телефон> в профиле пользователя"/>
+		  </div>
+		</div>
+		<div class="col-lg-7 col-xs-7 sidepad5">
+			<md-checkbox ng-model="theUser.portalData.WorkPhoneToSite"
+									 ng-true-value="'1'"
+									 ng-false-value="'0'"
+									 log-click="Профиль пользователя::Галка <Показывать на сайте рабочий телефон> в профиле пользователя">
+				Показывать на сайте
+			</md-checkbox>
+		</div>
+	      </div>
+	      <div class="row">
+		<div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		  <div class="input-group">
+		    <label for="home-phone" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Домашний телефон:</label>
+		    <input type="text"
+							 ng-model="theUser.portalData.ContactWithWorkFhone[1]"
+							 id="home-phone"
+							 class="form-control text-s12 no-border"
+							 log-click="Профиль пользователя::Поле <Домашний телефон> в профиле пользователя"/>
+		  </div>
+		</div>
+		  <div class="col-lg-7 col-xs-7 sidepad5">
+			  <md-checkbox ng-model="theUser.portalData.HomePhoneToSite"
+										 ng-true-value="'1'"
+										 ng-false-value="'0'"
+										 log-click="Профиль пользователя::Галка <Показывать на сайте домашний телефон> в профиле пользователя">
+					Показывать на сайте
+				</md-checkbox>
+		  </div>
+		</div>
+		<div class="row">
+		  <div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		    <div class="input-group">
+		      <label for="primary-mobile" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Основной мобильный телефон:</label>
+		      <input type="text"
+								 ng-model="theUser.portalData.ContactWithMobileFhone[0]"
+								 id="primary-mobile"
+								 class="form-control text-s12 no-border"
+								 log-click="Профиль пользователя::Поле <Основной мобильный телефон> в профиле пользователя"/>
+		    </div>
+		  </div>
+		    <div class="col-lg-7 col-xs-7 sidepad5">
+				<md-checkbox ng-model="theUser.portalData.MobileFhoneToSite"
+										 ng-true-value="'1'"
+										 ng-false-value="'0'"
+										 log-click="Профиль пользователя::Галка <Показывать на сайте основной мобильный телефон> в профиле пользователя">
+					Показывать на сайте
+				</md-checkbox>
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		      <div class="input-group">
+						<label for="add-mobile-1" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Дополнительный мобильный телефон:</label>
+						<input type="text"
+									 ng-model="theUser.portalData.ContactWithMobileFhone_1[0]"
+									 id="add-mobile-1"
+									 class="form-control text-s12 no-border"
+									 log-click="Профиль пользователя::Поле <Дополнительный мобильный телефон> в профиле пользователя"/>
+		      </div>
+		    </div>
+		    <div class="col-lg-7 col-xs-7 sidepad5">
+					<md-checkbox ng-model="theUser.portalData.MobilePhoneToSite_1"
+											ng-true-value="'1'"
+											ng-false-value="'0'"
+											log-click="Профиль пользователя::Галка <Показывать на сайте дополнительный мобильный телефон> в профиле пользователя">
+						Показывать на сайте
+					</md-checkbox>
+		    </div>
+		  </div>
+		  <div class="row">
+		    <div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+		      <div class="input-group">
+						<label for="add-mobile-2" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">Дополнительный мобильный телефон:</label>
+						<input type="text"
+									 ng-model="theUser.portalData.ContactWithMobileFhone_2[0]"
+									 id="add-mobile-2"
+									 class="form-control text-s12 no-border"
+									 log-click="Профиль пользователя::Поле <Дополнительный мобильный телефон> в профиле пользователя"/>
+		      </div>
+		    </div>
+		    <div class="col-lg-7 col-xs-7 sidepad5">
+					<md-checkbox ng-model="theUser.portalData.MobilePhoneToSite_2"
+											 ng-true-value="'1'"
+											 ng-false-value="'0'"
+											 log-click="Профиль пользователя::Галка <Показывать на сайте дополнительный мобильный телефон> в профиле пользователя">
+						Показывать на сайте
+					</md-checkbox>>
+		    </div>
+		  </div>
+          <div class="row">
+            <div class="col-lg-16 col-xs-16 underlined marleft15 padleft0">
+              <div class="input-group">
+                <label for="email" class="input-group-addon no-border no-background text-s12 padleft0" id="sizing-addon2">E-Mail:</label>
+                <input type="text"
+											 ng-model="theUser.portalData.Email"
+											 id="email"
+											 class="form-control text-s12 no-border"
+											 log-click="Профиль пользователя::Поле <E-Mail> в профиле пользователя"/>
+              </div>
+            </div>
+            <div class="col-lg-7 col-xs-7 sidepad5">
+							<md-checkbox ng-model="theUser.portalData.EmailToSite"
+													 ng-true-value="'1'"
+													 ng-false-value="'0'"
+													 log-click="Профиль пользователя::Галка <Показывать на сайте E-Mail> в профиле пользователя">
+								Показывать на сайте
+							</md-checkbox>
+            </div>
+          </div>
+				<div class="text-s16 marbot10 martop10">Настройки</div>
+
+				<!--<div>
+					<md-checkbox>Показывать профиль на сайте</md-checkbox>
+				</div>-->
+				<span>Информатор:</span>
+				<div>
+					<md-checkbox ng-model="theUser.settings.soundNotify"
+											log-click="Профиль пользователя::Галка <Звуковое оповещение о появлении новых сообщений> в профиле пользователя">
+						Звуковое оповещение о появлении новых сообщений
+					</md-checkbox>
+				</div>
+				<div>
+					<md-checkbox ng-model="theUser.settings.notifHistory"
+											title="При отмеченном чекбоксе в посещениях будут отображаться все попавшие в информатор темы. При не отмеченном - только те, в которые был заход или какое-то действие из информатора."
+											log-click="Профиль пользователя::Галка <В посещениях показывать все темы из информатора> в профиле пользователя">
+						В посещениях показывать все темы из информатора
+					</md-checkbox>
+				</div>
+			</div>
+			
+      <div class="col-lg-12 col-xs-24">
+      	<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Подразделение:</label>
+					<div class="width100per height27 btn-group" uib-dropdown>
+						<button type="button"
+										class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Подразделение> в профиле пользователя">
+							{{ departmentDict.getRecordValue(theUser.portalData.Department) }} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu text-s11">
+							<li ng-repeat="d in departmentDict.records">
+								<a title="d.key" href ng-click="theUser.portalData.Department = d.key">{{ d.value }}</a>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank"
+									 href ui-sref="body.adminDictionary({ type: 'Department' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Подразделение> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Отдел:</label>
+					<div uib-tooltip="Минимум один отдел должен быть выбран."
+						tooltip-trigger="none"
+						tooltip-is-open="sectionTooltip"
+						tooltip-placement="top-left"
+						class="width100per height27 btn-group"
+						uib-dropdown
+						auto-close="outsideClick">
+
+						<button type="button"
+										class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Отдел> в профиле пользователя">
+							{{ sectionDict.getRecordValues(theUser.portalData.section).join(', ') }} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu text-s11" uib-dropdown-menu>
+							<li ng-repeat="s in sectionDict.records">
+								<md-checkbox ng-click="multiselectHelper.selectCheckbox(theUser.portalData, 'section', s.value)"
+											ng-checked="theUser.portalData.section.indexOf(s.value) !== -1">{{ s.value }}</md-checkbox>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank"
+									 href ui-sref="body.adminDictionary({ type: 'Section' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Отдел> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Имя компании:</label>
+					<div class="width100per height27 btn-group" uib-dropdown>
+						<button id="companyName"
+										type="button"
+										class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Имя компании> в профиле пользователя">
+							{{ companyNameDict.getRecordValue(theUser.portalData.companyName) }} <span class="caret"></span>
+						</button>
+
+						<ul class="dropdown-menu text-s11">
+							<li ng-repeat="d in companyNameDict.records">
+								<a title="{{d.value}}" href ng-click="theUser.portalData.companyName = d.key">{{ d.value }}</a>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank" 
+									 href ui-sref="body.adminDictionary({ type: 'companyName' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Имя компании> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Зона ответственности:</label>
+					<div class="width100per height27 btn-group"
+							 uib-dropdown
+							 auto-close="outsideClick">
+						<button type="button"
+										class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Зона ответственности> в профиле пользователя">
+							{{ theUser.portalData.DepSubmiss.join(', ') }} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu text-s11" uib-dropdown-menu>
+							<li ng-repeat="s in sectionDict.records">
+								<md-checkbox ng-click="multiselectHelper.selectCheckbox(theUser.portalData, 'DepSubmiss', s.value)"
+											ng-checked="theUser.portalData.DepSubmiss.indexOf(s.value) !== -1">{{ s.value }}</md-checkbox>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank"
+									 href ui-sref="body.adminDictionary({ type: 'Section' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Зона ответственности> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+
+				<div class="input-group underlined height47">
+					<label class="input-group-addon no-border no-background text-s12 padleft0">Отдел сайта:</label>
+					<div class="width100per height27 btn-group" uib-dropdown>
+						<button type="button"
+									 	class="btn btn-default dropdown-toggle dropdown-style"
+										data-toggle="dropdown"
+										uib-dropdown-toggle
+										log-click="Профиль пользователя::Меню <Отдел сайта> в профиле пользователя">
+							{{ sectionSiteDict.getRecordValue(theUser.portalData.SectionSite[0]) }} <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu text-s11 left-inherit">
+							<li ng-repeat="d in sectionSiteDict.records">
+								<a title="d.key" href ng-click="theUser.portalData.SectionSite[0] = d.key">{{ d.value }}</a>
+							</li>
+							<li class="divider"></li>
+							<li ng-show="role('PM')">
+								<a target="_blank"
+									 href ui-sref="body.adminDictionary({ type: 'SectionSite' })"
+									 log-click="Профиль пользователя::Ссылка <Администрирование словаря: Отдел сайта> в профиле пользователя">
+									Администрирование словаря
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="input-group underlined height35 width100per pos-static" ng-init="
+				theUser.portalData.redirectMailTo = theUser.portalData.redirectMailTo && theUser.portalData.redirectMailTo[0]?theUser.portalData.redirectMailTo:''">
+					<span title="Перенаправлять почту на:" ng-if="theUser.portalData.redirectMailTo">
+						<span class="participant-element">
+						<span>{{profile.translateName(theUser.portalData.redirectMailTo)}}</span>
+							<a href
+								 ng-click="theUser.portalData.redirectMailTo = ''; theUser.portalData.redirectMailToTemp = ''"
+								 log-click="Профиль пользователя::Кнопка <Удалить перенаправление почты на сотрудника> в профиле пользователя">
+								&times;
+							</a>
+						</span>
+					</span>
+					<div class="typeahead-style">
+						<input ng-if="!theUser.portalData.redirectMailTo"
+									 required
+									 type="text"
+									 ng-init="theUser.portalData.redirectMailToTemp"
+									 ng-model="theUser.portalData.redirectMailToTemp"
+									 id="redirectMailTo"
+									 placeholder="Перенаправлять почту на"
+									 uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+									 typeahead-loading="loadingNames"
+									 typeahead-wait-ms="500"
+									 typeahead-on-select="theUser.portalData.redirectMailTo = $item.id; theUser.portalData.redirectMailToTemp = $item.name;"
+									 autocomplete="off"
+									 name="inputManager"
+									 class="input input-sm form-control padleft0 text-s13 no-border"
+									 log-click="Профиль пользователя::Поле <Перенаправлять почту на> в профиле пользователя"/>
+					</div>
+				</div>
+				<div class="martop15 marbot10 text-s16">Роль</div>
+				<ul class="list-unstyled">
+					<li ng-repeat="record in profile.getRoleDict().records">
+						<md-checkbox ng-model="roles[record.key]"
+												 title="{{record.key}}"
+												 log-click="Профиль пользователя::Галка <Роль: {{record.value}}> в профиле пользователя">
+							{{record.value}}
+						</md-checkbox>
+					</li>
+				</ul>
+			</div>
+		</article>
+		<article class="row">
+			<div class="col-lg-12 col-xs-24">
+				<div class="text-s16 marbot10 martop15 marleft10">Дополнительно</div>
+				<textarea class="overflow-auto textarea-border marleft10 martop10 form-control"
+									placeholder="Дополнительная информация"
+									name="about"
+									rows="10"
+									wrap="soft"
+									ng-model="theUser.portalData.About"
+									log-click="Профиль пользователя::Поле <Дополнительно> в профиле пользователя"></textarea>
+			</div>
+			<div class="col-lg-12 col-xs-24">
+				<div class="text-s16 marbot10 martop15 marleft10">Краткое резюме</div>
+				<textarea class="overflow-auto textarea-border marleft10 martop10 form-control"
+									placeholder="Резюме"
+									name="resume"
+									rows="5"
+									wrap="soft"
+									ng-model="theUser.portalData.Resume"
+									log-click="Профиль пользователя::Поле <Краткое резюме> в профиле пользователя"></textarea>
+			</div>
+		</article>
+		<article class="row">
+			<div class="marleft25 martop10 text-s16">Подписки</div>
+			<div class="col-lg-12 col-xs-24 marleft10 martop10">
+				<p ng-repeat="item in listSubscribtion">
+					<md-checkbox id="check_sub{{item.key}}"
+											 ng-model="subscribes[item.key]"
+											 title="{{item.key}}"
+											 log-click="Профиль пользователя::Галка <Подписки: {{item.subtype.subscription}}> в профиле пользователя">
+						{{item.subtype.subscription}}
+					</md-checkbox>
+				</p>
+			</div>
+		</article>
+		<article class="row">
+			<div class="col-lg-24 marleft10">
+				<div  class="martop10 text-s16">Уведомления</div>
+				<div class="underlined padleft0">
+					<div class="input-group">
+						<label for="push" class="input-group-addon no-border no-background text-s12 padleft0">Код для уведомлений:</label>
+						<input type="text"
+									 ng-model="theUser.portalData.pushToken"
+									 id="push"
+									 class="form-control text-s12 no-border"
+									 log-click="Профиль пользователя::Поле <Код для уведомлений> в профиле пользователя"/>
+					</div>
+				</div>
+			</div>
+		</article>
+		<article class="row martop20">
+			<div class="modal-footer">
+				<div class="row">
+					<div class="col-lg-24">
+						<md-button href
+											 class="btn btn-blue"
+											 ng-click="save(theUser)"
+											 log-click="Профиль пользователя::Кнопка <Сохранить> в профиле пользователя">
+							Сохранить
+						</md-button>
+						<md-button href
+											 class="btn btn-gray"
+											 ui-sref="body.profileDisplay({ id: theUser.username})"
+											 log-click="Профиль пользователя::Кнопка <Отмена> в профиле пользователя">
+							Отмена
+						</md-button>
+					</div>
+				</div>
+      </div>
+    </article>
+  </section>
+</section>

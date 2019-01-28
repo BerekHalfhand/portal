@@ -1,0 +1,44 @@
+<div ng-init="discus=$parent.$parent.discus;doc=$parent.$parent.doc;" class="attachments-list">
+  <ul ng-hide="doc.ddCollapsed" class="list-inline marbot0">
+    <li ng-repeat="item in model"  ng-init="attachFilename = $parent.$parent.discus.getDocumentFilename(item[0].doc, $parent.$parent.doc.unid)" ng-if="(item[0].mimeArray[1] != 'gif' && item[0].mimeArray[1] != 'png' && item[0].mimeArray[1] != 'jpeg')"
+    class="relative file-link-wrap" ng-mouseenter="attachHover=true" ng-mouseleave="attachHover=false;">
+      <md-button
+        ng-href="{{!item[0].domain?item[0].link:'http://'+item[0].domain+item[0].link}}"
+        class="file-link"
+        target="_blank"
+        log-click="Загрузка файлов::Кнопка <Скачать прикреплённый файл>">
+        <md-icon class="material-icons blue">insert_drive_file</md-icon>
+        <md-icon class="material-icons blue hover-icon">file_download</md-icon>
+        {{attachFilename}}
+      </md-button>
+      <md-button ng-if="discus.current._meta.write" 
+                 ng-click="deleteFile(discus.current, $index, discus)"
+                 class="delete-btn"
+                 log-click="Загрузка файлов::Кнопка <Удалить прикреплённый файл>">
+                  <md-icon class="material-icons">clear</md-icon>
+      </md-button>
+      <div ng-show="difftype" class="blue italic" style="position: absolute;top: 21px;right: 10px;font-size: 11px;">{{difftype == 'deleted' ? 'удален' : 'добавлен'}}</div>
+    </li>
+  </ul>
+  <ul ng-hide="doc.ddCollapsed" class="list-inline marbot0" lightgallery>
+    <li ng-repeat="item in model" ng-init="attachFilename = $parent.$parent.discus.getDocumentFilename(item[0].doc, $parent.$parent.discus.current._meta.write?$parent.$parent.discus.current.unid:doc.unid)" ng-if="(item[0].mimeArray[1] == 'gif' || item[0].mimeArray[1] == 'png' || item[0].mimeArray[1] == 'jpeg')"
+    class="relative img-link-wrap" ng-mouseenter="attachHover=true" ng-mouseleave="attachHover=false;">
+      <div class="img-link">
+        <a class="lightgallery-image" data-src="{{!item[0].domain?item[0].link:'http://'+item[0].domain+item[0].link}}"
+           ng-href="{{!item[0].domain?item[0].link:'http://'+item[0].domain+item[0].link}}"
+           log-click="Загрузка файлов::Ссылка на прикреплённую картинку"
+           data-sub-html="{{attachFilename}}">
+          <img ng-src="{{!item[0].domain?item[0].thumbnail:'http://'+item[0].domain+item[0].thumbnail}}">
+        </a>
+        <div class="short-filename martop5 grey text-s13" ng-attr-title="{{attachFilename}}">{{attachFilename}}</div>
+        <div ng-if="discus.current._meta.write"
+             class="delete-attachment"
+             ng-click="deleteFile(discus.current, $index, discus)"
+             log-click="Загрузка файлов::Кнопка <Удалить прикреплённую картинку>">
+             &times;
+        </div>
+        <div ng-show="difftype" class="blue italic text-s11">{{difftype == 'deleted' ? 'удален' : 'добавлен'}}</div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,39 @@
+<div id="{{doc.unid}}_linked_dropdown" class="relative" uib-dropdown auto-close="outsideClick"
+     keep-in-viewport=".dropdown-menu.linked-doc-menu" on-toggle="place()">
+  <md-button uib-dropdown-toggle
+             class="md-icon-button md-ink-ripple discus-icon-btn"
+             title="Связанные документы"
+             log-click="Дискуссии::Кнопка <Связанные документы> в меню сообщения в дискуссии">
+    <md-icon class="material-icons">device_hub</md-icon>
+  </md-button>
+  <div uib-dropdown-menu id="{{doc.unid}}_linked_menu" ng-init="showBody = true;" class="dropdown-menu linked-doc-menu" role="menu">
+    <div class="head black_33 bold text-s16">
+      Связи с темой
+    </div>
+    <div class="content">
+      <div ng-if="!doc.linked" class="text-center">
+        <md-progress-circular md-mode="indeterminate" md-diameter="20px"></md-progress-circular>
+      </div>
+      <div ng-if="doc.linked">
+        <ul class="tree-view-ul">
+          <li>
+            <span class="material-icons text-s16 black va-middle public-theme-icon">assignment</span>
+            <!--<span ng-if="doc.linked.Parent.isPublic" class="material-icons text-s16 black va-middle public-theme-icon">assignment</span>-->
+            <!--<span ng-if="!doc.linked.Parent.isPublic" class="material-icons text-s16 black va-middle private-theme-icon">lock</span>-->
+            <a ng-if="doc.linked.Parent && (doc.linked.Parent.unid != discus.main_doc.unid)"
+               href="#/discus/{{doc.linked.Parent.unid}}/"
+               class="blue"
+               log-click="Дискуссии::Ссылка на документ во всплывающем окне <Связанные документы> в дискуссии">
+              {{doc.linked.Parent.subject || 'Без темы'}} ({{doc.linked.Parent.messages || '0'}})
+            </a>
+            <span ng-if="doc.linked.Parent.unid == discus.main_doc.unid">{{doc.linked.Parent.subject || 'Без темы'}} ({{doc.linked.Parent.messages || '0'}})</span>
+            <span ng-if="!doc.linked.Parent">Нет ссылки</span>
+            <ul ng-show="showBody" class="tree-view-ul">
+              <li ng-repeat="child in doc.linked.Children" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/tree-item.html'"></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

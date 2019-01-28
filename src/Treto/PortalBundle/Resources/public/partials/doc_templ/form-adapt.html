@@ -1,0 +1,60 @@
+<article quote-selection class="document" ng-init="discus = $parent.discus; discus.initDictionaries(doc)">
+  <div class="msg-wrap clearfix">
+    <div class="msg-head"
+          ng-if="$root.$state.current.name!='body.notifications'"
+          ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'">
+    </div>
+    <div class="msg-main">
+      <div ng-show="!doc._meta.adaptation" class="alert alert-info">Обработка ...</div>
+      <div ng-if="doc._meta.adaptation" class="animate-show">
+        <div class="bg-grey padding-10">
+          <div class="row row-fluid">
+            <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+              <dl class="dl-horizontal">
+                <dt>Должность:</dt><dd>{{doc.WorkGroup | arrOrStrOutput}} / {{doc.WorkGroupEng | arrOrStrOutput}}</dd>
+                <dt>Подразделение:</dt><dd>{{doc._meta.adaptation.departmentDict.getRecordValue(doc.Department)}}</dd>
+                <dt>Отдел:</dt><dd>{{doc.section.join(', ')}}</dd>
+                <dt>Дата приёма на работу:</dt><dd>{{doc.DtWork | datetime}}</dd>
+                <dt>Окончание испытательного срока:</dt><dd>{{doc.TestPeriod | datetime}}</dd>
+                <dt>Условия оплаты:</dt><dd>{{doc.PayTerms}}</dd>
+                <dt>Оклад:</dt><dd>{{doc.Salary}}</dd>
+                <dt>Валюта:</dt><dd>{{doc._meta.adaptation.currencyDict.getRecordValue(doc.currency)}}</dd>
+                <dt>Логин:</dt><dd>{{doc.Login}}</dd>
+                <dt>Исходный пароль:</dt><dd>{{doc.Password}}</dd>
+                <dt>Email:</dt><dd>{{doc.Email}}</dd>
+                <dt>Личный Email:</dt><dd>{{doc.PrivateEmail}}</dd>
+                <dt>Руководитель:</dt><dd>{{discus.profile.translateName(doc.Manager)}}</dd>
+                <dt>Перенаправлять почту на:</dt><dd>{{discus.profile.translateName(doc.redirectMailTo)}}</dd>
+                <dt>Коучер:</dt><dd>{{discus.profile.translateName(doc.Coucher)}}</dd>
+                <dt>Рекрутер:</dt><dd>{{discus.profile.translateName(doc.Recruter)}}</dd>
+                <dt>Рекомендатель:</dt><dd>{{discus.profile.translateName(doc.Reference)}}</dd>
+                <dt>Начальник ИТ отдела:</dt><dd>{{discus.profile.translateName(doc.HeadIT)}}</dd>
+                <dt>Специалист по кадровому дел-ву:</dt><dd>{{discus.profile.translateName(doc.ManagerHR)}}</dd>
+                <dt>Главный бухгалтер:</dt><dd>{{discus.profile.translateName(doc.HeadFin)}}</dd>
+                <dt>Директор по персоналу:</dt><dd>{{discus.profile.translateName(doc.HeadHR)}}</dd>
+                <dt>Директор по персоналу:</dt><dd>{{discus.profile.translateName(doc.HeadHR)}}</dd>
+                <dt>Имя компании:</dt><dd>{{ doc._meta.adaptation.companyNameDict.getRecordValue(doc.companyName) }}</dd>
+                <dt>Страна:</dt><dd>{{ doc._meta.adaptation.countries.getRecordValue(doc.Country) }}</dd>
+                <p></p>
+                <dt ng-show="doc.Login || doc.FullName">Ссылка на профиль:</dt><dd>
+                  <a href ui-sref="body.profileDisplay({ id: (doc.Login || doc.FullName) })"
+                     log-click="Дискуссии::Ссылка на профиль с адаптационного листа">
+                    {{doc.FullNameInRus}} ({{doc.Login || doc.FullName}})
+                  </a></dd>
+              </dl>
+              <div ng-bind-html="doc.body | trustAsHtml"></div>
+              <upload-list model="doc.attachments"></upload-list>
+            </div>
+            <div ng-if="!discus.fastReplyMsg" class="blue martop10">
+              <span class="touch"
+                    ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+                    log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+                Ответить
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</article>

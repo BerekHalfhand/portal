@@ -1,0 +1,64 @@
+<div ng-if="user" ng-controller="headerCtrl" log-click-tmce-toolbar-observer>
+  <audio id="new_message">
+    <source src="/public/new_message.ogg">
+    <source src="/public/new_message.m4r">
+  </audio>
+  <header id="header" class="container-fluid" ng-click="blurClick();">
+    <div class="row">
+      <div class="mobile-upper-line clearfix" ng-class="{'mini-margin': windowWidth > 1200 && windowWidth <= 1300}">
+        <head-mobile-menu ng-if="windowWidth <= 840"></head-mobile-menu>
+        <a ui-sref="body.index" id="logo"
+           ui-sref-opts="{reload: true}"
+           log-click="Главное меню::Лого в главном меню"></a>
+        <div ng-if="windowWidth > 1240">
+          <ul class="list-unstyled marbot0">
+            <li class="time" ng-if="timeMoscow">
+              {{timeMoscow}} <span>Москва</span><br>
+              {{timeMilan}} <span>Милан</span>
+            </li>
+          </ul>
+        </div>
+        <head-menu ng-if="windowWidth > 840" class="relative"></head-menu>
+          <div class="mobile-notifications" ng-if="windowWidth < 841" ng-include="'/bundles/tretoportal/partials/user-table.html'"></div>
+        <head-search  ng-if="windowWidth <= 840" ng-init="$root.show.Search = false;" ng-class="{'pull-right': windowWidth <= 640}"></head-search>
+        <create-doc ng-if="windowWidth > 840" ng-click="$event.stopPropagation();"></create-doc>
+        <div class="user-table" ng-if="windowWidth > 840" ng-include="'/bundles/tretoportal/partials/user-table.html'"></div>
+      </div>
+      <!--<div ng-class="{'col-sm-4':(windowWidth > 1200), 'col-sm-9':(windowWidth <= 1200)}" class="col-xs-12" style="padding-left: 0px;" ng-click="$event.stopPropagation();">
+        <head-search ng-init="$root.show.Search = false;"></head-search>
+      </div>-->
+      
+    </div>
+    <!--<div ng-if="windowWidth <= 1000 && windowWidth > 640" class="row">-->
+      <!--<div class="col-sm-24">-->
+        <!--<head-menu></head-menu>-->
+      <!--</div>-->
+    <!--</div>-->
+  </header>
+  <div id="holder" ng-style="{'height': $root.windowHeight, 'width': $root.windowWidth }"></div>
+
+  <div class="create-forms-wrap">
+    <div ng-if="$root.show.create.form=='formTask'" ng-include="'/bundles/tretoportal/partials/modals/createTask.html'"></div>
+    <div ng-if="$root.show.create.form=='formProcess'" ng-include="'/bundles/tretoportal/partials/modals/createFormProcess.html'"></div>
+    <div ng-if="$root.show.create.form=='subTotal'" ng-include="'/bundles/tretoportal/partials/modals/createSubTotal.html'"></div>
+    <div ng-if="$root.show.create.form=='person'" ng-include="'/bundles/tretoportal/partials/modals/createPerson.html'"></div>
+    <div ng-if="$root.show.create.form=='organization'" ng-include="'/bundles/tretoportal/partials/modals/createOrganization.html'"></div>
+    <div ng-if="$root.show.create.form=='createVote'" ng-include="'/bundles/tretoportal/partials/modals/createVote.html'"></div>
+    <div ng-if="$root.show.create.form=='createAdapt'" ng-include="'/bundles/tretoportal/partials/modals/createAdapt.html'"></div>
+    <div ng-if="$root.show.create.form=='formCreatePersonAuto'" ng-include="'/bundles/tretoportal/partials/modals/createPersonAuto.html'"></div>
+    <div ng-if="$root.show.create.form=='formCreateTopPerson'" ng-include="'/bundles/tretoportal/partials/modals/topPerson.html'"></div>
+    <div ng-if="$root.show.linkedTo" ng-include="'/bundles/tretoportal/partials/modals/linkedToModal.html'"></div>
+  </div>
+  
+  <style>
+    #mention_{{$root.user.username}} {
+      background-color: #00a7ed;
+      border-radius: 4px;
+      color: white !important;
+      padding: 2px 5px;
+    }
+  </style>
+  
+  <div class="content" ui-view="main">
+  </div>
+</div>

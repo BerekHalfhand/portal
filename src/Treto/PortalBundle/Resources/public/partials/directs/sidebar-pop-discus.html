@@ -1,0 +1,79 @@
+<div ng-init="collapsePopularThemes=getBlockState('collapsePopularThemes');">
+  <div class="side-header">
+    <div ng-click="collapsePopularThemes=getBlockState('collapsePopularThemes', true);"
+         class="side-collapse touch"
+         log-click="Главная::Кнопка-стрелка <Показать\скрыть> блок <Читаемые> на главной">
+      <i ng-hide="collapsePopularThemes" class="material-icons">arrow_drop_down</i>
+      <i ng-show="collapsePopularThemes" class="material-icons">arrow_drop_up</i>
+    </div>
+    <ul class="list-inline">
+      <li class="text-s12">
+        <a href class="black" ui-sref="body.stat({ tab: 'popular-themes' })"
+           log-click="Главная::Ссылка <Читаемые> на статистику читаемых тем в блоке <Читаемые> на главной">
+          Читаемые
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="side-body" ng-show="collapsePopularThemes">
+    <div class="topThemes" ng-init="showOnlyMyPopularThemes = false;">
+      <div class="controlls row text-s12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padright0">
+          <a href ng-click="showOnlyMyPopularThemes = false;"
+             class="inline-block width100per text-center dark-grey"
+             ng-class="{active: !showOnlyMyPopularThemes}"
+             log-click="Главная::Вкладка <Общие> в блоке <Читаемые> на главной">
+            Общие
+          </a>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padleft0">
+          <a href ng-click="showOnlyMyPopularThemes = true;"
+             class="inline-block width100per text-center dark-grey"
+             ng-class="{active: showOnlyMyPopularThemes}"
+             log-click="Главная::Вкладка <Мои> в блоке <Читаемые> на главной">
+            Мои
+          </a>
+        </div>
+      </div>
+      <ul class="list-unstyled" ng-show="!showOnlyMyPopularThemes">
+        <li ng-repeat="theme in popDiscus track by theme.unid">
+          <span class="badge pull-right bgwhite pink">
+            <span title="Просмотры">{{theme.countOpenDuringPeriod}}</span>
+            <span class="font-smaller" title="Ответы">({{theme.countMessDuringPeriod}})</span>
+          </span>
+          <a href ui-sref="body.discus({ id: theme.unid, type: '' })"
+             title="{{theme.subject }}"
+             log-click="Главная::Ссылка на тему в блоке <Читаемые> на главной">
+            {{theme.shortModifiedDate + ' ' + theme.subject}}
+          </a>
+        </li>
+        <li ng-if="!popDiscus.length === 0 && !loadingPopDiscus" class="text-center">Нет читаемых тем</li>
+        <li ng-if="loadingPopDiscus" class="text-center">
+          <i class="spinner"></i>
+        </li>
+      </ul>
+      <ul class="list-unstyled" ng-show="showOnlyMyPopularThemes">
+        <li ng-repeat="theme in popMyDiscus track by theme.unid">
+          <span class="badge pull-right bgwhite pink">
+            <span title="Просмотры">{{theme.countOpenDuringPeriod}}</span>
+            <span class="font-smaller" title="Ответы">({{theme.countMessDuringPeriod}})</span>
+          </span>
+          <a href ui-sref="body.discus({ id: theme.unid, type: '' })"
+             title="{{ theme.subject }}"
+             log-click="Главная::Ссылка на тему в блоке <Читаемые> на главной">
+            {{theme.shortModifiedDate + ' ' + theme.subject}}
+          </a>
+        </li>
+        <li ng-if="!popMyDiscus.length && !loadingMyPopDiscus" class="text-center">Нет читаемых тем</li>
+        <li ng-if="loadingMyPopDiscus" class="text-center">
+          <i class="spinner"></i>
+        </li>
+      </ul>
+      <div ng-if="popMyDiscus.length > 0 || popDiscus.length > 0" class="text-right text-s12 padbot10 padleft10 padright10">
+        <a href ui-sref="body.stat({ tab: showOnlyMyPopularThemes ? 'my-popular-themes' : 'popular-themes' })"
+           class="blue"
+           log-click="Главная::Ссылка <Ещё> на статистику читаемых тем в блоке <Читаемые> на главной">ещё</a>
+      </div>
+    </div>
+  </div>
+</div>

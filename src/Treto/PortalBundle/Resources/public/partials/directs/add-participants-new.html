@@ -1,0 +1,61 @@
+<div class="add-participants-new" ng-init="$root.currentShareEnable = shareEnable;">
+    <md-button
+        md-no-ink
+        ng-disabled="!$parent.discus"
+        ng-click="$parent.discus.pushArray = ngmodel;
+                  $parent.discus.sharePushArray = sharePortal;
+                  $parent.discus.shareEnable = shareEnable;
+                  $parent.discus.selectParticipants($parent.discus.current, attrs);"
+        title="Добавить участников"
+        aria-label="Добавить участников"
+        class="icon-btn group-add"
+        log-click="Участники::Кнопка открыть окно добавления участников по отделам">
+        <md-icon class="material-icons">group_add</md-icon>
+    </md-button>
+    <md-chips
+        ng-model="ngmodel"
+        md-require-match="true"
+        md-on-select="addPersonChip($chip)"
+        md-on-remove="removePersonChip($chip)"
+        md-transform-chip="$chip"
+        md-max-chips="{{maxParticipants}}">
+        <md-autocomplete
+            ng-show="maxParticipants && maxParticipants > 0 ? ngmodel.length < maxParticipants : true"
+            ng-disabled="inputdisabled"
+            md-no-cache="true"
+            md-search-text="md.searchParticipant"
+            md-items="{{typeaheadexpr}}"
+            md-item-text="user.name"
+            placeholder="{{placeholder}}">
+            <md-item-template
+                log-click="Участники::Выбор участника из найденных в блоке добавления участников">
+                <span md-hightlight-text="md.searchParticimant">
+                    <b>{{user.name}}</b>
+                    <em ng-if="$root.users"
+                        class="text-smaller">
+                        <span ng-if="$root.users[user.id] && $root.users[user.id].involvement !== 100">
+                            (<b> {{$root.users[user.id].involvement}}</b>% до {{$root.users[user.id].involvementExpireDate | datetime}})
+                        </span>
+                        <span ng-if="!$root.users[user.id]" title="Бывшый сотрудник">EX</span>
+                    </em>
+                </span>
+            </md-item-template>
+            <md-not-found>
+                Сотрудник с именем "{{searchText}}" не найден.
+            </md-not-found>
+        </md-autocomplete>
+        <md-chip-template>
+            <span>
+                <img src="/public/img_site/{{$root.environment}}/thumb_{{$chip}}.jpeg" height="19" width="19"/>
+                <strong>{{$root.users ? $root.users[$chip].name : $chip}}</strong>
+                <em ng-if="$root.users"
+                    class="text-smaller">
+                    <span ng-if="$root.users[$chip] && $root.users[$chip].involvement !== 100">
+                        (<b> {{$root.users[$chip].involvement}}</b>% до {{$root.users[$chip].involvementExpireDate | datetime}})
+                    </span>
+                    <span ng-if="!$root.users[$chip]" title="Бывшый сотрудник">EX</span>
+                </em>
+            </span>
+        </md-chip-template>
+    </md-chips>
+</div>

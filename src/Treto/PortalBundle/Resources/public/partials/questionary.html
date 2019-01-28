@@ -1,0 +1,99 @@
+<div class="martop10">
+  <a href ui-sref="body.criterions" ng-hide="editQuestionay" class="green"
+     log-click="Банк вопросов::Кнопка <Назад> в опроснике">
+     Назад
+  </a>
+  <a href class="green" ng-show="editQuestionay" ng-click="editQuestionay=!editQuestionay"
+     log-click="Банк вопросов::Кнопка <Отмена> в режиме изменения опросника">
+     Отмена
+  </a>
+  <span uib-dropdown ng-show="editQuestionay" style="position:relative;">
+    <a href class="green" uib-dropdown-toggle
+       log-click="Банк вопросов::Кнопка <Добавить критерий> в режиме изменения опросника">
+       Добавить критерий
+    </a>
+    <ul class="dropdown-menu" role="menu" style="overflow-y:auto;max-height:200px">
+      <li ng-repeat="crit in criterionsAry()">
+        <a href class="text-s11" ng-click="addCriterion(crit.unid)" ng-bind="crit.name"></a>
+      </li>
+    </ul>
+  </span>
+  <div class="pull-right">
+    <a href class="green" ng-hide="editQuestionay" ng-click="printpr()"
+       log-click="Банк вопросов::Кнопка <Печать> в опроснике">
+       Печать
+    </a>
+    <a href class="green marleft5" ng-hide="editQuestionay"
+       log-click="Банк вопросов::Кнопка <Копировать ссылку> в опроснике">
+       Копировать ссылку
+    </a>
+    <a href class="green marleft5" ng-hide="editQuestionay"
+       ng-click="editQuestionay=!editQuestionay"
+       log-click="Банк вопросов::Кнопка <Изменить> в опроснике">
+       Изменить
+    </a>
+    <a href class="green marleft5" ng-hide="editQuestionay" ng-click="delete()"
+       log-click="Банк вопросов::Кнопка <Удалить> в опроснике">
+       Удалить
+    </a>
+    <a href class="green marleft5" ng-show="editQuestionay" ng-click="save()"
+       log-click="Банк вопросов::Кнопка <Сохранить> в опроснике">
+       Сохранить
+    </a>
+  </div>
+</div>
+<div ng-hide="editQuestionay" class="content">
+  <h3>Опросник: <span ng-bind='questionary.name'></span></h3>
+
+  <div ng-repeat="crit in content()" class="row">
+    <div class="col-lg-24 content">
+      <p ng-repeat="quest in quests(crit)" ng-bind-html="quest | break2br | nl2br" class="questions {{$index===0?'quote-author':''}}"></p>
+    </div>
+</div>
+</div>
+
+<div ng-show="editQuestionay" class="martop10">
+  <div class="row">
+    <div class="col-lg-24">
+      <table class="width100per">
+        <tr>
+          <td class="narrow">Название:</td>
+          <td>
+            <input class="form-control input-sm" type="text" ng-model="doc.name"
+                   log-click="Банк вопросов::Поле <Название> в режиме изменения опросника"/>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="martop10">
+    <div ng-repeat="crit in crits" class="content">
+      <p ng-bind="crit.name"></p>
+      <table class="table table-striped">
+        <tr>
+          <th></th>
+          <th>Вопрос</th>
+          <th>Описание</th>
+        </tr>
+        <tr ng-repeat="quest in crit.questions">
+          <td class="narrow">
+            <md-checkbox
+              id="input_{{$parent.$index}}_{{$index}}"
+              ng-model="quest.check"
+              log-click="Галка в таблице вопросов в режиме изменения опросника"></md-checkbox>
+          </td>
+          <td>
+            <textarea class="form-control text-s11" rows="4" ng-model="quest.name"
+                      log-click="Банк вопросов::Поле <Вопрос> в таблице вопросов в режиме изменения опросника">
+            </textarea>
+          </td>
+          <td>
+            <textarea class="form-control text-s11" rows="4" ng-model="quest.Description"
+                      log-click="Банк вопросов::Поле <Описание> в таблице вопросов в режиме изменения опросника">
+            </textarea>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

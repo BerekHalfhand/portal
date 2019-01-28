@@ -1,0 +1,100 @@
+<div class="edit-doc center" ng-init="check.InDoc=true">
+  <div class="container text-s12 panel marbot0 pad0force relative" ng-controller="modalCreateTask" ctrl-enter="discus.saved?ok():false">
+    <a class="close pull-right marright5" ng-click="close()" style="position: absolute;top: 5px;right: 0;z-index: 1001" title="Закрыть" log-click="Дискуссии::Кнопка <Закрыть> в окне создания просьбы">
+      <i class="material-icons">close</i>
+    </a>
+    <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+      <div ng-if="discus.main_doc._id || linkedTo">
+        <div class="modal-header" style="padding-right: 30px" ng-init="check.InDoc=true">
+          <md-checkbox id="checkInDoc" ng-disabled="linkedTo" ng-checked="check.InDoc" ng-click="check.InDoc = discus.toogleWriteIn();" ng-hide="linkedTo" log-click="Дискуссии::Галка <Создать в теме> в окне создания просьбы">Создать в теме "{{discus.main_doc.subject || discus.main_doc.subjVoting}}"</md-checkbox>
+          <span ng-show="linkedTo" for="checkInDoc1" ng-disabled="linkedTo">Создать на основании темы "{{parentSubject || discus.main_doc.subject || discus.main_doc.subjVoting}}"</span>
+          <span ng-show="discus.main_doc.ToSite == '1' && discus.current.parentID == discus.main_doc.unid">
+            <md-checkbox id="toSite" ng-init="discus.current.NotForSite = '1'" ng-checked="discus.current.NotForSite == '0'" ng-click="discus.current.NotForSite = discus.current.NotForSite == '1'?'0':'1'" log-click="Дискуссии::Галка <Отправлять на сайт> в окне создания просьбы">Отправлять на сайт</md-checkbox>
+          </span>
+        </div>
+      </div>
+
+      <div class="pad0force">
+        <div class="modal-header" style="overflow-y:initial;padding-left: 20px;" ng-init="discus.current.quote = QuoteSubject?QuoteSubject:''">
+          <input name="inputTaskName" autofocus required class="text-s16" type="text" placeholder="Просьба: название" ng-model="discus.current.subject" style="margin-bottom: 10px;" log-click="Дискуссии::Поле <Просьба: название> в окне создания просьбы"/>
+          <ng-messages ng-show="submitted" for="modalForm.inputTaskName.$error" class="required-warning" ng-click="submitted = false">
+            <ng-message when="required">Название должно быть указано.</ng-message>
+          </ng-messages>
+          <!-- <text-angular name="body" ng-model="discus.current.body" ta-target-toolbars='toolbar' ta-text-editor-class="input" placeholder="Введите текст"></text-angular> -->
+          <t-mce ng-if="discus.current.unid" ng-init="discus.current.body = CreateBody && linkedTo?CreateBody:''" model="discus.current.body" mentions="discus.current.mentions" log-click="Дискуссии::Поле <Введите текст> в окне создания просьбы"></t-mce>
+          <div ng-if="!discus.current.unid">Подождите...</div>
+        </div>
+        <div class="modal-header martop10">
+          <add-participants ngmodel="discus.current._meta.tasking.performers" share-portal="discus.current._meta.tasking.sharePerformers" multiple="true" placeholder="'Выбрать исполнителя (одного или несколько)'" typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'" inpwidth="'270px'" share-enable="true" participantstatus="'Исполнители'"></add-participants>
+          <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false" style="display: block;">
+            <ng-message when="currentPerformer">Укажите исполнителя.</ng-message>
+          </ng-messages>
+          <other-command style="display: block; margin-top: 10px;"></other-command>
+        </div>
+        <div class="modal-header">
+          <div class="row">
+            <div class="col-lg-14 col-md-12 col-sm-10 col-xs-24">
+              <div class="relative">
+                <a href ng-click="showDatePeriod=true;" ng-mouseover="hoverCalendar=true" ng-mouseleave="hoverCalendar=false" class="light-green" log-click="Дискуссии::Кнопка <Уточнить срок> в окне создания просьбы">
+                  <span ng-class="{'active':hoverCalendar}" class="ico click calendar"></span>
+                  <span>Уточнить срок</span>
+                </a>
+                <div class="dropdown-date-period panel" ng-show="showDatePeriod">
+                  <div class="modal-header">
+                    <span class="text-s14">Сроки исполнения</span>
+                  </div>
+                  <div>
+                    <p>
+                      <md-datepicker ng-model="dEndView" md-min-date="today" md-open-on-focus ng-change="dEnd = $root.viewToDate(dEndView); dEndView=$root.localizeDate(dEndView);" log-click="Дискуссии::Выбрать дату <Сроки исполнения> в окне создания просьбы"></md-datepicker>
+                    </p>
+                  </div>
+                  <span class="pull-right" style="margin: 10px;">
+                    <a href class="blue" ng-click="showDatePeriod = false;" log-click="Дискуссии::Кнопка <Закрыть> выплывающее окно <Сроки исполнения> в окне создания просьбы">Закрыть</a>
+                  </span>
+                  <span class="pull-right" style="margin: 10px;">
+                    <a href class="blue" ng-click="saveDate(dEnd)" log-click="Дискуссии::Кнопка <Сохранить> выплывающее окно <Сроки исполнения> в окне создания просьбы">Сохранить</a>
+                  </span>
+                </div>
+                <span>{{discus.current.taskDateStart | datetime}} - {{discus.current.taskDateEnd | datetime}}{{discus.current | taskTimeOld:'taskDateEnd'}}</span>
+              </div>
+            </div>
+            <div class="col-lg-10 col-md-12 col-sm-14 col-xs-24">
+              <div class="relative">
+                <!-- <input type="checkbox" id="checkFreeze">
+                <label for="checkFreeze">Подвесить</label> -->
+
+                <!-- <input type="checkbox" id="checkBirga">
+                <label for="checkBirga">В биржу задач</label> -->
+
+                <md-checkbox
+                  class="from-control" id="checkOwn" ng-checked="discus.current._meta.tasking.performers.indexOf($root.user.username)>-1" ng-click="(discus.current._meta.tasking.performers.indexOf($root.user.username)>-1) ? discus.current._meta.tasking.removePerformer($root.user.username) : discus.current._meta.tasking.addPerformer($root.user.username);" log-click="Дискуссии::Галка <Самому себе> в окне создания просьбы">    Самому себе
+                </md-checkbox>
+
+                <!-- <input type="checkbox" id="checkDep">
+                <label for="checkDep">На отдел</label> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-header" ng-if="partDoc = discus.current">
+          <div ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+        </div>
+        <div class="modal-header" ng-if="discus.current.attachments.length > 0 || $root.uploader.isUploading" style="margin-right: 0px; margin-left: 0px;">
+          <div ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading" class="progress-thin pad0force">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': $root.uploader.progress + '%' }"></div>
+          </div>
+          <upload-list model="discus.current.attachments" template-url="listing"></upload-list>
+        </div>
+      </div>
+      <div class="modal-body custom-toolbar relative" ng-init="pasteScreenShot = {value: false}" ng-class="{'padtop70': pasteScreenShot.value}">
+        <div ng-show="showTags == true" ng-init="doc=discus.current;">
+          <div style="margin-bottom: 5px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+        </div>
+        <md-button type="submit" class="btn btn-blue" ng-disabled="!discus.saved" copy-body log-click="Дискуссии::Кнопка <Сохранить> в окне создания просьбы">Сохранить</md-button>
+        <!-- <span popover-placement="right" uib-popover-template="'/bundles/tretoportal/partials/doc_templ/common/textAngularToolBar.html'" class="ico click style-toolbar marside10" title="Панель форматирования"></span> | -->
+        <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }" auto="true" multiple="true" model="discus.current.attachments" templ="discus_ico.html" class="touch"></upload-box>
+        <span id="mytoolbar" class="pull-right"></span>
+      </div>
+    </form>
+  </div>
+</div>

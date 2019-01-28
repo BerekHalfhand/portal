@@ -1,0 +1,26 @@
+<div class="martop10">
+  <a href ui-sref="body.criterions" class="green"
+     log-click="Банк вопросов::Кнопка <Назад> на странице создания нового критерия">Назад</a>
+  <a href class="pull-right green" ng-click="save()"
+     log-click="Банк вопросов::Кнопка <Сохранить> на странице создания нового критерия">Сохранить</a>
+</div>
+<h3>Новый критерий</h3>
+
+<table class="width100per">
+  <tr>
+    <td class="narrow">Название:</td>
+    <td>
+      <input type="text" class="form-control input-sm" ng-model="criterion.name"
+             log-click="Банк вопросов::Поле <Название> на странице создания нового критерия"/>
+    </td>
+  </tr>
+  <tr>
+    <td class="narrow padtop5" style="vertical-align: top;">Описание:</td>
+    <td>
+      <textarea class="form-control input-sm" rows="3"
+                ng-model="criterion.Description"
+                placeholder="Описание"
+                log-click="Банк вопросов::Поле <Описание> на странице создания нового критерия"></textarea>
+    </td>
+  </tr>
+</table>

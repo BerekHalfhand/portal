@@ -1,0 +1,169 @@
+<article quote-selection class="voting-wrap clearfix">
+  <div ng-init="discus = $parent.discus;voting = doc._meta.voting">
+
+    <div class="msg-wrap clearfix">
+      <div class="msg-head" ng-class="{'marleft30': $root.$state.current.name==='body.index'}"
+           ng-if="$root.$state.current.name!='body.notifications' || doc.unid != discus.main_doc.unid"
+           ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'">
+      </div>
+      <div ng-if="$root.$state.current.name==='body.index'" class="black text-s14" style="margin-top: 5px;">
+        <span>
+          <a href class="black hover-underline"
+             ui-sref="body.discus({ id: doc.unid, type:'' })"
+             log-click="Дискуссии::Ссылка на голосование\опрос с главной страницы">
+            {{doc.subject||doc.subjVoting}}
+          </a>
+        </span>
+        <span class="text-s12 grey nowrap" ng-if="doc._meta.voting.closeDate">до {{doc._meta.voting.closeDate | date:'dd.MM'}}</span>
+      </div>
+      <div class="msg-main vote-content clearfix" ng-hide="doc.hideVoteRes">
+        <tags-list model="doc.Tags"></tags-list>
+        <div>
+          <div ng-if="doc.body.length > 0" ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml"></div>
+          <!-- Результаты -->
+          <div ng-if="voting.oldVoting || voting.voted.length || !$root.can().vote(doc) || doc.status == 'close'">
+            <div ng-repeat="count in voting.counts track by $index"
+            ng-init="name = doc.AnswersData[$index].split('|')[0]; image = doc.AnswersData[$index].split('|')[1]; thumb=image.replace('src', 'thumbnail'); number = $index; showVoters = false;" class="text-s12">
+              <article ng-class="$root.$state.current.name==='body.index'?'':'row'">
+                <div ng-class="$root.$state.current.name==='body.index'?'':'col-lg-12'">
+                  <span ng-if="$root.$state.current.name!=='body.index' && !doc.ShowOnIndex"
+                        ng-click="$parent.showVoters = !$parent.showVoters;"
+                        class="touch"
+                        log-click="Дискуссии::Кнопка <Свернуть\Развернуть список> проголосовавших за вариант ответа в голосовании">
+                    <i ng-show="showVoters" class="material-icons text-s20" title="Свернуть" style="vertical-align: bottom;">arrow_drop_down</i>
+                    <i ng-hide="showVoters" class="material-icons text-s20" title="Развернуть" style="vertical-align: bottom; transform: rotate(90deg);">arrow_drop_up</i>
+                  </span>
+                  <span ng-bind-html="name"></span>
+                </div>
+              </article>
+              <article ng-class="$root.$state.current.name==='body.index'?'':'row'">
+                <div ng-if="image" ng-class="$root.$state.current.name==='body.index'?'':'col-lg-12'">
+                  <a ng-href="{{image}}" target="_blank"
+                     log-click="Дискуссии::Ссылка на картинку прикреплёную к варианту ответа в голосовании">
+                    <img class="martop5 marbot5 maxheight170 maxwidth170" ng-src="{{thumb}}" alt="{{name}}"/>
+                  </a>
+                </div>
+              </article>
+              <article ng-if="showVoters" class="text-s13">
+                <div ng-if="$root.$state.current.name!=='body.index'">
+                  <span ng-repeat="(voter, answer) in doc.answers | valueEquals:number"><b>{{$root.users[voter].name}}</b><span ng-bind="'('+$root.users[voter].WorkGroup+')'"></span><span ng-hide="$last">, </span><span>
+                </div>
+              </article>
+
+              <div class="progress-bar-wrap" ng-class="$root.$state.current.name==='body.index'?'':'row'" ng-class="{martop10: $root.$state.current.name!=='body.index'}">
+                <div ng-class="$root.$state.current.name==='body.index'?'progress-bar-holder':'col-lg-12'">
+                  <div class="progress text-center">
+                    <span class="black counter">{{voting.Math.round(count * 100)/100}}</span>
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{count}}" aria-valuemin="0" aria-valuemax="{{voting.maxCount}}"
+                    ng-style="{'width': (voting.Math.round(count / voting.maxCount *100) || 0) + '%'}">
+                      <span class="counter" ng-style="{'width': 100/(voting.Math.round(count / voting.maxCount *100)/100 || 0) + '%'}">{{voting.Math.round(count * 100)/100}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div ng-class="$root.$state.current.name==='body.index'?'percent':'col-lg-12'">
+                  {{voting.Math.round(count / voting.maxCount *100) || 0}}%
+                </div>
+              </div>
+            </div>
+            <upload-list ng-if="!doc.withAttach" model="doc.attachments"></upload-list>
+
+            <span ng-show="voting.notVoted().length > 0 && $root.$state.current.name!=='body.index'" ng-init="showParticipants = true">
+              Ждем ответа от:
+              <span class="blue touch"
+                    ng-click="showParticipants = !showParticipants"
+                    log-click="Дискуссии::Кнопка <Скрыть\Показать список> от кого ждём ответа в голосовании">
+                {{showParticipants?'Скрыть список':'Показать список'}}
+              </span>
+              <ul class="list-inline" ng-show="showParticipants">
+                <li ng-repeat="username in voting.notVoted()">
+                  <b ng-bind="discus.profile.translateName(username)"></b>
+                  <span ng-bind="'('+$root.users[username].WorkGroup+')'"></span>
+                </li>
+              </ul>
+            </span>
+            <p class="grey text-s12 martop10">Проголосовало: {{voting.peopleVoted()}}. 
+              <span ng-show="doc.PeriodPoll && (voting.notVoted().length === 0 || doc.status == 'close') && $root.$state.current.name!=='body.index'">Опрос окончен.</span>
+              <span ng-show="!doc.PeriodPoll && (voting.notVoted().length === 0 || doc.status == 'close') && $root.$state.current.name!=='body.index'">Голосование окончено.</span>
+            </p>
+
+            <div ng-if="$root.$state.current.name!=='body.index'" class="blue martop10">
+              <span ng-click="voting.watchVote()"
+                    ng-hide="doc.ShowOnIndex"
+                    class="marleft10 touch"
+                    log-click="Дискуссии::Кнопка <Следить\не следить> за голосованием">
+                {{voting.isWatched?'Не следить':'Следить'}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div ng-if="!discus.fastReplyMsg" class="blue martop10">
+          <span class="touch"
+                ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+                log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+            Ответить
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="voting-answers" ng-if="!voting.oldVoting && !voting.voted.length && $root.can().vote(doc) && doc.status != 'close'" ng-hide="doc.hideVoteRes">
+    <div class="text-s12">{{doc.AnswersLim>1?'Максимальное число ответов: ' + doc.AnswersLim:''}}</div>
+    <div class="voting-answer martop5" ng-repeat="answer in doc.AnswersData track by $index"
+         ng-init="name = answer.split('|')[0]; image = answer.split('|')[1]; thumb=image.replace('src', 'thumbnail');">
+      <article>
+        <div>
+          <input id="{{voting.doc.unid}}_answer_{{$index}}"
+                 type="{{(doc.AnswersLim > 1) ? 'checkbox' : 'radio'}}"
+                 class="from-control"
+                 log-click="Дискуссии::{{(doc.AnswersLim > 1) ? 'Галка' : 'Переключатель'}} варианта ответа в голосовании"/>
+          <label ng-click="voting.toggleAnswer($index); $event.stopPropagation();"
+                 ng-class="voting.isAnswer($index) ? 'checked' : ''" ng-bind-html="name">
+            </label>
+          <div ng-if="image">
+            <a ng-href="{{image}}" target="_blank"
+               log-click="Дискуссии::Ссылка на картинку прикреплёную к варианту ответа в голосовании">
+              <img class="martop5 marbot5 maxheight170 maxwidth170" ng-src="{{thumb}}" alt="{{name}}">
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+    <upload-list ng-if="!doc.withAttach" model="doc.attachments"></upload-list>
+    <article class="martop15" >
+      <div class="clearfix">
+        <div class="thirds_buttons_wrap">
+          <div class="button_wrap">
+            <md-button class="btn btn-blue"
+                       ng-click="voting.vote()"
+                       log-click="Дискуссии::Кнопка <Проголосовать> в голосовании">
+              Проголосовать
+            </md-button>
+          </div>
+          <div class="button_wrap">
+            <md-button class="btn btn-gray"
+                       ng-click="$root.confirm($root.localize('abandonConfirm', 'voting')) && voting.vote(true)"
+                       log-click="Дискуссии::Кнопка <Отказаться> в голосовании">
+              Отказаться
+            </md-button>
+          </div>
+        </div>
+        <div ng-if="$root.$state.current.name!=='body.index'" class="blue martop10">
+          <span class="blue touch"
+                ng-if="!discus.fastReplyMsg"
+                ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+                log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+            Ответить
+          </span>
+          <span ng-click="voting.watchVote()"
+                ng-hide="doc.ShowOnIndex"
+                class="marleft10 touch"
+                log-click="Дискуссии::Кнопка <Следить\не следить> за голосованием">
+            {{doc._meta.voting.isWatched?'Не следить':'Следить'}}
+          </span>
+        </div>
+      </div>
+    </article>
+  </div>
+</article>

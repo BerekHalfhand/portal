@@ -1,0 +1,256 @@
+<div ng-controller="docMenuCtrl" id="{{doc.unid}}_dropdown" uib-dropdown style="position:relative;" ng-mouseenter="doc._meta.mOverDoc=true"
+     ng-init="showChangeDates.status=false" keep-in-viewport=".dropdown-menu.new" on-toggle="place()">
+  <md-button uib-dropdown-toggle ng-click="discus.placeMenu(doc); loadParentTask(doc);"
+             class="md-icon-button md-ink-ripple discus-icon-btn per-message-menu-toggle" title="Ещё"
+             aria-label="Ещё"
+             log-click="Дискуссии::Меню <Ещё> у сообщения в дискуссии">
+    <md-icon class="material-icons">more_vert</md-icon>
+  </md-button>
+  <ul ng-click="discus.closeBottomSheet(doc); doc._meta.isMobile ? $event.stopPropagation() : false;"
+  id="{{doc.unid}}_menu" class="dropdown-menu new left-dropdown" role="menu">
+    <li>
+      <a href ng-click="$root.getDocUri(doc)"
+      log-click="Дискуссии::Пункт <Получить ссылку> в меню <Ещё> у сообщения в дискуссии">
+        <span class="material-icons marright15">link</span><span>Получить ссылку</span>
+      </a>
+    </li>
+    <li ng-controller="inviteGuestCtrl">
+      <a href ng-click="inviteGuestModal(discus.main_doc, doc)"
+         log-click="Дискуссии::Пункт <Пригласить гостя> в меню <Ещё> у сообщения в дискуссии">
+        <span class="material-icons marright15">link</span><span>Пригласить гостя</span></a>
+    </li>
+    <li ng-if="::((checkWriteSecurity(doc) || doc.authorLogin == $root.user.username || $root.role('PM') || ($root.role('BM') && doc.form == 'Contact'))
+        && $root.$state.current.name !== 'body.serp')"
+        ng-hide="::(doc.form === 'formVoting')"
+        class="edit-wrap-in-drop-menu">
+      <a href ng-click="discus.edit(doc, false);"
+         log-click="Дискуссии::Пункт <Редактировать> в меню <Ещё> у сообщения в дискуссии">
+        <span class="material-icons marright15">edit</span><span>Редактировать</span>
+      </a>
+    </li>
+    <li ng-if="discus.main_doc.unid != doc.unid && $root.$state.current.name !== 'body.serp'"
+        ng-init="doc._meta.loadTagsPages = false; doc._meta.showTags = false;"
+        class="relative">
+          <a href title="Теги"
+             onClick="jQuery('.vs-viewport').trigger('resizeScroll');"
+             ng-click="doc._meta.loadTagsPages = true; doc._meta.showTags = true;"
+             log-click="Дискуссии::Пункт <Добавить тег> в меню <Ещё> у сообщения в дискуссии">
+            <span class="material-icons marright15">local_offer</span><span>Добавить тег</span>
+          </a>
+    </li>
+    <li ng-if="$root.role('deleteDocs') && $root.$state.current.name !== 'body.serp'">
+      <a href ng-click="discus.deleteUndeleteDocument(doc)"
+         log-click="Дискуссии::Пункт <Восстановить\Удалить> в меню <Ещё> у сообщения в дискуссии">
+        <span class="material-icons marright15">delete</span><span>{{doc.status == 'deleted' || doc.Status == 'deleted'?'Восстановить':'Удалить'}}</span>
+      </a>
+    </li>
+    <li ng-controller="discusLinkedToCtrl">
+      <a href ng-click="showMenu(doc.unid)"
+         log-click="Дискуссии::Пункт <Связать с темой> в меню <Ещё> у сообщения в дискуссии">
+        <span class="material-icons marright15">share</span><span>Связать с темой</span></a>
+    </li>
+    <div ng-if="doc._meta && doc._meta.tasking &&
+                ($root.mynameis(doc.taskPerformerLat)||
+                 $root.mynameis(doc.authorLogin)||
+                 $root.mynameis(doc.CheckerLat)||
+                 $root.isEscalManager(doc)||
+                 $root.role('PM'))" style="position: relative;">
+      <li class="divider"></li>
+      <li ng-if="['body.notifications'].indexOf($root.$state.current.name) > -1"
+          ng-mouseover="!doc._meta.isMobile ? doc._meta.historyOpen=true : false"
+          ng-mouseleave="!doc._meta.isMobile ? doc._meta.historyOpen=false : false">
+        <a href ng-click="$event.stopPropagation(); discus.showBottomSheet('history', doc)">
+          <span class="material-icons marright15">history</span><span class="marright5">История изменений</span><span class="blue">({{doc.taskHistories.length||'0'}})</span>
+        </a>
+        <div ng-show="doc._meta.historyOpen" class="side-menu-wrap">
+          <ul class="dropdown-menu side-menu block" style="display: flex; flex-direction: column-reverse;">
+            <li ng-repeat="history in doc._meta.tasking.history track by $index" style="margin: 10px 15px; font-size: 14px; flex: 0 0 auto;">
+              <span ng-bind-html="history.text"> </span>
+            </li>
+          </ul>
+        </div>
+      </li>
+<!--       <li ng-if="doc.status == 'open' &&
+                 ($root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc)||$root.role('PM'))"
+          ng-mouseover="!doc._meta.isMobile ? doc._meta.specifOpen=true : false"
+          ng-mouseleave="!doc._meta.isMobile ? doc._meta.specifOpen=false : false">
+        <a href ng-click="discus.mobileCheck('task', doc)">
+          <span class="material-icons marright15">help_outline</span><span class="marright5">Уточнить</span><span class="blue">({{doc._meta.tasking.task.length||'0'}})</span>
+        </a>
+        <div ng-show="doc._meta.specifOpen && doc._meta.tasking.task.length > 0" class="side-menu-wrap">
+          <task-additions model="doc._meta.tasking.task"></task-additions>
+        </div>
+      </li> -->
+      <li ng-if="doc.status == 'open' && 
+                 $root.mynameis(doc.taskPerformerLat)"
+          ng-mouseover="!doc._meta.isMobile ? doc._meta.resultsOpen=true : false"
+          ng-mouseleave="!doc._meta.isMobile ? doc._meta.resultsOpen=false : false">
+        <a href ng-click="discus.mobileCheck('result', doc)">
+          <span class="material-icons marright15">note_add</span><span class="marright5">Результат</span><span class="blue">({{doc._meta.tasking.result.length||'0'}})</span>
+        </a>
+        <div ng-show="doc._meta.resultsOpen && doc._meta.tasking.result.length > 0" class="side-menu-wrap">
+          <task-additions model="doc._meta.tasking.result"></task-additions>
+        </div>
+      </li>
+      <!--<li ng-if="doc.status == 'open' &&
+                 $root.mynameis(doc.taskPerformerLat) &&
+                 doc.TaskStateCurrent != 10">
+        <a href ng-click="showChangeDates.status=true"
+           log-click="Дискуссии::Пункт <{{doc.taskDateRealEnd ? 'Изменить сроки и сложность' : 'Назначить срок'}}> в меню <Ещё> у сообщения в дискуссии">
+          <span class="material-icons marright15">{{doc.taskDateRealEnd ? 'update' : 'play_arrow'}}</span><span class="marright5">{{doc.taskDateRealEnd ? 'Изменить сроки и сложность' : 'Назначить срок'}}</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc.status == 'open' &&
+                 !doc._meta.tasking.completed() &&
+                 $root.mynameis(doc.taskPerformerLat)">
+        <a href ng-click="doc._meta.tasking.complete();"
+           log-click="Дискуссии::Пункт <Уведомить об исполнении> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">notifications</span><span class="marright5">Уведомить об исполнении</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc._meta.programmerSection &&
+                 doc.status == 'open' && 
+                 !doc._meta.tasking.completed() && 
+                 $root.mynameis(doc.taskPerformerLat) &&
+                 doc.TaskStateCurrent != 12">
+        <a href ng-click="doc._meta.tasking.toApply();"
+           log-click="Дискуссии::Пункт <Запросить накат> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">playlist_add</span><span class="marright5">Запросить накат</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc._meta.programmerSection &&
+                 doc.status == 'open' && 
+                 !doc._meta.tasking.completed() && 
+                 $root.mynameis(doc.toApplyUser)">
+        <a href ng-click="doc._meta.tasking.toApplyComplete();"
+           log-click="Дискуссии::Пункт <Уведомить о выполнении наката> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">playlist_add_check</span><span class="marright5">Уведомить о выполнении наката</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc.status == 'open' &&
+                 ($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.role('PM')||$root.isEscalManager(doc))">
+        <a href ng-click="doc._meta.tasking.close();"
+           log-click="Дискуссии::Пункт <Принять исполнение> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">check</span><span class="marright5">Принять исполнение</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc.status == 'open' &&
+                 doc._meta.tasking.completed() &&
+                 ($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc))">
+        <a href ng-click="discus.showEditForm('messagebb', null, doc.unid, 'CHECK')"
+           log-click="Дискуссии::Пункт <Отдать на проверку> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">person_pin</span><span class="marright5">Отдать на проверку</span>
+        </a>
+      </li>-->
+      <!--<li ng-if="doc.taskPerformerLat && doc.taskPerformerLat[0] != 'Просьба подвешена' &&
+                 (doc._meta.tasking.completed() || doc.taskDateCompleted || doc.TaskStateCurrent == 35) &&
+                 ($root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc)||$root.role('PM'))">
+        <a href ng-click="discus.showEditForm('messagebb', null, doc.unid, 'REJECT')"
+           title="В исполнении есть ошибки. Вернем просьбу на доработку исполнителю"
+           log-click="Дискуссии::Пункт <Вернуть на доработку> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">replay</span><span class="marright5">Вернуть на доработку</span>
+        </a>
+      </li>-->
+      <li ng-if="doc.status=='open'&&($root.mynameis(doc.taskPerformerLat))">
+        <ul class="list-inline priority">
+          <li><span class="material-icons marright15 dark-grey touch">priority_high</span><span style="line-height: 24px;display: inline-block;vertical-align: top;">Приоритет</span></li>
+          <li style="line-height: 24px;display: inline-block;vertical-align: top;">
+            <div ng-mouseleave="showPrior=false">
+              <span ng-click="doc._meta.tasking.changePriority('0');"
+                 ng-mouseover="showPrior=true"
+                 class="priority-item"
+                 log-click="Дискуссии::Переключатель <Приоритет: 0> в меню <Ещё> просьбы в дискуссии">
+                {{ showPrior?'0':(doc.Priority?doc.Priority:'0') }}
+              </span>
+              <span ng-click="doc._meta.tasking.changePriority('1');"
+                 ng-show="showPrior"
+                 class="priority-item"
+                 log-click="Дискуссии::Переключатель <Приоритет: 1> в меню <Ещё> просьбы в дискуссии">
+                1
+              </span>
+              <span ng-click="doc._meta.tasking.changePriority('2');"
+                 ng-show="showPrior"
+                 class="priority-item"
+                 log-click="Дискуссии::Переключатель <Приоритет: 2> в меню <Ещё> просьбы в дискуссии">
+                2
+              </span>
+              <span ng-click="doc._meta.tasking.changePriority('3');"
+                 ng-show="showPrior"
+                 class="priority-item"
+                 log-click="Дискуссии::Переключатель <Приоритет: 3> в меню <Ещё> просьбы в дискуссии">
+                3
+              </span>
+            </div>
+            <div ng-if="!(doc.status=='open'&&
+                  ($root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.authorLogin)||$root.role('PM')))">
+              <span class="priority-item">{{doc.Priority}}</span>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li ng-if="doc.TaskStateCurrent <= 30 && 
+                 ($root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc)||$root.role('PM'))"
+          ng-class="{'inactive': doc.TaskStateCurrent == 30}">
+        <a href ng-click="doc.TaskStateCurrent < 30 ? doc._meta.tasking.suspend() : false"
+           title="Подвесить просьбу. Когда исполнять и кому исполнять неясно"
+           log-click="Дискуссии::Пункт <Подвесить> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">pause</span><span class="marright5">Подвесить</span>
+        </a>
+      </li>
+      <li ng-if="['body.notifications'].indexOf($root.$state.current.name) > -1 && 
+                  doc.status == 'open' && 
+                 ($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.role('PM')||$root.isEscalManager(doc))">
+        <a href ng-click="doc._meta.tasking.cancel();"
+           title="Отменить исполнение просьбы"
+           log-click="Дискуссии::Пункт <Отменить> в меню <Ещё> просьбы в дискуссии">
+          <span class="material-icons marright15">delete</span><span class="marright5">Отменить</span>
+        </a>
+      </li>
+    </div>
+    <div>
+      <li class="divider"></li>
+      <li class="black_999 padleft25 padright25 marbot10">Создать связанную</li>
+      <li>
+        <a href ng-click="showFormEmit('formProcess', null, null, doc.unid, doc)"
+           log-click="Дискуссии::Пункт <Создать связанную: Тему> в меню <Ещё> у сообщения в дискуссии">
+          <span class="material-icons marright15">create_new_folder</span><span>Тему</span>
+        </a>
+      </li>
+      <li>
+        <a href ng-click="showFormEmit('formTask', null, null, doc.unid, doc)"
+           log-click="Дискуссии::Пункт <Создать связанную: Просьбу> в меню <Ещё> у сообщения в дискуссии">
+          <span class="material-icons marright15">assignment</span><span>Просьбу</span>
+        </a>
+      </li>
+      <!--<li>
+        <a href ng-click="showFormEmit('person', null, null, doc.unid)"
+           log-click="Дискуссии::Пункт <Создать связанного: Человека> в меню <Ещё> у сообщения в дискуссии">
+          <span class="menu-item person-menu"></span><span>Человека</span>
+        </a>
+      </li>
+      <li>
+        <a href ng-click="showFormEmit('organization', null, null, doc.unid)"
+           log-click="Дискуссии::Пункт <Создать связанного: Компанию> в меню <Ещё> у сообщения в дискуссии">
+          <span class="menu-item organization-menu"></span><span>Компанию</span>
+        </a>
+      </li>-->
+    </div>
+    <!--<li class="divider" style="margin: 5px 0"></li>
+    <li class="grey"><span style="padding: 3px 10px;">Прикрепить</span></li>
+    <li>
+      <a href ng-click="discus.openModalChatMessage()"
+         log-click="Дискуссии::Пункт <Прикрепить: Сообщения чата> в меню <Ещё> у сообщения в дискуссии">
+        Сообщения чата
+      </a>
+    </li>-->
+  </ul>
+  <task-date-difficulty-modal
+    date-model="doc.taskDateRealEnd || doc.taskDateEnd"
+    difficulty-model="doc.Difficulty"
+    difficulty-options="doc._meta.tasking.difficultySelect"
+    show="showChangeDates.status"
+    on-save="doc._meta.tasking.confirmTimeline(dEndDate)">
+  </task-date-difficulty-modal>
+  <div ng-if="isNotifMenu && discus.selectedEditForm=='messagebb'" ng-include="'/bundles/tretoportal/partials/modals/editMessage.html'"></div>
+  <div ng-if="isNotifMenu && discus.selectedEditForm=='formTask'" ng-include="'/bundles/tretoportal/partials/modals/editTask.html'"></div>
+</div>

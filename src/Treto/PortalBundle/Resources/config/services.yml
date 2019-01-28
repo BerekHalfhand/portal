@@ -1,0 +1,94 @@
+imports:
+    - { resource: serviceParameters.yml }
+
+services:
+    treto.validator:
+        class: %treto_portal.validator.class%
+        arguments: [@validator.mapping.class_metadata_factory, @validator.validator_factory, @translator.default, %validator.translation_domain%]
+
+    treto.cors_listener:
+        class: %treto_portal.cors_listener.class%
+        tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+        arguments: [[%io_host%]]
+
+    kernel.listener.exception_listener:
+        class: %treto_portal.exception_listener.class%
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    site.service:
+        class: Treto\PortalBundle\Services\SiteService
+        arguments: [%site_host%, %salt%, "@service_container"]
+
+    exporterto1c:
+      class: Treto\PortalBundle\Services\ExporterTo1C
+      arguments: ["@service_container"]
+
+    node.service:
+        class: Treto\PortalBundle\Services\NodeService
+        arguments: [%io_host%]
+
+    site.robo.service:
+        class: Treto\PortalBundle\Services\RoboService
+        arguments: ['@service_container']
+        abstract:  true
+
+    notif.service:
+        class: Treto\PortalBundle\Services\NotifService
+        arguments: ['@service_container']
+
+
+    service.site_roboxml:
+        class:  Treto\PortalBundle\Services\RoboXmlService
+        parent: site.robo.service
+
+    service.site_robojson:
+        class:  Treto\PortalBundle\Services\RoboJsonService
+        parent: site.robo.service
+
+    treto.format.action_listener:
+        class: Treto\PortalBundle\EventListener\FormatListener
+        arguments:
+            - @service.site_roboxml
+            - @service.site_robojson
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    treto.hash.action_listener:
+            class: Treto\PortalBundle\EventListener\HashListener
+            tags:
+                - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+                - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200 }
+
+    service.task_changes_logger:
+        class:  Treto\PortalBundle\Services\TaskChangesLogger
+        arguments: ["@service_container","@security.context"]
+
+    hipchat.service:
+        class: Treto\PortalBundle\Services\HipChatService
+        arguments: [%hipchat_team%, %hipchat_token%, "@logger"]
+
+    synch.service:
+        class: Treto\PortalBundle\Services\SynchService
+        arguments: ["@service_container"]
+    task.service:
+            class: Treto\PortalBundle\Services\TaskService
+            arguments: ["@service_container"]
+    consult.service:
+            class: Treto\PortalBundle\Services\ConsultService
+            arguments: ["@service_container"]
+    mail.service:
+                class: Treto\PortalBundle\Services\MailService
+                arguments: ["@service_container"]
+    search.service:
+        class: Treto\PortalBundle\Services\SearchService
+        arguments:
+            - @service_container
+
+    treto.monolog_web_processor:
+        class: Symfony\Bridge\Monolog\Logger
+        tags:
+            - { name: monolog.logger, channel: autotask }
+            - { name: monolog.logger, channel: sync }
+            - { name: monolog.logger, channel: notif_logger }

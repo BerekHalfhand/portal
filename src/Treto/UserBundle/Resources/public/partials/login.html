@@ -1,0 +1,61 @@
+<title>Авторизация</title>
+<script type="text/javascript">
+  var widgetId1;
+  var onloadCallback = function() {
+    widgetId1 = grecaptcha.render('captcha', {
+      'sitekey' : '6Ld78AwTAAAAAOzmGYdn3Nk6mfo8FFiDw0x_BT3m',
+      'theme' : 'light'
+    });
+  };
+</script>
+<div class="vertical-center bgwhite">
+  <div id="login" class="container">
+    <div class="row">
+      <div class="col-lg-6 col-lg-offset-9">
+        <div class="row">
+          <div class="col-lg-24">
+            <form>
+              <div id="logo" class="img-responsive center-block"></div>
+              <h1 class="text-center">Вход</h1>
+              <p ng-show="user.username">ЛОГИН</p>
+              <input type="text" placeholder="Логин" ng-model="user.username"
+                     log-click="Авторизация::Поле <Логин> на странице авторизации"/>
+              <div class="divider"></div>
+              <p ng-show="user.password">ПАРОЛЬ</p>
+              <input type="password" placeholder="Пароль" ng-model="user.password"
+                     log-click="Авторизация::Поле <Пароль> на странице авторизации"/>
+              <div class="divider"></div>
+              <input type="submit" value="Войти" class="btn btn-info btn-md btn-block"
+                     ng-click="auth.error=null;auth.login(user)"
+                     ng-disabled="!(user.password && user.username)"
+                     log-click="Авторизация::Кнопка <Войти> на странице авторизации"/>
+            </form>
+          </div>
+        </div>
+        <div class="row padtop10 padbot10">
+          <div class="col-lg-24">
+            <a ui-sref="resetting"
+               log-click="Авторизация::Ссылка <Забыли пароль?> на странице авторизации">
+              Забыли пароль?
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-24">
+            <div ng-show="auth.showCaptcha" id="captcha" style="position: absolute; margin-top: 30px;"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-24">
+            <div class="red text-s10">*Рекомендуется работа через браузер Google CHROME!</div>
+          </div>
+        </div>
+      </div>
+      <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+      <div class="col-lg-9" ng-show="auth.error">
+        <alert type="danger" >{{ auth.error | localize }}</alert>
+      </div>
+    </div>
+    
+  </div>
+</div>

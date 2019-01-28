@@ -1,0 +1,244 @@
+.task-search-button {
+  &,
+  &:focus {
+    color: @blue;
+  }
+
+  &:hover {
+    color: @blue;
+    background-color: @lighter-grey;
+  }
+}
+
+.task-priority {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+#tasks {
+  .table {
+    thead {
+      tr{
+        &:first-child td {
+          border-bottom: 2px solid @table-border-color;
+        }
+
+        &:last-child td {
+          border-bottom: none;
+        }
+      }
+
+      td i.material-icons {
+        font-size: 20px;
+        margin-right: -4px;
+        margin-bottom: -7px;
+      }
+    }
+
+    .md-errors-spacer {
+      display: none;
+    }
+
+    select {
+      outline: none;
+      box-shadow: none;
+      border: none;
+      border-bottom: 1px solid @border-color;
+      height: 33px;
+      padding: 5px 10px;
+
+      &:not([disabled]) {
+        background: none;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: @btn-bg-color;
+      }
+    }
+
+    md-input-container {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+
+      &.datepicker-container {
+        width: 45%;
+      }
+
+      .md-label {
+        font-size: 13px;
+      }
+
+      input,
+      md-select {
+        font-size: 11px;
+        line-height: 29px;
+      }
+    }
+
+    md-checkbox {
+      margin: 0;
+    }
+
+    md-select {
+      display: block;
+
+      &,
+      &.md-default-theme {
+        .md-select-value { 
+          padding: 0;
+        }
+      }
+    }
+
+    md-datepicker {
+      padding-right: 0;
+      margin-right: 0;
+      font-size: 0;
+      width: 100%;
+      display: inline-block;
+
+      .md-datepicker-input-container {
+        width: 100%;
+        padding: 0;
+      }
+
+      .md-datepicker-input {
+        min-width: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  .tasks-thumbler-delimeter {
+    position: relative;
+
+    @media all and (min-width: 1200px) {
+      display: inline-block;
+      width: 1px;
+      margin-right: 10px;
+    }
+
+    @media all and (max-width: 1199px) {
+      display: block;
+      height: 1px;
+      margin-bottom: 15px;
+    }
+
+    &::before {
+      content: 'x';
+      color: transparent;
+      position: absolute;
+      background: @light-grey;
+
+      @media all and (min-width: 1200px) {
+        width: 1px;
+        top: -30px;
+        bottom: -22px;
+        left: 0;
+      }
+
+      @media all and (max-width: 1199px) {
+        height: 1px;
+        left: -15px;
+        right: -15px;
+        top: 0;
+      }
+    }
+  }
+
+  #search-btn {
+    position: absolute;
+    right: -14px;
+    bottom: 0;
+    top: -1px;
+    width: 100px;
+    text-align: center;
+    background: @btn-bg-color;
+    color: @btn-bg-color;
+    text-transform: uppercase;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: @btn-bg-color !important;
+      color: @btn-bg-color !important;
+    }
+
+    &::before {
+      content: "Отобрать";
+      position: absolute;
+      left: 0;
+      right: 0;
+      text-align: center;
+      top: 50%;
+      margin-top: -7px;
+      line-height: 1;
+      color: @btn-font-color;
+    }
+  }
+
+  input[type="checkbox"] + label,
+  input[type="radio"] + label{
+    white-space: nowrap;
+  }
+}
+
+.task-search-status-menu {
+  md-option {
+    height: 30px;
+  }
+
+  @media all and (min-height: 286px) {
+    md-select-menu {
+      max-height: 270px;
+
+      md-content {
+        max-height: 270px;
+      }
+    }
+  }
+
+  @media all and (min-height: 316px) {
+    md-select-menu {
+      max-height: 300px;
+
+      md-content {
+        max-height: 300px;
+      }
+    }
+  }
+
+  @media all and (min-height: 346px) {
+    md-select-menu {
+      max-height: 330px;
+
+      md-content {
+        max-height: 330px;
+      }
+    }
+  }
+
+  @media all and (min-height: 376px) {
+    md-select-menu {
+      max-height: 360px;
+
+      md-content {
+        max-height: 360px;
+      }
+    }
+  }
+
+  @media all and (min-height: 406px) {
+    md-select-menu {
+      max-height: 390px;
+
+      md-content {
+        max-height: 390px;
+      }
+    }
+  }
+}

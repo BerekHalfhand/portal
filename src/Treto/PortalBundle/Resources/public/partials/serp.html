@@ -1,0 +1,63 @@
+<title>Поиск</title>
+<section class="container-fluid bgwhite blue-links">
+  <div class="row martop10">
+    <div class="col-lg-24">
+      <big>Искали: <b>"{{lastQuery}}"</b>
+        <span ng-show="q.params.Author"> по автору <b>{{users[q.params.Author.$in[0]].name || q.params.Author.$in[0]}}</b></span>
+        <!--<span ng-show="q.mypart"> (Вы участник)</span>-->
+      </big>
+      <p>{{status}}&nbsp<span ng-show="status == 'Найдено'"><b>{{back_docs.length - searchResContacts}}</b> документов</span><span ng-show="back_docs.length >= 1000">, возможно есть еще, попробуйте уточнить запрос</span></p>
+      <p ng-if="searchResContacts > 0">Найдено контактов: <b>{{searchResContacts}}</b></p>
+      <hr class="hr-d3 martop10">
+        <div class="row">
+          <div class="col-lg-24">
+            <div class="color-panel" infinite-scroll="infinite_scroll()" infinite-scroll-distance="1" infinite-scroll-disabled="docs.length >= back_docs.length || busy">
+              <ol class="search-ol">
+                <li ng-repeat="sdoc in docs" class="padleft20 marbot10" ng-init="doc=sdoc._source;doc.highlight = sdoc.highlight;" id="{{doc.unid}}">
+                  <p>
+                    <a href ui-sref="body.discus({ id: doc.unid, type: (doc.form=='Contact'?'contact':'') })"
+                       ng-switch on="doc.form"
+                       ng-init="doc_subject_html=(doc.highlight['subject.origin'].join('... ...') || doc.highlight['subject'].join('... ...') || doc.subject || 'Без темы')"
+                       log-click="Поиск::Ссылка на найденный комментарий на странице поиска">
+                      <big ng-switch-when="formAdapt">Адаптационный лист: <span ng-bind-html="doc.highlight.subject.join('... ...') || doc.subject || 'Без темы'"></span></big>
+                      <big ng-switch-when="formTask">Просьба: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="formVoting">Опрос: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="FormProcess">Тема: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="formProcess">Тема: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="messagebb">Сообщение: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="message">Сообщение: <span ng-bind-html="doc_subject_html"></span></big>
+                      <big ng-switch-when="Contact">{{angular.isArray(doc.ContactStatus)?($filter('filter')(doc.ContactStatus, 6, true).length?'Персона':'Контакт'):(doc.ContactStatus==6?'Персона':'Контакт')}}:
+                        <span ng-bind-html="doc.highlight.SiteName || doc.highlight.FullName || doc.highlight.ContactName || doc.highlight.OtherName || doc.ContactName || 'Без темы'"></span>
+                      </big>
+                      <big ng-switch-default>{{doc.form}}: <span ng-bind-html="doc.highlight.subject.join('...') || doc.subject || 'Без темы'"></span></big>
+                    </a>
+                    <span ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"
+                    class="dropmenu-wrap pull-right"></span>
+                  </p>
+                  <div dd-text-collapse dd-text-collapse-max-height="110">
+                    <p class="ddColl" ng-if="doc.form !== 'Contact'" ng-bind-html="(doc.highlight['body.origin'].join('... ...') || doc.highlight['body'].join('... ...') || doc.body) | removeBrokenTags | quoteAuthor "></p>
+                    <p class="ddColl" ng-if="doc.form == 'Contact' && (doc.highlight.EmailValues || doc.EmailValues)">
+                      Почта: <span ng-bind-html="doc.highlight.EmailValues || doc.EmailValues"></span><br>
+                      Тип контакта: <span ng-bind="(statusListDict.getRecordValues(doc.ContactStatus)|join) || 'Нет записи'"></span>
+                    </p>
+                  </div>
+                  <p>&nbsp</p>
+                  <p class="marbot10" ng-if="parents[doc.subjectID]">
+                    <a href ui-sref="body.discus({id: doc.subjectID, type:''})"
+                       ng-switch on="parents[doc.subjectID]['form']"
+                       log-click="Поиск::Ссылка на тему с найденным комментарием на странице поиска">
+                      <span ng-switch-when="FormProcess">Тема: {{parents[doc.subjectID]['subject']}}</span>
+                      <span ng-switch-when="formProcess">Тема: {{parents[doc.subjectID]['subject']}}</span>
+                      <span ng-switch-when="formTask">Просьба: {{parents[doc.subjectID]['subject']}}</span>
+                      <span ng-switch-when="Contact">Контакт: {{parents[doc.subjectID]['subject']}}</span>
+                    </a>
+                  </p>
+                  <p><b>{{$root.users[doc.authorLogin].name||doc.Author}}</b> <span class="dark-grey">{{doc.created | limitTo: 15 | date:'dd.MM.yyyy HH:mm'}}</span></p>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>

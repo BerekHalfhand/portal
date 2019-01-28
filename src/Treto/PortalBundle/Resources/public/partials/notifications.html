@@ -1,0 +1,224 @@
+<title>Уведомления</title>
+<header id="notif-header" ng-show="showHeader" style="height: 57px;">
+  <span ng-click="uncheckAll()"
+        class="touch notif-back"
+        ng-class="{absolute: ($root.windowWidth>1666), 'inline-block': ($root.windowWidth<=666)}"
+        log-click="Информатор::Кнопка <Назад> в меню информатора">
+    <i class="material-icons" style="margin-right: 10px;">arrow_back</i>
+    <span ng-show="$root.windowWidth>666" class="text-s18">Назад</span>
+  </span>
+  
+  <div ng-class="{'container-fluid':($root.windowWidth>1666), 'inline':($root.windowWidth<=1666 && $root.windowWidth>666), 'inline-block': ($root.windowWidth<=666)}"
+  ng-style="$root.windowWidth<=666 && {'width': '70%'}" style="max-width: 1400px;">
+    <ul ng-style="$root.windowWidth>666 && {'margin': '15px 0px 0px 14px'}" ng-class="{'width100per': ($root.windowWidth<=666)}"
+        class="list-inline text-s15 notif-ul">
+
+      <li ng-show="$root.windowWidth>1666"><span class="black bold">Выберите действие:</span></li>
+
+      <li ng-style="$root.windowWidth<=666 && {'width': '23%'}">
+        <a href class="dark-grey"
+           ng-click="markAsRead()"
+           title="Прочитано"
+           ng-class="{'disabled': spinner}"
+           log-click="Информатор::Кнопка <Прочитано> в меню информатора">
+            <i ng-if="!spinner" class="material-icons va-bottom">check</i>
+            <md-progress-circular ng-if="spinner" class="md-hue-2" md-mode="indeterminate" md-diameter="18px"></md-progress-circular>
+            <span ng-show="$root.windowWidth>666">Прочитано</span>
+        </a>
+      </li>
+
+      <li uib-dropdown  ng-style="$root.windowWidth<=666 && {'width': '23%'}" style="position:relative;">
+        <a href class="dark-grey"
+           uib-dropdown-toggle
+           title="Отложить"
+           log-click="Информатор::Меню <Отложить> в меню информатора">
+           <i class="material-icons va-bottom">query_builder</i>
+           <span ng-show="$root.windowWidth>666">Отложить</span>
+        </a>
+        <ul class="dropdown-menu text-s12" role="menu">
+          <li><a href ng-click="delayFor(1440)" log-click="Информатор::Пункт меню <Отложить: На сутки> в меню информатора">На сутки</a></li>
+          <li><a href ng-click="delayFor(2880)" log-click="Информатор::Пункт меню <Отложить: На 2 дня> в меню информатора">На 2 дня</a></li>
+          <li><a href ng-click="delayFor(4320)" log-click="Информатор::Пункт меню <Отложить: На 3 дня> в меню информатора">На 3 дня</a></li>
+          <li><a href ng-click="delayFor(7200)" log-click="Информатор::Пункт меню <Отложить: На 5 дней> в меню информатора">На 5 дней</a></li>
+          <li><a href ng-click="delayFor(10080)" log-click="Информатор::Пункт меню <Отложить: На неделю> в меню информатора">На неделю</a></li>
+        </ul>
+      </li>
+
+      <li ng-style="$root.windowWidth<=666 && {'width': '23%'}">
+        <a href class="dark-grey"
+           ng-click="toFavorites()"
+           title="В избранное"
+           log-click="Информатор::Кнопка <В избранное> в меню информатора">
+           <i class="material-icons va-bottom">grade</i>
+           <span ng-show="$root.windowWidth>666">В избранное</span>
+        </a>
+      </li>
+
+      <li ng-style="$root.windowWidth<=666 && {'width': '23%'}">
+        <a href class="dark-grey"
+           ng-click="doNotNotify()"
+           title="Не уведомлять"
+           log-click="Информатор::Кнопка <Не уведомлять> в меню информатора">
+           <i class="material-icons va-bottom">notifications_off</i>
+           <span ng-show="$root.windowWidth>666">Не уведомлять</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</header>
+<div class="container-fluid" style="max-width: 1400px;">
+  <div class="col-lg-24 panel martop15" style="padding: 0 20px;">
+    <header class="martop15">
+      <span class="text-s16">Информатор<span ng-click="refreshNotifications()" title="Обновить" class="touch" log-click="Информатор::Кнопка <Обновить> в информаторе">({{count.Notif}})</span></span>
+      <i ng-show="$root.show.notifLoading" class="spinner"></i>
+      <a class="pull-right touch"
+            title="Развернуть/Свернуть все сообщения. Может занять продолжительное время." ng-click="changeExpandState();"
+            log-click="Информатор::Кнопка <Развернуть/Свернуть все сообщения> в информаторе">
+        <span ng-show="notifExp.Control">свернуть все</span>
+        <span ng-hide="notifExp.Control">развернуть все</span>
+      </a>
+      <a ui-sref="body.notificator"
+         ui-sref-opts="{reload: true}"
+         class="text-s13"
+         title="Перейти к новому информатору"
+         log-click="Информатор::Ссылка на новый информатор в старом информаторе">
+        Новый информатор
+      </a>
+      <div class="divider martop15"></div>
+    </header>
+    <div ng-if="$root.serverTimeMsk" ng-init="count.Notif = countRelevant()"></div>
+    <article id="notif-table">
+      <section ng-show="count.Notif === 0">Пока непрочитанных сообщений нет</section>
+      <section ng-attr-id="tr_{{::item.parentUnid}}" ng-repeat="(key, item) in Notifications | orderObjectBy:'entryOrder':true"
+        ng-init="expanded[item.parentUnid] = notifExp.Control;" ng-mouseenter="showCheckbox = true;" ng-mouseleave="showCheckbox = false;" style="clear: both; min-height: 32.5px;">
+        <div class="notif-controls">
+
+          <span ng-if="(item.urgency <= 0 && showCheckbox) || checkedDocs[item.parentUnid]"
+          ng-attr-title="{{item.urgency < 0 ? 'Перенос срока исполнения' : 
+                           item.parentForm == 'formTask' ? 'Просьба' :
+                           item.parentForm == 'formVoting' ? 'Опрос' :
+                           item.parentForm == 'Contact' ? 'Контакт' :
+                           item.parentForm == 'formProcess' ? 'Тема' : 'Отметить'}}">
+            <md-checkbox
+              class="notif-checkbox"
+              aria-label="checked"
+              id="notifCheckboxTop{{$index}}"
+              ng-click="changeCheckedState(item.parentUnid);"
+              ng-checked="checkedDocs[item.parentUnid] === true"
+              log-click="Информатор::Галка <Отметить> у темы в информаторе">
+           </md-checkbox>
+          </span>
+          
+          <i ng-if="item.urgency > 0" class="pink material-icons" style="cursor: default;" title="Требуется действие">{{item.isPublic==1?'assignment_late':'lock'}}</i>
+          
+          <span ng-if="item.urgency == 0" ng-switch on="::item.parentForm" ng-hide="showCheckbox || checkedDocs[item.parentUnid]">
+            <span ng-switch-when="formTask" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'assignment':'lock'}}</span>
+            <span ng-switch-when="messagebb" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'assignment':'lock'}}</span>
+            <span ng-switch-when="formVoting" class="material-icons">{{item.isPublic==1?'sort':'lock'}}</span> 
+            <span ng-switch-when="formAdapt" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'create_new_folder':'lock'}}</span>
+            <span ng-switch-when="Empl" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'folder_shared':'lock'}}</span>
+            <span ng-switch-when="Contact" ng-if="item.documentType == 'Person'" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'folder_shared':'lock'}}</span>
+            <span ng-switch-when="Contact" ng-if="item.documentType == 'Organization'" class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'business':'lock'}}</span>
+            <span ng-switch-default class="material-icons" style="position: absolute; top: 0px;">{{item.isPublic==1?'create_new_folder':'lock'}}</span>
+          </span>
+          <span ng-if="item.urgency < 0" ng-hide="showCheckbox || checkedDocs[item.parentUnid]"
+                class="material-icons" style="position: absolute; top: 0px;">update</span>
+
+        </div>
+        <div class="notif-controls" style="text-align: center;">
+          <span class="glyphicon text-s11 touch"
+                ng-class="{'glyphicon-triangle-right':!expanded[item.parentUnid], 'glyphicon-triangle-bottom':expanded[item.parentUnid]}"
+                ng-click="expand(item.parentUnid)"
+                ng-attr-title="{{expanded[item.parentUnid] ? 'Свернуть' : 'Развернуть'}}"
+                style="padding: 4px;"
+                log-click="Информатор::Кнопка-стрелка <Развернуть/Свернуть> уведомление в информаторе"></span>
+        </div>
+        <div class="notif-item">
+          <a href
+             ui-sref="body.discus({ id: item.parentUnid, type: item.parentForm === 'Contact' ? 'contact' : ''})"
+             title="{{::(item.subject || item.subjVoting ||'(неопознанная тема '+$index+')')}}"
+             class="blue"
+             target="_blank"
+             style="width: {{$root.windowWidth-380+($root.windowWidth < 550 ? 120 : 0)+($root.windowWidth < 340 ? 150 : 0)}}px;"
+             log-click="Информатор::Ссылка на тему в информаторе">
+
+            <span ng-switch on="::item.parentForm">
+              <span ng-switch-when="formTask"> ПРОСЬБА: </span>
+              <span ng-switch-when="messagebb"> ПРОСЬБА: </span>
+              <span ng-switch-when="formVoting"> ОПРОС: </span>
+              <span ng-switch-when="formAdapt"> АДАПТАЦИОННЫЙ ЛИСТ: </span>
+              <span ng-switch-when="Empl"> ПРОФИЛЬ: </span>
+              <span ng-switch-when="Contact" ng-if="item.documentType == 'Person'"> Контакт персона: </span>
+              <span ng-switch-when="Contact" ng-if="item.documentType == 'Organization'"> Контакт организация: </span>
+
+                {{::(item.subject || item.subjVoting ||'(неопознанная тема '+$index+')')}}{{::(item.flag ? ' '+item.flag : '')}}
+            </span>
+            <span ng-show="$root.notificationsDiscus[item.parentUnid]&&$root.notificationsDiscus[item.parentUnid].main_item.ToSite == '1'&&item.parentForm!='Empl'">
+              <b class="red-db4437">Внимание! Публичный блог!</b>
+            </span>
+          </a>
+          <a ng-repeat="(unid, subitem) in ::item.docs"
+             ui-sref="body.discus({ id: unid, type: ''})"
+             ng-if="::(unid!=item.parentUnid && item.docs[unid]['urgency'] > 0)"
+             ng-style="$first && {'margin-top': '-5px'}"
+             style="width: {{$root.windowWidth-380+($root.windowWidth < 550 ? 120 : 0)+($root.windowWidth < 340 ? 150 : 0)}}px;"
+             class="pink sub-notif"
+             target="_blank"
+             log-click="Информатор::Ссылка на подтему в информаторе">
+             {{::subitem.subject}}
+          </a>
+        </div>
+        <div ng-hide="$root.windowWidth < 340" class="relative notif-right-menu" ng-mouseleave="item._meta.mOverDoc=false" ng-mousemove="item._meta.mOverDoc=true">
+          <involvement username="item.authorLogin || item.AuthorLogin"
+                       ng-if="$root.users && $root.users[item.authorLogin || item.AuthorLogin].involvement != 100 || (item.authorLogin == $root.user.username || item.AuthorLogin == $root.user.username)"></involvement>
+          <span class="notif-author bold">
+            <a href target="_blank" class="black"
+               ui-sref="body.profileDisplay({ id: item.Author || item.AuthorLogin })"
+               title="{{(getShareName('fullName', item.sendShareFrom, item.shareAuthorLogin) || $root.users[item.AuthorLogin].WorkGroup.join(', ')||item.Author)}}"
+               log-click="Информатор::Ссылка на профиль автора темы в информаторе">
+              {{::(getShareName('fullName', item.sendShareFrom, item.shareAuthorLogin) || $root.users[item.AuthorLogin].name || item.Author)}}
+            </a>
+          </span>
+          <span ng-hide="$root.windowWidth < 550" class="dark-grey text-s12">{{::item.created | dateonly}}</span>
+          
+          <span ng-init="doc = item; isNotifMenu = true;" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"
+          class="dropmenu-wrap"></span>
+          
+        </div>
+           <div ng-show="expanded[item.parentUnid]" style="padding-left: 55px;">
+            <div ng-if="$root.notificationsDiscus[item.unid].isLoaded !== true && $root.notificationsDiscus[item.parentUnid].isLoaded !== true" style="float: left; clear: both;">
+              <span id="preloader"></span>
+            </div>
+            <div id="{{::discus.main_doc.unid}}" ng-if="$root.notificationsDiscus[item.unid].isLoaded === true || $root.notificationsDiscus[item.parentUnid].isLoaded === true"
+            ng-init="discus = $root.notificationsDiscus[item.parentUnid]; discus.initDictionaries();"
+            ng-mouseenter="discus.main_doc?discus.main_doc._meta.mOverDoc=true:''" ng-mouseleave="discus.main_doc?discus.main_doc._meta.mOverDoc=false:''" style="float: left; width: 100%; position: relative;">
+              <div class="msg"><document ng-if="discus.main_doc" doc="discus.main_doc"></document></div>
+              <div ng-if="discus.selectedEditForm=='message'||discus.selectedEditForm=='messagebb'" ng-include="'/bundles/tretoportal/partials/modals/editMessage.html'"></div>
+              <div ng-if="discus.selectedEditForm=='formTask'" ng-include="'/bundles/tretoportal/partials/modals/editTask.html'"></div>
+              <div ng-if="discus.selectedEditForm=='formProcess'" ng-include="'/bundles/tretoportal/partials/modals/editFormProcess.html'"></div>
+              <!-- <div ng-if="discus.displayParticipants" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-group-participants.html'"></div> -->
+              <div ng-repeat="comment in discus.comments | orderBy:'created'" id="{{::comment.unid}}" class="msg">
+                
+                <div ng-if="(comment.subject||comment.subjVoting||comment.taskID)&&comment.form!='subTotal'&&comment.form!='messagebb'&&comment.form!='message'">
+                  <div class="martop10" ng-init="doc=comment" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/subj-menu.html'"></div>
+                </div>
+                
+                <document ng-if="can().read(comment)" class="{{comment.AttachedDoc ? 'well well-xs' : ''}}" doc="comment"></document>
+              </div>
+            <span ng-if="item.urgency <= 0 && expanded[item.parentUnid]" class="notif-bottom-checkbox">
+              <md-checkbox
+                class="notif-checkbox"
+                aria-label="checked"
+                id="notifCheckboxBottom{{$index}}"
+                ng-click="changeCheckedState(item.parentUnid);"
+                ng-checked="checkedDocs[item.parentUnid] === true"
+                log-click="Информатор::Галка <Отметить> у темы в информаторе">
+             </md-checkbox>
+            </span>
+            </div>
+          </div>
+      </section>
+    </article>
+  </div>
+</div>

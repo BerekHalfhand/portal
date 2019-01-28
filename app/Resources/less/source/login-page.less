@@ -1,0 +1,45 @@
+input {
+  outline: none;
+  border: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  width: 100%;
+}
+.form-control{
+  border: none;
+  border-bottom: 1px solid @border-color;
+}
+textarea.form-control{
+  box-shadow: none;
+  resize:none;
+  background-color: transparent;
+}
+
+div.input{
+  outline: none;
+  border: none;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+  margin: 0px -11px;
+  height: auto;
+  max-height: 200px;
+  overflow: auto;
+
+  .ta-bind:focus{
+    outline: none;
+  }
+}
+.ta-scroll-window > .ta-bind{
+  min-height: 100px;
+}
+#login p{
+  margin: 0px;
+  color: @blue;
+}
+#login input[type=submit],
+h1 {
+  font-family: 'Roboto';
+  font-weight: lighter;
+}

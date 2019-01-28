@@ -1,0 +1,35 @@
+<div ng-if="!denied" ng-init="collapseStat=getBlockState('collapseStat'); collapseStat?loadStat():false;">
+    <div class="side-header">
+    <div ng-click="collapseStat=getBlockState('collapseStat', true); collapseStat?loadStat():false;"
+         class="side-collapse touch"
+         log-click="Главная::Кнопка-стрелка <Показать\скрыть> блок <Статистика> на главной">
+        <i ng-hide="collapseStat" class="material-icons">arrow_drop_down</i>
+        <i ng-show="collapseStat" class="material-icons">arrow_drop_up</i>
+    </div>
+    <ul class="list-inline">
+        <li class="text-s12">
+            <a href class="black" ui-sref="body.stat({ tab: 'main' })"
+               log-click="Главная::Ссылка <Статистика> на страницу статистики в блоке <Новые организации> на главной">
+                Статистика
+            </a>
+        </li>
+    </ul>
+    </div>
+    <div class="side-body" ng-show="collapseStat">
+    <div class="stat text-s12 padbot10 padtop10 padleft10 padright10">
+        <main-stat
+            employers
+            employed-fired
+            messages-total-count
+            logged-today-count
+            bmometer
+            top-chatterboxes
+            top-silent
+            top-in-time
+            top-overdue
+            top-fast-workers
+            top-slow-workers>
+        </main-stat>
+    </div>
+    </div>
+</div>

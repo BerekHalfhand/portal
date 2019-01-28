@@ -1,0 +1,11 @@
+parameters:
+    treto_user.ajax_login.ajax_athentication_listener.class: Treto\UserBundle\EventListener\AjaxAuthenticationListener
+
+services:
+    treto_user.ajax_login.ajax_athentication_success_handler:
+        class: %treto_user.ajax_login.ajax_athentication_listener.class%
+        parent: security.authentication.success_handler
+        
+    treto_user.ajax_login.ajax_athentication_failure_handler:
+        class: %treto_user.ajax_login.ajax_athentication_listener.class%
+        parent: security.authentication.failure_handler

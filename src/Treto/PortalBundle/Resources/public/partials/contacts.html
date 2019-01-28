@@ -1,0 +1,257 @@
+      <title>Контакты</title>
+      <div class="container-fluid" ng-init="selectedTab = false">
+        <div class="row martop15">
+          <div class="sidebar col-lg-6">
+            <div class="list-group">
+              <div>
+                <a href class="list-group-item contact-menu"
+                   ng-class="{'active' : selectedTab == 'allContact', 'link-loading' : loading}"
+                   ng-click="changeTab('allContact');"
+                   log-click="Контакты::Вкладка <Все контакты> на странице контакты">
+                   Все контакты
+                   <div class="glyphicon pull-right glyphicon-menu-{{ !allContCollapsed ? 'down' : 'right' }}"></div>
+                </a>
+                <div class="list-group" uib-collapse="allContCollapsed">
+                  <group ng-if="statusListDict.records" records-tree="statusListDict.recordsTree"></group>
+                </div>
+              </div>
+              <div>
+                <a href class="list-group-item contact-menu"
+                   ng-class="{'active' : selectedTab == 'allEmpls', 'link-loading' : loading}"
+                   ng-click="changeTab('allEmpls');"
+                   log-click="Контакты::Вкладка <Сотрудники> на странице контакты">
+                   Сотрудники
+                   <div class="glyphicon pull-right glyphicon-menu-{{ !collCollapsed ? 'down' : 'right' }}"></div>
+                </a>
+                <div uib-collapse="collCollapsed">
+                    <li class="list-group-item contact-menu" ng-repeat="sec in sectionDict.records | orderBy:'value'" ng-click="getProfiles(sec.value, $root.s.text)" class="ng-scope">
+                      <span class="ico icon-to-employees"></span>
+                      <a href class="ng-binding">
+                        {{sec.value}}
+                      </a>
+                    </li>
+                </div>
+              </div>
+              <div>
+                <a href class="list-group-item contact-menu"
+                   ng-class="{'active' : selectedTab == 'allDiss', 'link-loading' : loading}"
+                   ng-click="changeTab('allDiss');"
+                   log-click="Контакты::Вкладка <Уволенные> на странице контакты">
+                   Уволенные
+                </a>
+              </div>
+              <div>
+                <a href
+                   class="list-group-item contact-menu"
+                   ng-class="{'active' : selectedTab == 'basket', 'link-loading' : loading}"
+                   ng-click="changeTab('basket');"
+                   log-click="Контакты::Вкладка <Корзина> на странице контакты">
+                   Корзина
+                </a>
+              </div>
+              <div>
+                <a href ng-show="$root.role('PM')"
+                   ui-sref="body.adminDictionary({type:'StatusList'})"
+                   class="list-group-item contact-menu"
+                   log-click="Контакты::Ссылка <Консоль администратора> на странице контакты">
+                   Консоль администратора
+                </a>
+              </div>
+              <div>
+                <a href ng-show="$root.role('PM')"
+                   ui-sref="body.portalSettings({})"
+                   class="list-group-item contact-menu"
+                   log-click="Контакты::Ссылка <Настройки портала> на странице контакты">
+                   Настройки портала
+                </a>
+              </div>
+              <div>
+                <a href ui-sref="body.c1logList()"
+                   class="list-group-item contact-menu"
+                   log-click="Контакты::Ссылка <Логи синхронизации в 1С> на странице контакты">
+                   Логи синхронизации в 1С
+                </a>
+              </div>
+              <div>
+                <a href class="list-group-item contact-menu"
+                   log-click="Контакты::Кнопка <Выгрузить контакты в 1С> на странице контакты">
+                   Выгрузить контакты в 1С
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="search-area col-lg-18 bgwhite">
+            <div class="search-panel color-panel top-color-green">
+              <input type="text" id="SelectedContacts_IDS" ng-model="SelectedContacts_IDS" ng-hide="true">
+              <input type="text" id="DieIsCast"  ng-model="DieIsCast" ng-hide="true">
+              <div class="row" ng-if="for1c">
+                <div class="col-lg-18">
+                  <span ng-show="selectedContact">
+                    <b>Выбрано {{DieIsCast==1?'(сохранено)':DieIsCast==2?'(отменено)':''}}: </b>{{selectedContact.name}}
+                  </span>
+                </div>
+                <div class="col-lg-6">
+                  <button type="submit"
+                          ng-click="save1cContacts();"
+                          class="btn btn-info btn-xs btn-big marright10"
+                          ng-disabled="!selectedContact"
+                          log-click="Контакты::Кнопка <Сохранить> на странице контакты">
+                          Сохранить
+                  </button>
+                  <button type="submit"
+                          ng-click="reset1cContacts();"
+                          class="btn btn-default btn-xs btn-big marright10"
+                          ng-disabled="!selectedContact"
+                          log-click="Контакты::Кнопка <Отмена> на странице контакты">
+                          Отмена
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="search-form col-lg-24">
+                  <h5>Сортировать контакты:</h5>
+                  <hr />
+                  <div class="col-lg-24">
+                    <form class="form-inline" role="form" ng-init="$root.s = {'type': nameValue }" ng-submit="runSearch();">
+                      <span class="search-input-icon">
+                        <i ng-click="runSearch();" class="glyphicon glyphicon-search touch"
+                           log-click="Контакты::Кнопка <Поиск (иконка лупа)> на странице контакты"></i>
+                      </span>
+                      <input class="form-control search-input" type="text" placeholder="Поиск"
+                             ng-model="$root.s.text"
+                             uib-typeahead="user.name as user.name for user in getAutoCompleteList($viewValue)"
+                             typeahead-loading="loadingNames"
+                             typeahead-focus-first="false"
+                             typeahead-on-select="$root.s.text = $item.name; runSearch();"
+                             log-click="Контакты::Кнопка <Поиск (иконка лупа)> на странице контакты"/>
+                      <div uib-dropdown style="position: initial;">
+                        <div ng-show="$root.s.type.name == 'По БМ'"
+                             class="touch search-dropdown"
+                             data-toggle="dropdown"
+                             uib-dropdown-toggle
+                             log-click="Контакты::Меню <Поиск по БМ> на странице контакты">
+                          <i class="material-icons search-dropdown-icon">expand_more</i>
+                        </div>
+                        <ul class="dropdown-menu text-s12 left-inherit maxheight600 minwidth250 overflow-auto pad5 search-dropdown-list">
+                          <li ng-repeat="bm in BMs" class="touch" ng-click="$root.s.text = bm.FullNameInRus; $root.getContacts()">
+                            {{bm.FullNameInRus}}
+                          </li>
+                        </ul>
+                      </div>
+                    </form>
+                    <div class="martop20 col-lg-20 pull-left" ng-if="selectedGroup == 'contacts'">
+                      <input id="check_name"
+                             type="radio"
+                             name="first"
+                             checked="checked"
+                             hidden
+                             ng-model="$root.s.type"
+                             ng-value="nameValue"
+                             log-click="Контакты::Переключатель <Поиск: В имени> на странице контакты"/>
+                      <label for="check_name">В имени</label>
+                      
+                      <input id="check_manager"
+                             type="radio"
+                             name="first"
+                             hidden
+                             ng-model="$root.s.type"
+                             ng-value="managerValue"
+                             log-click="Контакты::Переключатель <Поиск: По менеджеру фабрики> на странице контакты"/>
+                      <label for="check_manager">По менеджеру фабрики</label>
+                      
+                      <input id="check_bm"
+                             type="radio"
+                             name="first"
+                             hidden
+                             ng-model="$root.s.type"
+                             ng-value="bmValue"
+                             ng-click="!BMs.length > 0 ? getBMs() : false"
+                             log-click="Контакты::Переключатель <Поиск: По БМ> на странице контакты"/>
+                      <label for="check_bm">По БМ</label>
+                    </div>
+                  <div  class="col-lg-4 martop20 pull-right">
+                    <a ng-if="selectedGroup == 'contacts'"
+                       ng-click="$root.s.contact = {name:'Персоны', search:'Person'};changeSelectedGroup('contacts', true);"
+                       log-click="Контакты::Кнопка <Поиск по персонам> на странице контакты">
+                      <i class="ico icon-person pull-right"></i>
+                    </a>
+                    <a ng-if="selectedGroup == 'contacts'"
+                       ng-click="$root.s.contact = {name:'Компании', search:'Organization'};changeSelectedGroup('contacts', true);"
+                       log-click="Контакты::Кнопка <Поиск по организациям> на странице контакты">
+                      <i class="ico icon-org pull-right"></i>
+                    </a>
+                </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-22 search-filter">
+                  <i class="icon icon-filter"></i>ОТОБРАНО:
+                  <a class="green" ng-if="selectedGroup">{{selectedGroup == 'contacts'?'В контактах':selectedGroup == 'empls'?'В профилях':''}}</a>
+                  <a class="green" ng-if="$root.s.contact">только {{$root.s.contact.name}}</a>
+                  <a class="green" ng-if="$root.s.group">в группе {{$root.s.group.name}}</a>
+                  <a class="green" ng-if="$root.s.text && $root.s.text!=''">{{$root.s.type.name}} "{{$root.s.text}}"</a>
+                  <a class="green" ng-if="$root.p">по сотрудникам "{{$root.p}}"</a>
+                  <div ng-click="removeParams();"
+                       ng-if="($root.p) || ($root.s.contact) || ($root.s.group) || ($root.s.text && $root.s.text!='')"
+                       class="glyphicon glyphicon-remove touch"
+                       log-click="Контакты::Кнопка <Очистить параментры поиска> на странице контакты">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="search-result" infinite-scroll="addContacts()" infinite-scroll-distance="1" infinite-scroll-disabled="contactsBusy">
+              <table class="table-responsive table-striped" width="100%">
+                <tr ng-repeat="contact in contacts | orderBy:'LastName':false">
+                  <td ng-if="contact.form!=='Empl'">
+                    <p ng-if="for1c">
+                      <input type="radio"
+                             id="{{contact.unid}}-checkbox"
+                             ng-checked='selectedContact.unid == contact.unid'
+                             ng-click="select1cContact(contact)"
+                             log-click="Контакты::Переключатель <Для 1С> у контакта в таблице контактов на странице контакты"/>
+                      <label for="{{contact.unid}}-checkbox" class="pull-left"></label>
+                    </p>
+                    <strong>
+                      <a class="darker-grey mar4" ui-sref="body.discus(getContactUrlParams(contact.unid))"
+                         log-click="Контакты::Ссылка на контакт в таблице контактов на странице контакты">
+                        {{contact.ContactName||contact.subject||contact.LastName}}
+                      </a>
+                    </strong>
+                  </td>
+                  <td ng-if="contact.form==='Empl'">
+                    <strong>
+                      <a class="darker-grey mar4"
+                         ui-sref='body.profileDisplay({id: contact.Login})'
+                         title=""
+                         log-click="Контакты::Ссылка на профиль сотрудника в таблице контактов на странице контакты">
+                         {{contact.LastName +' '+ contact.name}}
+                      </a>
+                    </strong>
+                  </td>
+                  <td ng-if="contact.form !== 'Empl'">{{contact.PhoneCellValues[0]}}</td>
+                  <td ng-if="contact.form !== 'Empl'">{{contact.EmailValues[0]}}</td>
+                  <td ng-if="contact.form !== 'Empl'" class="green">{{statusListDict.getRecordValues(contact.ContactStatus)|join}}{{(contact.Group.length && contact.ContactStatus.length)?'/':''}}<span ng-repeat="gr in contact.Group">{{($index?', ':'') + gr}}</span></td>
+                  <td ng-if="contact.form === 'Empl'"><p class="green">{{contact.WorkGroup | arrOrStrOutput }}<p></td>
+                  <td ng-if="contact.form === 'Empl'"><p>{{contact.Email}}<p></td>
+                  <td ng-if="contact.form === 'Empl' &&
+                  (contact.ContactWithMobileFhone[0]
+                  ||contact.ContactWithMobileFhone_1[0]
+                  ||contact.ContactWithMobileFhone_2[0]
+                  ||contact.ContactWithWorkFhone[0])"><p>Тел:
+                    {{contact.ContactWithMobileFhone[0]
+                    ||contact.ContactWithMobileFhone_1[0]
+                    ||contact.ContactWithMobileFhone_2[0]
+                    ||contact.ContactWithWorkFhone[0]}}<p></td>
+                  <td ng-if="contact.Status==='deleted'"
+                      style="height:23px;background:url(/public/images/contacts/undelete.png) no-repeat center center;"
+                      ng-click="contact.contactUndelete()"
+                      log-click="Контакты::Кнопка <Восстановить удалённый понтакт> в таблице контактов на странице контакты">&nbsp;</td>
+                </tr>
+              </table>
+              {{status}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="/bundles/tretoportal/js/pure/contact.js"></script>

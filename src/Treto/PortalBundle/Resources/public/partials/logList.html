@@ -1,0 +1,45 @@
+<title>Посещения</title>
+<div id="logs" >
+  <div class="container martop15">
+    <div class="row">
+      <div class="col-lg-24 panel pad0force">
+        <div class="pad0_15">
+          <h5 class="martop20"
+              ng-init="revSort=true;"
+              ng-click="revSort=!revSort"
+              log-click="Посещения::Заголовок <Посещения> на странице посещений">
+              Посещения:
+          </h5>
+          <hr class="bordtop_e6">
+        </div>
+        <div class="pad0_15" infinite-scroll="addHistory()" infinite-scroll-distance="1" infinite-scroll-disabled="historyBusy">
+          <p class="padbot15 text-s11">Количество тем на странице: {{page}}</p>
+          <table class="">
+            <tr ng-repeat="logItem in history|orderBy:'time.date':revSort">
+              <td class="padbot10" style="min-width: 120px;">{{logItem.date | date:'dd.MM.yyyy HH:mm'}}</td>
+              <td class="padleft10 padbot10">
+                <a ng-if="logItem.state == 'body.discus'"
+                   href
+                   ui-sref="body.discus({ id: logItem.stateParams.id, type: logItem.stateParams.type})"
+                   class="black_33"
+                   log-click="Посещения::Ссылка на тему в таблице на странице посещений">
+                   {{logItem.label || 'Без темы'}}
+                </a>
+                <a ng-if="logItem.state == 'body.profileDisplay'"
+                   href
+                   ui-sref="body.profileDisplay({ id: logItem.stateParams.id, type: ''})"
+                   class="black_33"
+                   log-click="Посещения::Ссылка на профиль пользователя в таблице на странице посещений">
+                   {{logItem.label || 'Без темы'}}
+                </a>
+              </td>
+            </tr>
+          </table>
+          {{status}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

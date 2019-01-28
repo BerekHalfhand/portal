@@ -1,0 +1,58 @@
+<div id="participantsTable" class="add-participants-table" ng-init="$root.currentShareEnable = shareEnable;" ng-class="{'hide-info': attrs.hideinfo == 'true', 'hide-all-info': attrs.hideallinfo == 'true'}">
+  <div class="add-participants-table__item" ng-show="multiple || section">
+  	<div class="participants-number">
+  		{{participantstatus}} ({{ngmodel.length + (sharePortal | objLength)}}):
+  	</div>
+  	<div class="add-participant-btn" ng-show="multiple || section">
+  		<span class="material-icons touch" ng-disabled="!$parent.discus" ng-click="$parent.discus.pushArray = ngmodel; $parent.discus.sharePushArray = sharePortal; $parent.discus.shareEnable = shareEnable; $parent.discus.selectParticipants($parent.discus.current, attrs); showAddTeamsdepartments = true;" title="Добавить участников" log-click="Участники::Кнопка открыть окно добавления участников по отделам">group_add</span>
+  		
+  		<add-teamsdepartments ng-if="$parent.discus.displayParticipants && showAddTeamsdepartments" ngdiscus="$parent.$parent.discus"></add-teamsdepartments>
+  	</div>
+  </div>
+
+  <div class="add-participants-table__item" fading-out>
+  	<div class="participants-input-wrapper">
+  		<ul class="participants-input stylized-scroll">
+
+        <!-- Заполнение участников Tile Expert -->
+        <li ng-repeat="obj in ngmodel" class="participant-element">
+          <b>{{$root.users[obj].name||obj}}</b><i ng-if="$root.users[obj].involvement && $root.users[obj].involvement!= 100">(<b>{{$root.users[obj].involvement}}%</b> до {{$root.users[obj].involvementExpireDate | datetime}})</i>
+          <a href ng-click="removePerson(obj);" class="delete" log-click="Участники::Кнопка <Удалить участника> в блоке добавления участников">
+            <i class="material-icons text-s16">close</i>
+          </a>
+        </li>
+        
+        <!-- Заполнение участников из других команд -->
+        <li ng-repeat="user in fillUserInfo()" class="participant-element">
+          <b>{{findShareName(user.domain, user.login)||user.login}}</b><span>({{$root.shareUsers[user.domain].name}})</span>
+          <a href ng-click="removeSharePerson(user.login, user.domain);" class="delete" log-click="Участники::Кнопка <Удалить участника> в блоке добавления участников">
+            <i class="material-icons text-s16">close</i>
+          </a>
+        </li>
+
+        <li class="typeahead-style" ng-hide="!multiple && (ngmodel.length > 0 || getShareCount() > 0)">
+          <input id="participantInput" type="text" ng-model="login" tabindex="100" uib-typeahead="{{typeaheadexpr}}" ng-init="initfocus ? focusOnMe() : false;" typeahead-on-select="addPerson($item); login='';" placeholder="{{placeholder}}" ng-disabled="inputdisabled" autocomplete="off" typeahead-popup-template-url="customPopupTemplate.html" typeahead-template-url="customTemplate.html" log-click="Участники::Поле <Добавить участника> в блоке добавления участников"/>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script type="text/ng-template" id="customPopupTemplate.html">
+  <div class="dropdown-menu search-drop-hover" ng-show="isOpen() && !moveInProgress" role="listbox" aria-hidden="{{!isOpen()}}">
+    <ul class="stylized-scroll">
+     <li ng-repeat="match in matches | orderBy: 'label' track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch(matches.indexOf(match));"  role="option" id="{{::match.id}}" log-click="Участники::Выбор участника из найденных в блоке добавления участников">
+      <div uib-typeahead-match index="$index" match="match" query="query" template-url="templateUrl"></div>
+    </li>
+  </ul>
+</div>
+</script>
+
+<script type="text/ng-template" id="customTemplate.html">
+  <a ng-hide="!$root.currentShareEnable && match.model.domain">
+    <span class="name" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>,
+    <span ng-bind="match.model.WorkGroup.join(', ') || $root.users[match.model.login].WorkGroup.join(', ')"></span>
+    <span ng-if="match.model.domain">({{$root.shareUsers[match.model.domain].name}})</span>
+    <span class="text-smaller" ng-bind-html="!match.model.involvement || match.model.involvement === 100 ? '' : ' (<b>' + match.model.involvement + '</b>% до ' + (match.model.involvementExpireDate | datetime) + ')'"></span>
+  </a>
+</script>

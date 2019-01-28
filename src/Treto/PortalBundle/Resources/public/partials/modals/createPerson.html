@@ -1,0 +1,18 @@
+<div class="edit-doc center">
+  <div class="container text-s12 panel marbot0 pad0force" ng-controller="contactNewPersonCtrl" style="position: relative;" ctrl-enter="ok()">
+    <!--<div class="close-edit-form" ng-click="close()">&times;</div>-->
+    <button type="button" class="close pull-right marright5"
+        ng-click="close()"
+        style="position: absolute;top: 0;right: 0;z-index: 1001"
+        title="Закрыть"
+        log-click="Контакты::Кнопка <Закрыть> в окне создания персоны">
+        &times;
+    </button>
+    <div class="modal-body padbot0">
+        <span class="text-s16">Персона</span>
+    </div>
+	  <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+	    <div ng-init="isModal = true" ng-include="'/bundles/tretoportal/partials/createPersonTempl.html'"></div>
+	  </form>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+.color-panel {
+	margin-bottom: 10px;
+}
+
+.color-panel p{
+	margin-bottom: 0px;
+}
+
+.blog-post{
+	margin-bottom: 10px;
+}
+
+.blog-post p{
+	text-align: justify;
+}
+
+#main-photo {
+	margin-bottom: 10px;
+}
+#main-photo img{
+	width: 40%; 
+	height: 40%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.groups li {
+  padding: 0px 0px 0px 20px;
+  list-style: none;
+  margin-left: 0px;
+  vertical-align: middle;
+}
+i.icon {
+	display: block;
+	float: left;
+}
+i.icon.icon-arrow-right {
+	width: 16px;
+	height: 16px;
+	background-size: 4px 8px;
+	background-image: url("/public/images/profile/arrow_right.png");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+i.icon.icon-arrow-down {
+  width: 16px;
+  height: 16px;
+  background-size: 8px 4px;
+  background-image: url("/public/images/profile/arrow_down.png");
+  background-repeat: no-repeat;
+	background-position: center;
+}
+
+.profileMenu .dropdown-menu img {
+    max-width: 30px;
+    max-height: 30px;
+    margin-right: 6px;
+    display: inline-block;
+}
+.profileMenu {
+  width: 100%;
+}
+
+.btn-wide {
+    width: 20%;
+    min-width: 200px;
+    margin: 6px 0;
+}
+
+.menu li {
+    margin: 2px;
+}
+

@@ -1,0 +1,308 @@
+<title>Просьбы</title>
+<div id="tasks" ng-keydown="$event.keyCode == 13 && search()">
+  <div class="container martop15">
+    <div class="row">
+      <div class="col-lg-24 panel pad0force">
+        <div class="bordtop_ec table-responsive" style="overflow: visible;">
+          <table class="table table-fixed table-striped table-bordered valign-middle no-bord-left no-bord-right no-border">
+            <thead>
+              <tr class="bold text-s13">
+                <td width="10%"
+                    style="padding: 15px 8px 15px 15px;"
+                    class="touch"
+                    ng-click="order('parsedStatus')"
+                    log-click="Поиск просьб::Сортировка таблицы поиска просьб по статусу">
+                  Статус
+                  <i ng-show="sort.predicate=='status'" class="pull-right material-icons">{{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}</i>
+                  <img ng-hide="sort.predicate=='status'" class="pull-right padtop2" src="/public/images/tasks/sort.png"/>
+                </td>
+                <td width="24%"
+                    style="padding: 15px 8px;"
+                    class="touch"
+                    ng-click="order('subject')"
+                    log-click="Поиск просьб::Сортировка таблицы поиска просьб по заголовку">
+                  Просьба
+                  <span ng-show="tasks.saved && tasks.records.length">
+                    (отобрано {{tasks.records.length}})
+                  </span>
+                  <i ng-show="sort.predicate=='subject'" class="pull-right material-icons">{{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}</i>
+                  <img ng-hide="sort.predicate=='subject'" class="pull-right padtop2" src="/public/images/tasks/sort.png"/>
+                </td>
+                <td width="15%" style="padding: 15px 8px;" class="touch">
+                  <span class="padright5"
+                        ng-click="order('Author')"
+                        log-click="Поиск просьб::Сортировка таблицы поиска просьб по автору">
+                      Автор
+                  </span>
+                  <div class="inline-block padright5">
+                    <md-input-container md-no-float>
+                      <md-checkbox
+                        md-no-ink
+                        ng-checked="tasks.params.iAmAuthor"
+                        ng-click="toggleAuthorSwitch(); search();"
+                        aria-label="i am author checkbox"
+                        log-click="Поиск просьб::Галка <Автор: Мои> в поиске просьб">
+                        Мои
+                      </md-checkbox>
+                    </md-input-container>
+                  </div>
+                  <i ng-show="sort.predicate=='Author'"
+                     class="pull-right material-icons"
+                     ng-click="order('Author')"
+                     log-click="Поиск просьб::Сортировка таблицы поиска просьб по автору">
+                    {{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}
+                  </i>
+                  <img ng-hide="sort.predicate=='Author'"
+                       class="pull-right padtop2"
+                       src="/public/images/tasks/sort.png"
+                       ng-click="order('Author')"
+                       log-click="Поиск просьб::Сортировка таблицы поиска просьб по автору"/>
+                </td>
+                <td width="15%" style="padding: 15px 8px;" class="touch">
+                  <span class="padright5"
+                        ng-click="order('taskPerformerLat')"
+                        log-click="Поиск просьб::Сортировка таблицы поиска просьб по исполнителю">
+                      Исполнитель
+                  </span>
+                  <div class="inline-block padright5">
+                    <md-input-container md-no-float>
+                      <md-checkbox
+                        md-no-ink
+                        ng-checked="tasks.params.iAmPerformer"
+                        ng-click="togglePerformerSwitch(); search();"
+                        aria-label="i am performer checkbox"
+                        log-click="Поиск просьб::Галка <Исполнитель: Мои> в поиске просьб">
+                        Мои
+                      </md-checkbox>
+                    </md-input-container>
+                  </div>
+                  <i ng-show="sort.predicate=='taskPerformerLat'"
+                     class="pull-right material-icons"
+                     ng-click="order('taskPerformerLat')"
+                     log-click="Поиск просьб::Сортировка таблицы поиска просьб по исполнителю">
+                    {{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}
+                  </i>
+                  <img ng-hide="sort.predicate=='taskPerformerLat'"
+                       class="pull-right padtop2"
+                       src="/public/images/tasks/sort.png"
+                       ng-click="order('taskPerformerLat')"
+                       log-click="Поиск просьб::Сортировка таблицы поиска просьб по исполнителю"/>
+                </td>
+                <td width="13%"
+                    style="padding: 15px 8px;"
+                    class="touch"
+                    ng-click="order('created')"
+                    log-click="Поиск просьб::Сортировка таблицы поиска просьб по дате создания">
+                  Дата создания
+                  <i ng-show="sort.predicate=='created'" class="pull-right material-icons">{{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}</i>
+                  <img ng-hide="sort.predicate=='created'" class="pull-right padtop2" src="/public/images/tasks/sort.png"/>
+                </td>
+                <td width="13%"
+                    style="padding: 15px 8px;"
+                    class="touch"
+                    ng-click="order(tasks.params.status==='completed'?'taskDateCompleted':'taskDateRealEnd')"
+                    log-click="Поиск просьб::Сортировка таблицы поиска просьб по дате выполнения">
+                  Дата выполнения
+                  <i ng-show="sort.predicate=='taskDateRealEnd' || sort.predicate=='taskDateCompleted'" class="pull-right material-icons">{{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}</i>
+                  <img ng-hide="sort.predicate=='taskDateRealEnd' || sort.predicate=='taskDateCompleted'" class="pull-right padtop2" src="/public/images/tasks/sort.png"/>
+                </td>
+                <td width="9%"
+                    style="padding: 15px 8px;"
+                    class="touch"
+                    ng-click="order('Priority')"
+                    log-click="Поиск просьб::Сортировка таблицы поиска просьб по приоритету">
+                  Приоритет
+                  <i ng-show="sort.predicate=='Priority'" class="pull-right material-icons">{{sort.reverse?"arrow_drop_down":"arrow_drop_up"}}</i>
+                  <img ng-hide="sort.predicate=='Priority'" class="pull-right padtop2" src="/public/images/tasks/sort.png"/>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <md-input-container md-no-float>
+                    <md-select ng-model="tasks.params.status"
+                               ng-change="tasks.changeStatus(); search();"
+                               md-container-class="task-search-status-menu"
+                               aria-label="task status"
+                               log-click="Поиск просьб::Выбор опции <Статус> на странице поиска просьб">
+                        <md-option ng-repeat="opt in tasks.statusOptions" value="{{opt.value}}">{{opt.name}}</md-option>
+                    </md-select>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container md-no-float>
+                    <input type="text"
+                           placeholder="Ввод заголовка/части заголовка просьбы"
+                           ng-model="tasks.params.subject"
+                           ng-keyup="$event.keyCode == 13 && search()"
+                           aria-label="task title"
+                           log-click="Поиск просьб::Поле <ввод заголовка\части заголовка просьбы> на странице поиска просьб"/>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container md-no-float>
+                    <md-autocomplete
+                           placeholder="ФИО"
+                           ng-keydown="lastPressedOnAuthorIsKeyboard = true;"
+                           ng-keyup="$event.keyCode == 13 && search()"
+                           ng-click="lastPressedOnAuthorIsKeyboard = false"
+                           md-no-cache="true"
+                           md-select-on-focus
+                           md-clear-button="false"
+                           md-delay="50"
+                           md-search-text="searchAuthor"
+                           md-selected-item="tasks.params.author"
+                           md-selected-item-change="onChangeAuthor()"
+                           md-items="user in profile.usersAllAutocomplete(searchAuthor, true, true)"
+                           md-item-text="user.name"
+                           aria-label="author name"
+                           log-click="Поиск просьб::Поле <ФИО> автора просьбы на странице поиска просьб">
+                        <md-item-template>
+                          <span md-hightlight-text="searchAuthor">
+                            <b>{{user.name}}</b>{{$root.users[user.id] ? (user.WorkGroup ? ', ' + user.WorkGroup.join(', ') : '') : ', уволен'}}
+                          </span>
+                        </md-item-template>
+                        <md-not-found>
+                          Сотрудник с именем "{{searchAuthor}}" не найден.
+                        </md-not-found>
+                    </md-autocomplete>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container md-no-float>
+                    <md-autocomplete
+                           placeholder="ФИО"
+                           ng-keydown="lastPressedOnPerformerIsKeyboard = true;"              
+                           ng-keyup="$event.keyCode == 13 && search()"
+                           ng-click="lastPressedOnPerformerIsKeyboard = false"
+                           md-no-cache="true"
+                           md-select-on-focus
+                           md-clear-button="false"
+                           md-delay="50"
+                           md-search-text="searchPerformer"
+                           md-selected-item="tasks.params.performer"
+                           md-selected-item-change="onChangePerformer()"
+                           md-items="user in profile.usersAllAutocomplete(searchPerformer, true, true)"
+                           md-item-text="user.name"
+                           aria-label="performer name"
+                           log-click="Поиск просьб::Поле <ФИО> исполнителя просьбы на странице поиска просьб">
+                        <md-item-template>
+                          <span md-hightlight-text="searchPerformer">
+                            <b>{{user.name}}</b>{{$root.users[user.id] ? (user.WorkGroup ? ', ' + user.WorkGroup.join(', ') : '') : ', уволен'}}
+                          </span>
+                        </md-item-template>
+                        <md-not-found>
+                          Сотрудник с именем "{{searchPerformer}}" не найден.
+                        </md-not-found>
+                    </md-autocomplete>
+                  </md-input-container>
+                </td>
+                <td align="center">
+                  <md-input-container md-no-float class="datepicker-container">
+                    <md-datepicker
+                      ng-model="tasks.params.created.start"
+                      ng-change="search();"
+                      md-min-date="tasks.startDate"
+                      md-max-date="tasks.params.created.end || tasks.endDate"
+                      md-open-on-focus
+                      md-placeholder="с"
+                      md-hide-icons="all"
+                      aria-label="task created since"
+                      log-click="Поиск просьб::Выбор даты создания просьбы <с> числа на странице поиска просьб">
+                    </md-datepicker>
+                  </md-input-container>
+                  <span class="inline-block" style="width: 4%;">-</span>
+                  <md-input-container md-no-float class="datepicker-container">
+                    <md-datepicker
+                      ng-model="tasks.params.created.end"
+                      ng-change="search();"
+                      md-min-date="tasks.params.created.start || tasks.startDate"
+                      md-max-date="tasks.endDate"
+                      md-open-on-focus
+                      md-placeholder="по"
+                      md-hide-icons="all"
+                      aria-label="task created until"
+                      log-click="Поиск просьб::Выбор даты создания просьбы <по> число на странице поиска просьб">
+                    </md-datepicker>
+                  </md-input-container>
+                </td>
+                <td align="center">
+                  <md-input-container md-no-float class="datepicker-container">
+                    <md-datepicker
+                      ng-model="tasks.params.completed.start"
+                      ng-change="search();"
+                      md-min-date="tasks.startDate"
+                      md-max-date="tasks.params.completed.end || tasks.endDate"
+                      md-open-on-focus
+                      md-placeholder="с"
+                      md-hide-icons="all"
+                      aria-label="task completed since"
+                      log-click="Поиск просьб::Выбор даты выполнения просьбы <с> числа на странице поиска просьб">
+                    </md-datepicker>
+                  </md-input-container>
+                  <span class="inline-block" style="width: 4%;">-</span>
+                  <md-input-container md-no-float class="datepicker-container">
+                    <md-datepicker
+                      ng-model="tasks.params.completed.end"
+                      ng-change="search();"
+                      md-min-date="tasks.params.completed.start || tasks.startDate"
+                      md-max-date="tasks.endDate"
+                      md-open-on-focus
+                      md-placeholder="с"
+                      md-hide-icons="all"
+                      aria-label="task completed until"
+                      log-click="Поиск просьб::Выбор даты выполнения просьбы <по> число на странице поиска просьб">
+                    </md-datepicker>
+                  </md-input-container>
+                </td>
+                <td>
+                  <md-input-container md-no-float>
+                    <input type="text"
+                           placeholder="приоритет"
+                           ng-model="tasks.params.priority"
+                           ng-keyup="$event.keyCode == 13 && search()"
+                           aria-label="task priority"
+                           log-click="Поиск просьб::Поле <приоритет> на странице поиска просьб"/>
+                  </md-input-container>
+                </td>
+              </tr>
+              <tr ng-if="!tasks.saved">
+                <td colspan="7" class="text-s14 text-center" style="padding: 10px;">
+                  <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                </td>
+              </tr>
+              <tr ng-if="tasks.saved && !tasks.records.length">
+                <td colspan="7" class="text-s14 text-center" style="padding: 15px;">Ничего не найдено...</td>
+              </tr>
+            </thead>
+            <tbody ng-if="tasks.records" infinite-scroll="tasks.search(null, tasks.records.length, 200, sort)" infinite-scroll-distance="1" infinite-scroll-disabled="tasks.searchEnd || !tasks.saved || !sort">
+              <tr ng-repeat="task in tasks.records | orderBy: sort.predicate : sort.reverse">
+                <td class="bold text-s11">
+                  {{task.parsedStatus | localize:'task'}}
+                </td>
+                <td class="text-s13">
+                  <a class="blue"
+                     ui-sref="body.discus({ id: task.unid, type:'' })"
+                     log-click="Поиск просьб::Ссылка на просьбу в поиске просьб">
+                     {{task.subject}}
+                  </a>
+                </td>
+                <td class="text-s13">{{profile.translateName(task.authorLogin)}}</td>
+                <td class="text-s13">{{profile.translateName(task.taskPerformerLat)}}</td>
+                <td align="center" class="text-s13">{{task.created | datetime}}</td>
+                <td align="center" class="text-s13">{{task.taskDateRealEnd | datetime}}</td>
+                <td align="center" class="text-s13">
+                  <div class="task-priority padtop5 bgwhite text-circle text-center" style="color: black !important;">{{task.Priority}}</div>
+                </td>
+              </tr>
+              <tr ng-if="tasks.records.length && !tasks.saved">
+                <td colspan="7" class="text-s14 text-center" style="padding: 10px;">
+                  <md-progress-circular md-mode="indeterminate" md-diameter="30"></md-progress-circular>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

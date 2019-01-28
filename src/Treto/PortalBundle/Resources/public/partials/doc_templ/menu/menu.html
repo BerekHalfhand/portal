@@ -1,0 +1,211 @@
+<section class="msg-menu" ng-init="show = {}; show.Tags = false; show.Linked = (doc.isLinked == 1 || doc.linkedUNID.length > 0); show.pageLoad = true; discus = discus || $parent.$parent.$parent.discus;">
+  <div class="pull-right right-menu-in-discus" ng-if="$root.$state.current.name!=='body.index'">
+    <ul class="list-inline dark-grey" style="margin-bottom: 0px;" ng-mouseleave="doc._meta.mOverDoc=false; doc._meta.mOverDoc2=false;" ng-mouseover="doc._meta.mOverDoc2=true;">
+      <li class="label-danger-wrap" ng-if="doc && doc.status == 'deleted'"><span class="label label-danger"
+          title="Документ поставлен в очередь на удаление">подлежит удалению</span></li>
+      <li class=""
+          ng-if="doc.mailHash && $root.user.username == doc.mailAccess">
+        <a ng-click="discus.shareMail(doc.unid, doc.mailStatus); doc.mailStatus = doc.mailStatus == 'open'?'close':'open'"
+           ng-attr-title="{{doc.mailStatus == 'open'?'Сделать общедоступным':'Сделать личным'}}"
+           style="cursor: pointer;"
+           log-click="Дискуссии::Кнопка <Сделать общедоступным\личным> в меню сообщения в дискуссии">
+          {{doc.mailStatus == 'open'?'Сделать общедоступным':'Сделать личным'}}
+        </a>
+      </li>
+      <li ng-if="doc.mailHash">
+        <span class="md-icon-button md-ink-ripple discus-icon-btn">
+          <i class="ico click share" ng-class="{active:doc.mailStatus == 'open'}"></i>
+        </span>
+      </li>
+      <li class="new-post-wrap" ng-show="$root.$state.current.name!=='body.index'&&discus.isNew(doc)">
+        <span class="new-post discus-label">NEW</span>
+      </li>
+      <li ng-show="doc.dateModified && doc.dateModified != doc.created" ng-init="showDiff = false;" class="edited-label-wrap">
+        <span ng-click="showDiff = !showDiff;" class="discus-label touch">ред.</span>
+        <doc-diff ng-if="showDiff"></doc-diff>
+      </li>
+      <li class="created-wrap">
+        <span class="inline-block padtop2">{{doc.created | datetime}}</span>
+      </li>
+      <!--<li ng-if="doc.isLinked == 1 || doc.linkedUNID.length > 0" ng-hide="(discus.main_doc.unid == doc.unid && $root.$state.current.name!=='body.notifications') || !doc._meta.mOverDoc">
+        <a href ng-click="show.pageLoad = false; show.Linked = !show.Linked;"
+           log-click="Дискуссии::Кнопка <Связанные документы> в меню сообщения в дискуссии">
+          <i ng-class="{active:show.Linked && doc.linked}" class="ico click conn" title="Связанные документы"></i>
+        </a>
+      </li>
+      <li ng-if="discus.main_doc.unid != doc.unid || $root.$state.current.name=='body.notifications'"
+          ng-show="doc._meta.mOverDoc"
+          ng-init="doc.Tags.length>0 ? show.Tags = true : show.Tags = false;"
+          ng-click="show.Tags = !show.Tags" class="touch"
+          log-click="Дискуссии::Кнопка <Теги> в меню сообщения в дискуссии">
+        <i ng-class="{active:show.Tags}" class="ico click tag" title="Теги"></i>
+      </li>
+      <li ng-if="doc.isLinked == 1 || doc.linkedUNID.length > 0"
+          ng-hide="(discus.main_doc.unid == doc.unid && $root.$state.current.name!=='body.notifications') || !doc._meta.mOverDoc"
+          ng-include="'/bundles/tretoportal/partials/doc_templ/menu/linked-doc-dropdown.html'"></li>-->
+      <li ng-if="!doc.mailHash && (discus.main_doc.unid != doc.unid || $root.$state.current.name!=='body.notifications') && (doc._meta.mOverDoc || doc.AttachedDoc.length)">
+        <md-button
+            ng-click="doc.AttachedDoc = (doc.AttachedDoc.length ? [] : $root.user.username); discus.update(doc)"
+            class="md-icon-button md-ink-ripple discus-icon-btn"
+            ng-attr-title="{{ doc.AttachedDoc.length ? 'Открепить (документ не будет всегда развёрнут)' : 'Прикрепить (документ будет всегда развёрнут)'}}"
+            aria-label="{{ doc.AttachedDoc.length ? 'Открепить (документ не будет всегда развёрнут)' : 'Прикрепить (документ будет всегда развёрнут)'}}"
+            log-click="Дискуссии::Кнопка <Прикрепить\Открепить документ> в меню сообщения в дискуссии">
+          <i class="ico click fix" ng-class="{active:doc.AttachedDoc.length}"></i>
+        </md-button>
+      </li>
+      <!--<li ng-show="$root.$state.current.name==='body.notifications'">
+        <a href ng-click="discus.answer(doc || discus.main_doc, false)"
+           title="Ответ"
+           log-click="Дискуссии::Кнопка <Ответ> в меню сообщения в дискуссии">
+          <span class="ico click reply"></span>
+        </a>
+      </li>
+      <li>
+        <a href ng-click="discus.answer(doc || discus.main_doc, true)"
+           title="Ответ с цитатой"
+           log-click="Дискуссии::Кнопка <Ответ с цитатой> в меню сообщения в дискуссии">
+          <span class="ico click answer-comm"></span>
+        </a>
+      </li>-->
+
+      <li class="load-previous-msg-wrap" ng-if="['body.notifications', 'body.notificator'].indexOf($root.$state.current.name) > -1 && discus.comments[0].unid == doc.unid">
+        <md-button
+            ng-click="discus.loadPreviousComment(discus.main_doc, doc)"
+            class="md-icon-button md-ink-ripple discus-icon-btn"
+            title="Загрузить предыдущее сообщение"
+            log-click="Дискуссии::Кнопка <Загрузить предыдущее сообщение> в меню сообщения в дискуссии">
+              <md-icon class="material-icons">eject</md-icon>
+        </md-button>
+      </li>
+      <li class="relative pad0force tags-wrap">
+        <div class="darkmatter" ng-show="doc._meta.showTags" ng-click="doc._meta.showTags = false;"></div>
+        <div class="dropdown-menu tags-menu" style="display: block;"
+             keep-in-viewport
+             ng-show="doc._meta.showTags"
+             ng-include="'/bundles/tretoportal/partials/doc_templ/common/tags-window.html'"
+             ng-controller="tagsCtrl">
+        </div>
+      </li>
+      <li ng-if="!nomenu" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"
+          class="dropmenu-wrap" id="{{doc.unid}}_dropmenu-wrap"></li>
+    </ul>
+  </div>
+  <div class="left-menu">
+    <div class="avatar-wrap" ng-init="environment = discus.getShareEnvironment(doc.sendShareFrom)||$root.environment;
+    avatarLogin = discus.getShareEnvironment(doc.sendShareFrom)?doc.shareAuthorLogin:doc.authorLogin; avatarDomain = doc.sendShareFrom?'http://'+doc.sendShareFrom:''">
+      <div  ng-init="lgImageVisible = false; discus['lgImageVisible'] = false"
+            ng-click="discus['lgImageVisible'] = discus['lgImageVisible'] == doc._id?false:doc._id"
+            class="avatar"
+            log-click="Дискуссии::Аватар автора сообщения в дискуссии">
+            <div class="pic"
+                 ng-style="{'background-image': 'url({{::avatarDomain}}/public/img_site/{{::environment}}/thumb_{{::avatarLogin}}.jpeg)'}"></div></div>
+      <div  ng-click="discus['lgImageVisible'] = false"
+            ng-if="discus['lgImageVisible'] == doc._id"
+            class="lg-image-for-40 user-lg-image"
+            keep-in-viewport
+            log-click="Дискуссии::Аватар автора сообщения в дискуссии">
+            <div class="pic"
+                 ng-style="{'background-image': 'url({{::avatarDomain}}/public/img_site/{{::environment}}/b_{{::avatarLogin}}.jpeg)'}"></div></div>
+    </div>
+    
+    <div ng-controller="voteMenuCtrl" class="name-wrap">
+
+      <md-button md-no-ink
+                 ng-click="discus.switchExpanded(doc);"
+                 ng-if="doc.form !== 'formVoting' && $root.windowWidth > 768"
+                 class="icon-btn collapse-msg-btn"
+                 title="Свернуть/развернуть сообщение"
+                 aria-label="collapse message"
+                 log-click="Дискуссии::Кнопка-стрелка <Свернуть/развернуть сообщение> в дискуссии">
+                  <md-icon class="material-icons" style="color: black;"
+                           ng-class="{'collapse-triangle-right':(!discus.expanded[doc.unid] || discus.expanded[doc.unid] == 'collapsed')}">
+                              arrow_drop_down
+                  </md-icon>
+      </md-button>
+
+      <span ng-if="$root.$state.current.name!=='body.index'"
+            class="ico chat-status{{$root.users[doc.authorLogin].status.id}}"
+            ng-class="{'chat-status-in-theme': discus.discusUsers[doc.authorLogin]}"
+            ng-attr-title="{{discus.discusUsers[doc.authorLogin]?'Онлайн в этой теме':
+                            ($root.users[doc.authorLogin].status.id===1?'Онлайн, но в другой теме':'Оффлайн')}}"></span>
+      <involvement username="doc.authorLogin || doc.AuthorLogin"
+                   ng-if="$root.users && $root.$state.current.name!=='body.index' && ((doc.authorLogin == $root.user.username || doc.AuthorLogin == $root.user.username) || $root.users[doc.authorLogin || doc.AuthorLogin].involvement!==100)"></involvement>
+      <a href target="_blank"
+         class="user-name-link text-s13" ng-if="$root.$state.current.name!=='body.index'"
+         ui-sref="body.profileDisplay({ id: doc.authorLogin || doc.Author || doc.taskPerformerLat[0] })"
+         title="{{$root.users[doc.authorLogin].WorkGroup.join(', ') || doc.Author || doc.taskPerformerLat[0]}}"
+         log-click="Дискуссии::Ссылка на профиль автора сообщения в дискуссии">
+        {{::(doc.AuthorRus || doc.Author)}}
+      </a>
+      <a ui-sref="body.profileDisplay({ id: doc.authorLogin || doc.Author || doc.taskPerformerLat[0],
+      force:'force-display', blogs:true})"
+         ng-show="doc.type == 'Blog' && !doc.parentID && !doc.subjectID"
+         style="padding-top: 2px;"
+         log-click="Дискуссии::Ссылка на страницу в профиле со всеми блогами автора сообщения в дискуссии">все блоги автора</a>
+      <div ng-if="$root.$state.current.name==='body.index'" ng-init="doc.hideVoteRes = false;">
+        <div class="text-s13" style="margin-right: 70px; line-height: 20px;">{{::(doc.AuthorRusShort || doc.Author)}}</div>
+        <div class="blue touch text-s10 open-close-link">
+          <span ng-click="doc.hideVoteRes=!doc.hideVoteRes;"
+                style="display: block;"
+                log-click="Дискуссии::Кнопка <Свернуть\развернуть опрос> на главной">
+            {{doc.hideVoteRes?'развернуть':'свернуть'}}
+          </span>
+          <span ng-show="!doc.ShowOnIndex">
+            <span ng-if="voting.isWatched"
+                  ng-click="voting.watchVote();"
+                  log-click="Дискуссии::Кнопка <Не следить за опросом> на главной">
+              не следить
+            </span>
+            <span ng-if="!voting.isWatched"
+                  ng-click="voting.watchVote();"
+                  log-click="Дискуссии::Кнопка <Cледить за опросом> на главной">
+              следить
+            </span>
+          </span>
+        </div>
+      </div>
+      <span class="like-dislike-wrap grey_7a888f" ng-if="$root.$state.current.name!=='body.index'" ng-show="doc.likes">
+        <img ng-if="$root.user.username == doc.authorLogin" src="/public/images/discus/like.svg" title='Простановка лайков собственным комментариям запрещена' style="width: 14px;"/>
+        <i ng-click="discus.requestLikeConfirmation(doc, 1);"
+           ng-if="$root.user.username != doc.authorLogin"
+           ng-class="{'green':doc.likes[$root.user.username].isLike == 1}"
+           title='Нравится высказывание'
+           class="material-icons touch"
+           style="font-size: 14px; vertical-align: sub;"
+           log-click="Дискуссии::Кнопка <Нравится> в меню сообщения в дискуссии">
+          thumb_up
+        </i>
+
+        <span ng-class="{green:doc.likes[$root.user.username].isLike == 1}">{{doc._meta.qLikes || 0}}</span>
+
+        <img ng-if="$root.user.username == doc.authorLogin" src="/public/images/discus/dislike.svg" title='Простановка лайков собственным комментариям запрещена' style="width: 14px;"/>
+        <i ng-click="discus.requestLikeConfirmation(doc, 0);"
+           ng-if="$root.user.username != doc.authorLogin"
+           ng-class="{'red':doc.likes[$root.user.username].isLike == 0}"
+           title='Не нравится высказывание'
+           class="material-icons touch"
+           style="font-size: 14px; vertical-align: sub;"
+           log-click="Дискуссии::Кнопка <Не нравится> в меню сообщения в дискуссии">
+          thumb_down
+        </i>
+
+        <span ng-class="{red:doc.likes[$root.user.username].isLike == 0}">{{doc._meta.qDislikes || 0}}</span>
+
+      </span>
+        <div ng-if="doc._meta.confirmLike == true" ng-include="'/bundles/tretoportal/partials/modals/binaryModal.html'"></div>
+    </div>
+  </div>
+  <div class="row" ng-if="(discus.main_doc.ToSite === '1' || (discus.main_doc.form == 'Contact' &&
+  (discus.main_doc.ContactStatus.indexOf(7) !== -1 || discus.main_doc.ContactStatus.indexOf('7') !== -1 ||
+  discus.main_doc.ContactStatus.indexOf(10) !== -1 || discus.main_doc.ContactStatus.indexOf('10') !== -1))) && doc.NotForSite === '1'">
+    <div class="col-lg-24">
+      <span  class="blue">Ответ виден ТОЛЬКО на портале</span>
+    </div>
+  </div>
+</section>
+<div ng-if="discus.main_doc.unid != doc.unid && show.Linked && doc.linked" class="martop5">
+    <span class="grey text-s11 italic">На основании ответа создали тему(ы): </span>
+    <ul ng-init="discus.checkScroll(show.pageLoad)" class="tree-view-ul" style="display: inline-block; margin-bottom: 0px;">
+        <li ng-repeat="child in doc.linked.Children" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/tree-item.html'"></li>
+    </ul>
+</div>

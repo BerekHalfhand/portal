@@ -1,0 +1,312 @@
+<div class="edit-doc center" ng-controller="discountCtrl" ctrl-enter="ok()">
+  <div class="container text-s12 panel marbot0 pad0force">
+    <div class="panel-body text-s16">
+      <span ng-show="discount.id">Редактирование скидки</span>
+      <span ng-hide="discount.id">Новая скидка</span>
+    </div>
+    <div class="panel-body">
+      <form role="form" class="form-horizontal">
+        <div class="row form-group">
+          <div class="col-lg-4 blue">
+            Скидка
+          </div>
+          <div class="col-lg-14" ng-init="discount.ObjectDiscount = discount.ObjectDiscount || 2">
+            <input id="ObjectDiscount1"
+                   type="radio"
+                   hidden
+                   value="0"
+                   ng-model="discount.ObjectDiscount"
+                   log-click="Создание скидки::Переключатель <Скидка: для декоров> в окне создания скидки"/>
+            <label for="ObjectDiscount1">для декоров</label>
+            <input id="ObjectDiscount2"
+                   type="radio"
+                   hidden
+                   value="1"
+                   ng-model="discount.ObjectDiscount"
+                   log-click="Создание скидки::Переключатель <Скидка: для фона> в окне создания скидки"/>
+            <label for="ObjectDiscount2">для фона</label>
+            <input id="ObjectDiscount3"
+                   type="radio"
+                   hidden
+                   value="2"
+                   ng-model="discount.ObjectDiscount"
+                   log-click="Создание скидки::Переключатель <Скидка: общая> в окне создания скидки"/>
+            <label for="ObjectDiscount3">общая</label>
+            <input id="ObjectDiscount4"
+                   type="radio"
+                   hidden
+                   value="3"
+                   ng-model="discount.ObjectDiscount"
+                   log-click="Создание скидки::Переключатель <Скидка: специальная> в окне создания скидки"/>
+            <label for="ObjectDiscount4">специальная</label>
+          </div>
+          <div class="col-lg-6">
+            <md-checkbox ng-model="discount.SampleDiscount"
+                         name="SampleDiscount"
+                         log-click="Создание скидки::Галка <Образцы> в окне создания скидки">
+              образцы
+            </md-checkbox>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-4 blue">
+            Применить для
+          </div>
+          <div class="col-lg-14" ng-init="discount.UseDiscount = discount.UseDiscount || 0">
+            <input id="UseDiscount1"
+                   type="radio"
+                   hidden
+                   value="0"
+                   ng-model="discount.UseDiscount"
+                   log-click="Создание скидки::Переключатель <Применить для: всех серий> в окне создания скидки"/>
+            <label for="UseDiscount1">всех серий</label>
+            <input id="UseDiscount2"
+                   type="radio"
+                   hidden
+                   value="1"
+                   ng-model="discount.UseDiscount"
+                   log-click="Создание скидки::Переключатель <Применить для: выбранных артикулов/размеров/серий> в окне создания скидки"/>
+            <label for="UseDiscount2">выбранных артикулов/размеров/серий</label>
+          </div>
+          <div class="col-lg-6">
+            <input id="BasicDiscount"
+                   type="checkbox"
+                   ng-model="discount.BasicDiscount"
+                   name="BasicDiscount"
+                   hidden
+                   log-click="Создание скидки::Галка <Не зависит от объема> в окне создания скидки"/>
+            <label for="BasicDiscount" ng-click="discount.ConditionDiscount_1 = '2';discount.ConditionDiscount_2 = '0';discount.ConditionDiscount_3 = 0;discount.ConditionDiscount_4 = '3';">не зависит от объема</label>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-4 blue">
+            Тип скидки
+          </div>
+          <div class="col-lg-14" ng-init="discount.IsSupposed = discount.IsSupposed || 0 ">
+            <input id="IsSupposed1"
+                   type="radio"
+                   hidden
+                   value="0"
+                   ng-model="discount.IsSupposed"
+                   log-click="Создание скидки::Переключатель <Тип скидки: подтвержденная> в окне создания скидки"/>
+            <label for="IsSupposed1">подтвержденная</label>
+            <input id="IsSupposed2"
+                   type="radio"
+                   hidden
+                   value="1"
+                   ng-model="discount.IsSupposed"
+                   log-click="Создание скидки::Переключатель <Тип скидки: предполагаемая> в окне создания скидки"/>
+            <label for="IsSupposed2">предполагаемая</label>
+          </div>
+        </div>
+        <div class="row form-group" ng-repeat="i in discount.SeriesDiscount track by $index">
+          <div class="col-lg-7 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button ng-disabled="discount.UseDiscount !== '1'"
+                      type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Серия> в окне создания скидки">
+                {{ discount.SeriesDiscount[$index] || 'Серия' }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="(key, value) in series">
+                  <a href title="{{key}}" ng-click="discount.SeriesDiscountId[$parent.$index] = key;discount.SeriesDiscount[$parent.$index] = series[key]">{{ value }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-7 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button ng-disabled="discount.UseDiscount !== '1'"
+                      type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Артикул> в окне создания скидки">
+                {{ discount.ArticleDiscount[$index] || 'Артикул' }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="(key, value) in articles[discount.SeriesDiscountId[$index]]">
+                  <a href ng-click="discount.articlediscountid[$parent.$index] = key;discount.ArticleDiscount[$parent.$index] = articles[discount.SeriesDiscountId[$parent.$index]][discount.articlediscountid[$parent.$index]]">{{ value }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-7 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button ng-disabled="discount.UseDiscount !== '1'"
+                      type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Размер> в окне создания скидки">
+                {{ discount.SizeDiscount[$index] || 'Размер' }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="(key, value) in sizes[discount.SeriesDiscountId[$index]]">
+                  <a href ng-click="discount.sizediscountid[$parent.$index] = key;discount.SizeDiscount[$parent.$index] = sizes[discount.SeriesDiscountId[$parent.$index]][discount.sizediscountid[$parent.$index]]">{{ value }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-1 height35">
+            <span class="padright10 touch"
+                  style="vertical-align: middle;line-height: 35px;"
+                  ng-click="addLine(discount.SeriesDiscount.length);"
+                  log-click="Создание скидки::Кнопка <Добавить серию> в окне создания скидки">
+              <i class="material-icons blue text-s14">add_circle</i>
+            </span>
+          </div>
+        </div>
+        <div class="row form-group">
+          <div class="col-lg-1 height35">
+            <span class="padright10" style="vertical-align: middle;line-height: 35px;">Если</span>
+          </div>
+          <div class="col-lg-3 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Если (Условие 1)> в окне создания скидки">
+                {{ ConditionDiscount1[discount.ConditionDiscount_1] }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="p in ConditionDiscount1">
+                  <a href ng-click="discount.ConditionDiscount_1 = $index">{{ p }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button ng-disabled="discount.BasicDiscount"
+                      type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Если (Условие 2)> в окне создания скидки">
+                {{ ConditionDiscount2[discount.ConditionDiscount_2] }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="p in ConditionDiscount2">
+                  <a href ng-click="discount.ConditionDiscount_2 = $index">{{ p }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4 form-inline">
+            <input ng-disabled="discount.BasicDiscount"
+                   class="form-control height35" style="width: 100%;"
+                   ng-init="discount.ConditionDiscount_3 = discount.ConditionDiscount_3"
+                   type="text"
+                   ng-model="discount.ConditionDiscount_3"
+                   log-click="Создание скидки::Поле <Если (Условие 3)> в окне создания скидки"/>
+          </div>
+          <div class="col-lg-3 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button ng-disabled="discount.BasicDiscount"
+                      type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <Если (Условие 4)> в окне создания скидки">
+                {{ ConditionDiscount4[discount.ConditionDiscount_4] }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="p in ConditionDiscount4">
+                  <a href ng-click="discount.ConditionDiscount_4 = $index">{{ p }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-1 height35">
+            <span class="padright10" style="vertical-align: middle;line-height: 35px;">, то</span>
+          </div>
+          <div class="col-lg-3 form-inline">
+            <div class="width100per height35 btn-group" uib-dropdown>
+              <button type="button"
+                      class="btn btn-default dropdown-toggle dropdown-style"
+                      style="padding: 0 15px 15px 0; border-bottom: 1px solid #CCC !important;"
+                      data-toggle="dropdown"
+                      uib-dropdown-toggle
+                      log-click="Создание скидки::Меню <То (Условие 5)> в окне создания скидки">
+                {{ ConditionDiscount5[discount.ConditionDiscount_5] }} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto">
+                <li ng-repeat="p in ConditionDiscount5">
+                  <a href ng-click="discount.ConditionDiscount_5 = $index">{{ p }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 form-inline">
+            <input class="form-control height35" style="width: 100%;"
+                   ng-init="discount.ConditionDiscount_6 = discount.ConditionDiscount_6" type="text" ng-model="discount.ConditionDiscount_6"
+                   log-click="Создание скидки::Поле <То (Условие 6)> в окне создания скидки"/>
+          </div>
+          <div class="col-lg-1 height35">
+            <span ng-hide="discount.ConditionDiscount_5 == 2" class="padright10" style="vertical-align: middle;line-height: 35px;">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-inline">
+            <span class="blue">Срок действия:</span> с
+            <p class="p-underlined bgr-calendar" style="width: 140px; display: inline-block;">
+              <new-datepicker date-min-limit="1900/01/01">
+                <input prevent-keyboard-input
+                       ng-model="DtFromDate"
+                       type="text"
+                       ng-init="DtFromDate=(discount.FromDate ? $root.convertStrToLocaleDate(discount.FromDate) : null)"
+                       ng-change="discount.FromDate=$root.convertObjDateToStr(DtFromDate); DtFromDate=$root.localizeDate(DtFromDate);"
+                       ng-disabled="discount.conditionunlimited"
+                       log-click="Создание скидки::Выбор даты <Срок действия: с> в окне создания скидки"/>
+              </new-datepicker>
+            </p>до
+            <p class="p-underlined bgr-calendar" style="width: 140px; display: inline-block;">
+              <new-datepicker date-min-limit="1900/01/01">
+                <input prevent-keyboard-input
+                       ng-model="DtConditionDuration"
+                       type="text"
+                       ng-init="DtConditionDuration=(discount.ConditionDuration ? $root.convertStrToLocaleDate(discount.ConditionDuration) : null)"
+                       ng-change="discount.ConditionDuration=$root.convertObjDateToStr(DtConditionDuration); DtConditionDuration=$root.localizeDate(DtConditionDuration);"
+                       ng-disabled="discount.conditionunlimited"
+                       log-click="Создание скидки::Выбор даты <Срок действия: по> в окне создания скидки"/>
+              </new-datepicker>
+            </p>
+            <md-checkbox
+              ng-model="discount.conditionunlimited"
+              name="conditionunlimited"
+              log-click="Создание скидки::Галка <без срока> в окне создания скидки">
+              без срока
+            </md-checkbox>
+          </div>
+        </div>
+        <p>
+          <input type="text" placeholder="Текст">
+        </p>
+        <div class="divider"></div>
+        <span class="pull-right">
+          <a href class="blue"
+             ng-click="discount.persistDiscount($parent.doc.unid);$root.showCreateDiscount = false"
+             log-click="Создание скидки::Кнопка <Применить> в окне создания скидки">
+             ПРИМЕНИТЬ
+          </a>
+          <a href class="black"
+             ng-click="$root.showCreateDiscount = false; discount = null;"
+             log-click="Создание скидки::Кнопка <Отмена> в окне создания скидки">
+             ОТМЕНА
+          </a>
+        </span>
+      </form>
+    </div>
+  </div>
+</div>

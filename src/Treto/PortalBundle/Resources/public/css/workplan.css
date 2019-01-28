@@ -1,0 +1,53 @@
+.wp{
+  border-top: 1px solid #333;
+  border-left: 1px solid #333;
+  margin:1;  
+}
+.wp td:nth-child(n+1){
+  margin:1;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+}
+.wp td.username,
+.wp td[rowspan],
+.wp td[colspan] {
+  text-align:left!important;
+  padding-left:11px;
+}
+.wp td:nth-child(n+2) {
+  width:25px!important;
+}
+.right-bordered {
+   border-right:2px solid black!important;
+}
+.bottom-bordered {
+   border-bottom:2px solid black!important;
+}
+.rowheader {
+  width:254px!important;
+  text-align:left;
+}
+
+.marker {
+ /**border:1px solid red;*/
+}
+.cell-dropdown{
+  position:relative;
+}
+.width300 {
+  width:300px!important;
+}
+table.wp td {
+  font-size: 11px!important;
+  padding:0px;
+}
+table.workgroup {
+}
+
+.business {    background-color: #dbdbdb; }
+.weekend {     background-color: #aa7777; }
+.illness {     background-color: #ff0000; }
+.vacation {    background-color: #ffff00; }
+.unavailable { background-color: #cccccc; }
+
+

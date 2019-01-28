@@ -1,0 +1,168 @@
+<title>Теги</title>
+<section id="tags">
+  <nav class="bgwhite filter-nav">
+    <div class="container">
+      <ul class="nav nav-tabs text-uppercase pink-bottom">
+        <li ng-class="{active: tagsTab == 1}">
+          <a href ng-click="tagsTab = 1; loadPopularTags();"
+             ng-class="{'nav-active-a': tagsTab == 1}"
+             class="nav-a"
+             log-click="Теги::Вкладка <Популярные> на странице тегов">
+            ПОПУЛЯРНЫЕ
+          </a>
+        </li>
+        <li ng-class="{active: tagsTab == 2}">
+          <a href
+             ng-click="tagsTab = 2; loadMyTags();"
+             ng-class="{'nav-active-a': tagsTab == 2}"
+             class="nav-a"
+             log-click="Теги::Вкладка <Мои> на странице тегов">
+            МОИ
+          </a>
+        </li>
+        <li ng-class="{active: tagsTab == 3}">
+          <a href
+             ng-click="tagsTab = 3; loadTags();"
+             ng-class="{'nav-active-a': tagsTab == 3}"
+             class="nav-a"
+             log-click="Теги::Вкладка <Все> на странице тегов">
+            ВСЕ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container panel martop10">
+    <div class="row">
+      <div class="col-lg-24 pad0force">
+        <div class="padtop20">
+          <div class="pad0_15">
+            <span class="text-s16">Тег</span>
+            <span class="text-s14" ng-click="selected.deleteMode = !selected.deleteMode;" 
+            style="position: absolute; right: 15px;">
+              <a ng-hide="selected.deleteMode" class="blue" href
+                 log-click="Теги::Переключатель <Режим удаления> на странице тегов">РЕЖИМ УДАЛЕНИЯ</a>
+              <a ng-show="selected.deleteMode" class="blue" href
+                 log-click="Теги::Переключатель <Режим добавления> на странице тегов">РЕЖИМ ДОБАВЛЕНИЯ</a>
+            </span>
+            <hr class="bordtop_e6">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div ng-show="selected.Tag.length>0" class="col-lg-12">
+        <i class="material-icons" style="vertical-align: middle;">filter_list</i>
+        <span style="margin: 0 5px;">Отобрано:</span>
+        <span class="green">{{selected.Tag}}</span>
+        <md-checkbox
+          id="check_tasksOnly"
+          ng-model="search.tasksOnly"
+          style="margin-left: 15px;"
+          log-click="Теги::Галка <Только просьбы> на странице тегов">
+          только просьбы
+        </md-checkbox>
+        
+        <div ng-show="loading.statusDocs == 1;" class="mar10">Идет поиск...</div>
+        <div ng-show="loading.statusDocs == 2" class="mar10">Ничего не найдено.</div>
+        
+        <article ng-repeat="doc in search.Docs" ng-init="showBody = true;" ng-show="search.tasksOnly ? doc.form === 'formTask' : true"
+        class="row martop20" style="overflow: hidden;">
+          <div class="col-lg-2 touch" ng-click="showBody = !showBody">
+            <span ng-hide="showBody"
+                  log-click="Теги::Переключатель <раскрыть> тело комментария на странице тегов">
+              <i class="material-icons">
+                add_box
+              </i>
+            </span>
+            <span ng-show="showBody"
+                  log-click="Теги::Переключатель <свернуть> тело комментария на странице тегов">
+              <i class="material-icons">
+                indeterminate_check_box
+              </i>
+            </span>
+          </div>
+          <div class="col-lg-22">
+            <div>
+              <span class="marright10">
+                <strong>
+                  <a href ui-sref="body.discus({ id: doc.unid, type: '' })" class="black"
+                     log-click="Теги::Ссылка на комментарий на странице тегов">
+                    {{::(search.parents[doc.parentID].subject || doc.subject)}}
+                  </a>
+                </strong>
+              </span>
+              <span>
+                <a href ui-sref="body.discus({ id: doc.unid, type: '' })" class="black"
+                   log-click="Теги::Ссылка на профиль автора на странице тегов">
+                  {{::(search.parents[doc.parentID].AuthorRus || doc.AuthorRus)}}
+                </a>
+              </span>
+              <span>{{::$root.convertStrToLocaleDate(search.parents[doc.parentID].created || doc.created)}}</span>
+              <span ng-click="deleteTagManually(doc, selected.Tag)"
+                    class="grey touch text-s16 marleft5"
+                    log-click="Теги::Кнопка <удалить тег> у комментария на странице тегов">
+                &times;
+              </span>
+            </div>
+            <p ng-show="showBody" ng-bind-html="doc.body" style="font-size: 11px;"></p>
+          </div>
+          
+        </article>
+      </div>
+      <div ng-class="{'col-lg-12':(selected.Tag.length>0),'col-lg-24':(selected.Tag.length==0)}">
+      
+        <form class="form-inline" role="form">
+          <span class="search-input-icon"><i class="glyphicon glyphicon-search"></i></span>
+          <input class="form-control search-input"
+                 type="text"
+                 placeholder="Поиск"
+                 ng-model="search.Query"
+                 log-click="Теги::Поле <Поиск> на странице тегов"/>
+        </form>
+        
+        <div ng-show="loading.statusTags == 1" class="mar10">Загрузка тегов...</div>
+        <div ng-show="loading.statusTags == 2" class="mar10">Теги не найдены.</div>
+        
+        <section ng-if="loading.statusTags == 0">
+          <article style="margin-top: 15px" ng-if="Tags" ng-init="loadLetters();">
+            <span class="marright15">
+              <a href ng-class="{blue:selected.Letter.length == 0, black:selected.Letter.length > 0}"
+                 ng-click="selected.Letter = ''"
+                 log-click="Теги::Переключатель тегов по букве <все> на странице тегов">
+                Все
+              </a>
+            </span>
+            <span ng-repeat="letter in Letters" ng-show="searchFilter(letter, true);" class="marright15">
+              <a href ng-class="{blue:selected.Letter === letter, black:selected.Letter !== letter}"
+                 ng-click="selected.Letter = letter"
+                 log-click="Теги::Переключатель тегов по букве на странице тегов">
+                {{letter}}
+              </a>
+            </span>
+          </article>
+          
+          <article style="margin: 15px 0">
+            <span ng-repeat="tag in Tags | orderBy:'-name':true" ng-show="(searchFilter(tag.name, false))">
+              <a href
+                 ng-class="{green:selected.Tag === tag.name, grey:(selected.Letter && selected.Letter !== tag.name[0] && selected.Tag !== tag.name)}"
+                 class="black"
+                 ng-click="selected.Tag = tag.name; selectTag({'tag': tag.name, 'myOnly': (tagsTab == 2), 'tagsTab': tagsTab});"
+                 style="text-decoration: underline; font-size:{{tag.fontSize}}px;"
+                 log-click="Теги::<Выбор тега> на странице тегов">
+                {{tag.name}}
+              </a> 
+              <span ng-if="selected.deleteMode"
+                    ng-click="deleteTagCompletely(tag.name);"
+                    title="Удалить тег"
+                    class="black tag-remove-span"
+                    log-click="Теги::Кнопка <удалить тег> на странице тегов">
+                    &times;
+              </span>
+            </span>
+          </article>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>

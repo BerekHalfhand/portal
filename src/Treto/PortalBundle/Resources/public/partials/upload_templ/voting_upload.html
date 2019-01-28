@@ -1,0 +1,9 @@
+<span ng-init="$root.uploader = uploader;"
+      onclick="document.getElementById('votingPics').click();"
+      title="Прикрепить картинку"
+      class="touch dark-grey"
+      style="margin-top: 10px; display: inline-block;"
+      log-click="Загрузка файлов::Кнопка <Прикретить картинку>">
+  <i class="material-icons">attach_file</i>
+</span>
+<input id="votingPics" type="file" nv-file-select uploader="uploader" ng-model="model" multiple size="1" style="display: none;">

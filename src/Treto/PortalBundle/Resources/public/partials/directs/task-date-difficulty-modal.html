@@ -1,0 +1,63 @@
+<div class="task-date-difficulty-modal-wrap">
+  <div class="darkmatter"
+        ng-if="show"
+        ng-click="hideModal()"></div>
+  <div class="task-date-difficulty-modal panel" ng-if="show" style="z-index: 35; position: absolute;"
+        keep-in-viewport>
+    <div class="modal-header">
+      <a href class="black"
+         ng-click="hideModal()"
+         title="Закрыть"
+         log-click="Дискуссии::Кнопка <Закрыть> во всплывающем окне изменения сложности и сроков выполнения просьбы">
+        <i class="material-icons text-s14 va-middle">arrow_back</i>
+      </a>
+      <span class="text-s16 va-middle">Подтверженный срок</span>
+    </div>
+    <div class="modal-body">
+      <table>
+        <tr>
+          <td class="text-s13 padtop5 padright10">Дата исполнения:</td>
+          <td>
+            <md-datepicker
+              ng-model="dt.date"
+              md-min-date="today"
+              md-open-on-focus
+              log-click="Дискуссии::Выбор даты <Дата исполнения> во всплывающем окне изменения сложности и сроков выполнения просьбы">
+            </md-datepicker>
+          </td>
+        </tr>
+        <tr>
+          <td class="text-s13 padtop5 padright10">Сложность:</td>
+          <td>
+            <div uib-dropdown style="position: relative" ng-init="!difficulty?setDifficulty('1 Легко'):''">
+              <input class="form-control input-sm text-s11"
+                     style="height: 21px"
+                     type="text"
+                     placeholder="Сложность"
+                     ng-model="difficulty"
+                     uib-dropdown-toggle
+                     log-click="Дискуссии::Меню <Сложность> во всплывающем окне изменения сложности и сроков выполнения просьбы"/>
+              <span class="caret input" style="right: 13px;top: 8px;"></span>
+              <ul class="dropdown-menu" role="menu">
+                <li ng-repeat="p in difficultyOptions">
+                  <a class="text-s11" href ng-click="setDifficulty(p)">{{ p }}</a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="padtop10">
+            <md-button href
+                       class="btn btn-blue"
+                       ng-click="save();"
+                       log-click="Дискуссии::Кнопка <Сохранить> во всплывающем окне изменения сложности и сроков выполнения просьбы">
+              СОХРАНИТЬ
+            </md-button>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

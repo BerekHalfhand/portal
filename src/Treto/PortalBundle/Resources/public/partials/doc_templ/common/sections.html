@@ -1,0 +1,53 @@
+<div class="modal-header sections" ng-if="!discus.isBlog && discus.sectionDict.recordsTree">
+  <ul class="list-inline marbot0">
+    <li uib-dropdown style="position:relative">
+      <a href class="dropdown-toggle black"
+         uib-dropdown-toggle
+         log-click="Дискуссии::Меню <Выберите категорию: 1> темы в окне создания\редактирования темы>">
+        {{ discus.current.C1 ? discus.current.C1 : 'Выберите категорию' }} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <div ng-repeat="record in discus.sectionDict.recordsTree.children">
+          <li ng-repeat="record2 in record.children" title="{{record2.value}}" ng-init="discus.current.C1==record2.value?discus.current.C1Children=record2.children:'';">
+            <a href class="text-s11 black" ng-click="discus.current.C1 = record2.value; discus.current.C2 = ''; discus.current.C3='';discus.current.C4='';discus.current.C1Children=record2.children;discus.current.C2Children='';discus.current.C3Children=''">{{ record2.value }}</a>
+          </li>
+        </div>
+      </ul>
+    </li>
+    <li uib-dropdown ng-show="discus.current.C1Children" style="position:relative">
+      <a href class="dropdown-toggle black"
+         uib-dropdown-toggle
+         log-click="Дискуссии::Меню <Выберите категорию: 2> темы в окне создания\редактирования темы>">
+        {{ discus.current.C2 ? discus.current.C2 : 'Выберите категорию' }} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="record3 in discus.current.C1Children" title="{{record3.value}}" ng-init="discus.current.C2==record3.value?discus.current.C2Children=record3.children:'';">
+          <a href class="text-s11 black" ng-click="discus.current.C2 = record3.value; discus.current.C3 = ''; discus.current.C4='';discus.current.C2Children = record3.children;discus.current.C3Children = ''">{{ record3.value }}</a>
+      </ul>
+    </li>
+    <li uib-dropdown ng-show="discus.current.C2Children" style="position:relative">
+      <a href class="dropdown-toggle black"
+         uib-dropdown-toggle
+         log-click="Дискуссии::Меню <Выберите категорию: 3> темы в окне создания\редактирования темы>">
+        {{ discus.current.C3 ? discus.current.C3 : 'Выберите категорию' }} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="record4 in discus.current.C2Children" title="{{record4.value}}" ng-init="discus.current.C3==record4.value?discus.current.C3Children=record4.children:'';">
+          <a href class="text-s11 black" ng-click="discus.current.C3 = record4.value;discus.current.C4='';discus.current.C3Children = record4.children;">{{ record4.value }}</a>
+        </li>
+      </ul>
+    </li>
+    <li uib-dropdown ng-show="discus.current.C3Children" style="position:relative">
+      <a href class="dropdown-toggle black"
+         uib-dropdown-toggle
+         log-click="Дискуссии::Меню <Выберите категорию: 4> темы в окне создания\редактирования темы>">
+        {{ discus.current.C3 ? discus.current.C3 : 'Выберите категорию' }} <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="record5 in discus.current.C3Children" title="{{record5.value}}">
+          <a href class="text-s11 black" ng-click="discus.current.C4 = record5.value;">{{ record5.value }}</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

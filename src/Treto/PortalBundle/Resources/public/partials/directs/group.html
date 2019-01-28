@@ -1,0 +1,15 @@
+<li class="list-group-item" ng-repeat="(key,record) in recordsTree.children | orderObjectBy:'value'"
+  ng-hide="record.subtype.show === '0'">
+  <span class="ico icon-to-all"></span>
+  <div ng-if="record.children"
+       class="glyphicon pull-right glyphicon-menu-{{ $parent.expand ? 'down' : 'right' }}"
+       ng-click="$parent.expand = !$parent.expand;"
+       log-click="Контакты::Кнопка-стрелка <Раскрыть\закрыть> раскрывающийся список в контактах">
+  </div>
+  <a href title="{{record.key}}"
+     ng-click="$root.s.group = {name: record.value, search: record.key}; $root.getContacts();"
+     log-click="Контакты::Кнопка выбора группы контактов в контактах">
+    {{record.value}}
+  </a>
+  <groupul ng-if="expand" record="record" ></groupul>
+</li>

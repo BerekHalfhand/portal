@@ -1,0 +1,16 @@
+<!-- controller is "otherCommand" directive -->
+<div class="other-command-wrapper">
+  <md-checkbox ng-checked="checkedCommand.length > 0" ng-click="showCommandSelect = true;" aria-label="checked"></md-checkbox>
+  <p class="text-overflow-wrapper" ng-init="showCommandSelect = false;" log-click="Участники::Кнопка <Команды> в окне добавления участников" ng-click="showCommandSelect = !showCommandSelect;">
+    <span class="text-overflow">{{checkedCommand.length?checkedCommand.length == 0?'(все команды)':checkedCommand.join(', '):'Команды'}}</span>
+    <i class="material-icons">arrow_drop_down</i>
+  </p>
+  <div ng-show="showCommandSelect" class="select-command">
+    <md-checkbox ng-checked="recountCheckedCommand() == allCommandCount" ng-model="allCommandCheckbox" ng-click="selectAllCommand()">Все команды</md-checkbox>
+    <md-checkbox ng-repeat="(domain, value) in $root.shareUsers" ng-init="selectedShareCommand[domain] = selectedShareCommand[domain]?selectedShareCommand[domain]:false" ng-click="" class="embedded" ng-model="selectedShareCommand[domain]">{{::value.name}}</md-checkbox>
+    <md-button href class="btn btn-blue" ng-click="setSelectedCommand()" log-click="Участники::Кнопка <Выбрать> в окне выбора команд">Выбрать</md-button>
+    <a class="popup-close-btn" title="Закрыть" ng-click="showCommandSelect = false;" log-click="Участники::Кнопка <Закрыть> в окне выбора команд">
+      <i class="material-icons">close</i>
+    </a>
+  </div>
+</div>

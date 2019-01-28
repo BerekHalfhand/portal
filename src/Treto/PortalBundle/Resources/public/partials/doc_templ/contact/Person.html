@@ -1,0 +1,180 @@
+<div class="row" ng-init="doc.isLoaded = true;">
+  <div class="col-lg-12">
+    <p>
+      <span>Должность:</span>
+      <span ng-class="{'grey':!doc.Rank}" >{{doc.Rank | arrOrStrOutput:'Нет записи'}}</span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Компания:</span>
+      <span ng-repeat="(key, value) in doc.Organization">
+        <a href ui-sref="body.discus({ id: doc.OrganizationID[key], type: 'Contact'})"
+           log-click="Контакты::Ссылка на компанию, в которой работает персона, в контактах">
+          {{value}}
+        </a>
+      </span>
+      <!-- <a href class="green" ng-click="$root.showCreateOrganization = !$root.showCreateOrganization">создать</a>
+      <a href class="green" ng-click="$root.showCreateSelectOrganization = !$root.showCreateSelectOrganization">выбрать</a> -->
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Тип контакта:</span>
+      <span ng-class="{'grey':!doc.ContactStatus}" ng-bind="(statusListDict.getRecordValues(doc.ContactStatus)|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Профиль деятельности:</span>
+      <span ng-class="{'grey':!doc.Group}" ng-bind="(doc.Group|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Источник информации:</span>
+      <span ng-class="{'grey':!doc.InformationSource}" ng-bind="(infoSourceDict.getRecordValues(doc.InformationSource)|join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Менеджер:</span>
+      <span ng-class="{'grey':!doc.ResponsibleManager}" ng-bind="doc.ResponsibleManager || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Место регистрации:</span>
+      <span ng-switch on="doc.RegPlace">
+        <span ng-switch-when="1">Портал</span>
+        <span ng-switch-when="2">1С</span>
+        <span ng-switch-when="3">Сайт</span>
+        <span ng-switch-when="4">iPad</span>
+        <span ng-switch-when="5">Android</span>
+        <span class="grey" ng-switch-default>Нет записи</span>
+      </span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Регистрация на сайте:</span>
+      <span ng-class="{'grey':!doc.ToSite}" ng-bind="doc.ToSite || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Имя компании:</span>
+      <span ng-class="{'grey':!doc.companyName}" >{{ companyNameDict.getRecordValue(doc.companyName) || 'Нет записи'}}</span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>История изменений:</span>
+      <span ng-class="{'grey':!doc.ChangeLog}" ng-bind="(doc.ChangeLog|lastChange) || 'Нет записи'"></span>
+      <a href class="green" ng-click="showhistoryPopup=true"
+         log-click="Контакты::Кнопка <История изменений: Подробнее> в контактах">Подробнее</a>
+      <div ng-if="showhistoryPopup" ng-init="contact=doc" ng-include="'/bundles/tretoportal/partials/modals/contactHistory.html'"></div>
+    </p>
+  </div>
+  <div class="col-lg-12">
+    <p>
+      <span>Телефон:</span>
+      <span ng-class="{'grey':!(doc.PhoneValues || doc.MobilTel || doc.WorkTel)}" ng-bind="(doc.PhoneValues || doc.MobilTel || doc.WorkTel | join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Мобильный телефон:</span>
+      <span ng-class="{'grey':!doc.PhoneCellValues}" ng-bind="(doc.PhoneCellValues | join) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>E-mail:</span>
+      <span ng-class="{'grey':!(doc.EmailValues || doc.Email)}">
+        <span ng-show="(doc.EmailValues || doc.Email | join)">
+          <span ng-if="doc.EmailValues || doc.Email[0].length > 1">
+            <a ng-repeat="mail in (doc.EmailValues || doc.Email)"
+               ng-href="mailto://{{mail}}" target="_blank"
+               log-click="Контакты::Ссылка на <e-mail> персоны в контактах">
+              {{mail}}
+            </a>, </span><!--Checking whether it's a string or an array-->
+            <a ng-if="!doc.EmailValues && doc.Email[0].length == 1"
+               ng-href="mailto://{{doc.Email}}" target="_blank"
+               log-click="Контакты::Ссылка на <e-mail> персоны в контактах">
+              {{doc.Email}}
+            </a> 
+        </span>
+        <span ng-hide="(doc.EmailValues || doc.Email | join)">Нет записи</span></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Адрес регистрации:</span>
+      <span ng-class="{'grey':!(doc | addressContact:'Actual')||doc.ActualAddress}" ng-bind="(doc | addressContact:'Actual') || doc.ActualAddress || 'Нет записи'"></span>
+    </p>
+    <div class="devider"></div>
+    <p>
+      <span>Адрес доставки:</span>
+      <span ng-class="{'grey':!(doc | addressContact:'ForDelivery')}" ng-bind="(doc | addressContact:'ForDelivery') || doc.DeliveryAddress || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>Паспорт:</span>
+      <span ng-class="{'grey':!((doc | passportView) || doc.Passport)}" ng-bind="(doc | passportView) || doc.Passport || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p>
+      <span>День рождения:</span>
+      <span ng-class="{'grey':!doc.BirthDay}" ng-bind="(doc.BirthDay | datetime) || 'Нет записи'"></span>
+    </p>
+    <div class="divider"></div>
+    <p ng-if="doc.ContactStatus.indexOf(14) != -1 || doc.ContactStatus.indexOf('14') != -1">
+      <span>Оклад:</span>
+      <span ng-class="{'grey':!doc.Salary}" ng-bind="doc.Salary || 'Нет записи'"></span>
+    </p>
+    <p>
+      <span>Комментарий:</span>
+      <span ng-class="{'grey':!doc.Comment}" ng-bind="doc.Comment || 'Нет записи'"></span>
+    </p>
+    <p>
+      <div ng-show="doc.HRQuestionsLinkGeneratedBy">опрос запрошен ({{doc.HRQuestionsLinkGeneratedBy}} {{doc.HRQuestionsLinkGeneratedDate|datetime}})</div>
+    </p>
+    <a href class="green"
+       ng-show="doc.ContactStatus.indexOf('6') != -1 || doc.ContactStatus.indexOf(6) != -1"
+       ng-click="showSelectQuestionary=true"
+       log-click="Контакты::Кнопка <Запросить опрос> персоны в контактах">
+      запросить опрос
+    </a>
+    <span uib-dropdown style="position:relative;" ng-show="doc.ContactStatus.indexOf('6') != -1 || doc.ContactStatus.indexOf(6) != -1">
+      <a href class="green" uib-dropdown-toggle
+         log-click="Контакты::Меню <Показать ссылку на опрос> персоны в контактах">
+        показать ссылку
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li ng-repeat="quest in doc.questionaries | orderBy:'name'"> 
+          <a href class="text-s11" ng-click="doc.showQuestionaryLink(quest.unid)" ng-bind="quest.name"></a> 
+        </li>
+      </ul>
+    </span>
+    <div ng-if="showSelectQuestionary" ng-include="'/bundles/tretoportal/partials/modals/selectQuestionary.html'"></div>
+    <p>
+      <div ng-show="doc.HitListLinkGeneratedBy">хит лист запрошен ({{doc.HitListLinkGeneratedBy}} {{doc.HitListLinkGeneratedDate|datetime}})</div>
+    </p>
+    <p>
+      <a href class="green"
+         ng-show="doc.ContactStatus.indexOf('6') != -1 || doc.ContactStatus.indexOf(6) != -1"
+         ng-click="doc.sendHitList(doc)"
+         log-click="Контакты::Кнопка <Запросить хит лист> персоны в контактах">
+        запросить хит лист
+      </a>
+      <a href class="green"
+         ng-show="doc.ContactStatus.indexOf('6') != -1 || doc.ContactStatus.indexOf(6) != -1"
+         ng-click="doc.showHitListLink()"
+         log-click="Контакты::Меню <Показать ссылку на хит лист> персоны в контактах">
+        показать ссылку
+      </a>
+    </p>
+    <p ng-show="doc.ContactStatus.indexOf('6') != -1 || doc.ContactStatus.indexOf(6) != -1 && doc.Group.indexOf('Резервисты') == -1">
+      <a href ng-click="$root.toReserve(doc)" class="green"
+         log-click="Контакты::Кнопка <Отправить в резерв> персоны в контактах">
+        отправить в резерв
+      </a>
+    </p>
+  </div>
+</div>
+<div class="green martop10">
+  <span class="touch"
+        ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')"
+        log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">
+    Ответить
+  </span>
+</div>

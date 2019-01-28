@@ -1,0 +1,64 @@
+<div class="select-command">
+  <div class="select-comand__wrapper-content stylized-scroll">
+    <a class="popup-close-btn" title="Закрыть" ng-click="ngdiscus.displayParticipants = false; section.expanded = !section.expanded; $parent.$parent.showAddTeamsdepartments = false;" log-click="Участники::Кнопка <Закрыть> в окне <Добавить сотрудников>">
+      <i class="material-icons">close</i>
+    </a>
+    
+    <div class="parent-list" ng-if="ngdiscus.participantsList.saved" ng-init="breakAt = ngdiscus.participantsList.sectionsLength / 2; section.expanded = true">
+      <md-checkbox ng-click="ngdiscus.allSectionCheckToggle();" ng-class="ngdiscus.participantsList.checked ? 'checked' : ''" log-click="Участники::Галка <Добавить всех сотрудников> в окне <Добавить сотрудников>" aria-label="checked"></md-checkbox>
+      
+      <span class="checkbox-label" ng-click="section.expanded = !section.expanded" log-click="Участники::Кнопка <Показать\скрыть сотрудников Tile Expert> в окне <Добавить сотрудников>">
+        <span class="minus-plus" ng-class="{active:!section.expanded}"></span>Tile Expert
+      </span>
+    
+      <div class="participants-divisions" ng-show="section.expanded">
+        <ul class="child-list">
+          <li ng-repeat="section in ngdiscus.participantsList.sections" ng-show="windowWidth < 1200 || $index < breakAt">
+            <md-checkbox aria-label="checked" type="checkbox" id="tc_{{$index}}" ng-click="ngdiscus.sectionCheckToggle(section);" ng-checked="section.checked" log-click="Участники::Галка <Добавить сотрудников отдела> в окне <Добавить сотрудников>">
+              <span class="bold" ng-bind="participant.name"></span>
+              <span ng-bind="participant.WorkGroup"></span>
+            </md-checkbox>
+
+            <span class="checkbox-label" ng-click="section.expanded = !section.expanded" log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела> в окне <Добавить сотрудников>">
+              <span class="minus-plus" ng-class="{active:!section.expanded}"></span>{{section.name}}
+            </span>
+            <ul class="child-list" ng-show="section.expanded">
+              <li ng-repeat="participant in section.participants | orderObjectBy:'name'">
+                <md-checkbox aria-label="checked" type="checkbox" id="sc_{{$index}}" ng-click="ngdiscus.participantCheckToggle(section, participant);" ng-checked="participant.checked" log-click="Участники::Галка <Добавить сотрудника> в окне <Добавить сотрудников>">
+                  <span class="bold" ng-bind="participant.name"></span>,
+                  <span ng-bind="participant.WorkGroup.join(', ')"></span>
+                </md-checkbox>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+        <ul class="child-list" ng-hide="windowWidth < 1200">
+          <li ng-repeat="section in ngdiscus.participantsList.sections" ng-hide="$index < breakAt">
+            <md-checkbox aria-label="checked" type="checkbox" id="tc_{{$index}}" ng-click="ngdiscus.sectionCheckToggle(section);" ng-checked="section.checked" log-click="Участники::Галка <Добавить сотрудников отдела> в окне <Добавить сотрудников>">
+              <span class="bold" ng-bind="participant.name"></span>
+              <span ng-bind="participant.WorkGroup"></span>
+            </md-checkbox>
+            <span class="checkbox-label" ng-click="section.expanded = !section.expanded" log-click="Участники::Кнопка <Показать\скрыть сотрудников отдела> в окне <Добавить сотрудников>">
+              <span class="minus-plus" ng-class="{active:!section.expanded}"></span>{{section.name}}
+            </span>
+            <ul class="child-list" ng-show="section.expanded">
+              <li ng-repeat="participant in section.participants | orderObjectBy:'name'">
+                <md-checkbox aria-label="checked" type="checkbox" id="sc_{{$index}}" ng-click="ngdiscus.participantCheckToggle(section, participant);" ng-checked="participant.checked" log-click="Участники::Галка <Добавить сотрудника> в окне <Добавить сотрудников>">
+                  <span class="bold" ng-bind="participant.name"></span>,
+                  <span ng-bind="participant.WorkGroup.join(', ')"></span>
+                </md-checkbox>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <departments-teams></departments-teams>
+
+    <div class="alert alert-info" ng-show="!ngdiscus.participantsList.saved">Загрузка отделов...</div>
+
+    <a href class="btn-blue md-button" title="Добавить сотрудников из выбранных отделов" ng-click="ngdiscus.displayParticipants = false; ngdiscus.saveSelectedParticipants(ngdiscus.displayParticipantsDoc, ngdiscus.pushArray); section.expanded = !section.expanded; portal.open = !portal.open; $parent.$parent.showAddTeamsdepartments = false;" log-click="Участники::Кнопка <Выбрать> в окне <Добавить сотрудников>"> Выбрать</a>
+  </div>
+</div>

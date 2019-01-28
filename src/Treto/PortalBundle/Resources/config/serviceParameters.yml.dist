@@ -1,0 +1,10 @@
+parameters:
+    treto_portal.validator.class: Treto\PortalBundle\Validator\Validator
+    treto_portal.cors_listener.class: Treto\PortalBundle\Services\CorsListener
+    treto_portal.exception_listener.class: Treto\PortalBundle\Services\ExceptionListener
+    site_host: 'http://127.0.0.1'
+    vacancy_host: 'https://jobs.tile.expert'
+    salt: 'test'
+    io_host: 'http://test.treto.ru:3001'
+    hipchat_team: ''
+    hipchat_token: ''

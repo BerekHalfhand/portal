@@ -1,0 +1,73 @@
+<div class="edit-doc" move-window="bottom left" move-window-handler=".drag">
+  <div class="text-s12 panel" ng-controller="modalEditForm" ctrl-enter="discus.saved?ok(true):false">
+    <div class="drag"></div>
+    <form ng-submit="submitted = true; ok(true);" novalidate name="modalForm" ng-init="submitted = false;">
+      <div class="modal-header mobile-btns">
+        <md-button class="close-edit-form md-ink-ripple discus-icon-btn" ng-click="close()" style="z-index: 1;" log-click="Дискуссии::Кнопка <Закрыть> в окне редактирования сообщения">
+          <md-icon class="material-icons">clear</md-icon>
+        </md-button>
+        <md-button class="close-edit-form-text white md-ink-ripple" ng-click="close()" log-click="Дискуссии::Кнопка <Закрыть> в окне редактирования сообщения">Закрыть</md-button>
+        <md-button class="md-ink-ripple md-primary md-raised save-btn pull-right" ng-disabled="!discus.saved" type="submit" copy-body log-click="Дискуссии::Кнопка <Сохранить> в окне редактирования сообщения">Сохранить</md-button>
+      </div>
+      <div class="modal-header" ng-if="discus.main_doc.ToSite === '1' || (discus.main_doc.form == 'Contact' && (discus.main_doc.ContactStatus.indexOf(7) !== -1 || discus.main_doc.ContactStatus.indexOf('7') !== -1 || discus.main_doc.ContactStatus.indexOf(10) !== -1 || discus.main_doc.ContactStatus.indexOf('10') !== -1))" ng-init="discus.current.locale = !discus.current.locale?'ru':discus.current.locale; discus.current.NotForSite = discus.current.NotForSite === '1' || discus.current.NotForSite === '0'?discus.current.NotForSite:'1'">
+        <div>
+          <md-checkbox ng-checked="!discus.current.NotForSite || discus.current.NotForSite == '0'" ng-click="discus.current.NotForSite = discus.current.NotForSite == '1'?'0':'1'" class="marbot0" log-click="Дискуссии::Галка <Публиковать на сайте> в окне редактирования сообщения">Публиковать на сайте</md-checkbox>
+          <span ng-if="!discus.current.NotForSite || discus.current.NotForSite == '0'" uib-dropdown class="relative inline-block marleft20">
+            <a href class="dropdown-toggle black" uib-dropdown-toggle ng-init="discus.current.locale = discus.current.locale?discus.current.locale:locale.records[0].value" log-click="Дискуссии::Меню <Выберите локаль> в окне редактирования сообщения">
+              {{discus.current.locale?discus.current.locale:'Выберите локаль'}}<span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu new" role="menu">
+              <li ng-repeat="record in locale.records" title="{{record.value}}">
+                <a href class="text-s11 black" ng-click="discus.current.locale = record.value">{{record.value}}</a>
+              </li>
+            </ul>
+          </span>
+        </div>
+      </div>
+      <div class="modal-body" style="overflow-y:initial;padding-bottom:30px;" ng-switch on="discus.current.typeDoc">
+        <input class="text-s16" type="text" ng-model="discus.current.subject" ng-switch-when="task" ng-if="discus.current.action == 'reject'" placeholder="Возврат просьбы на доработку." log-click="Дискуссии::Поле <Возврат просьбы на доработку> в окне редактирования сообщения"/>
+        <input class="text-s16" type="text" ng-model="discus.current.subject" ng-switch-when="task" ng-if="discus.current.action == 'check'" placeholder="Просьба передана на проверку." log-click="Дискуссии::Поле <Просьба передана на проверку> в окне редактирования сообщения"/>
+        <input class="text-s16" type="text" ng-model="discus.current.subject" ng-switch-when="task" ng-if="discus.current.action != 'reject' && discus.current.action != 'check'" placeholder="Добавление уточнения к просьбе."
+        log-click="Дискуссии::Поле <Добавление уточнения к просьбе> в окне редактирования сообщения"/>
+        <input class="text-s16" type="text" ng-model="discus.current.subject" ng-switch-when="changes" placeholder="Добавление изменений задачи к просьбе." log-click="Дискуссии::Поле <Добавление изменений задачи к просьбе> в окне редактирования сообщения"/>
+        <input class="text-s16" type="text" ng-model="discus.current.subject" ng-switch-when="result" placeholder="Добавление результата выполнения к просьбе." log-click="Дискуссии::Поле <Добавление результата выполнения к просьбе> в окне редактирования сообщения"/>
+        <input ng-switch-default class="text-s16 marbot20" type="text" placeholder="Заголовок (не обязательно)" ng-model="discus.current.subject" log-click="Дискуссии::Поле <Заголовок> в окне редактирования сообщения"/>
+        <!-- <text-angular name="body" ng-model="discus.current.body" ta-target-toolbars='toolbar' ta-text-editor-class="input" placeholder="Введите текст"></text-angular> -->
+        <t-mce ng-if="discus.current.unid" model="discus.current.body" mentions="discus.current.mentions" log-click="Дискуссии::Поле <Введите текст> в окне редактирования сообщения"></t-mce>
+        <div ng-if="!discus.current.unid">Подождите...</div>
+      </div>
+      <div class="modal-body" ng-if="discus.current.action == 'check'">
+        <add-participants
+                initfocus = true
+                share-enable="true"
+                share-portal="shareCheckerModel"
+                ngmodel="discus.current.CheckerLat"
+                placeholder="'Проверяющий'"
+                typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'"
+                inpwidth="'120px'">
+        </add-participants>
+        <other-command style="display: block; margin-top: 20px;"></other-command>
+        <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false" style="display: block;">
+          <ng-message when="CheckerLat">Укажите проверяющего.</ng-message>
+        </ng-messages>
+      </div>
+      <div class="modal-body" ng-if="discus.current.attachments.length > 0 || $root.uploader.isUploading" style="margin-right: 0px; margin-left: 0px;">
+        <md-progress-linear md-mode="determinate" ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading" value="{{$root.uploader.progress}}" role="progressbar" class="blue"></md-progress-linear>
+        <upload-list model="discus.current.attachments" template-url="listing"></upload-list>
+      </div>
+      <div class="modal-footer custom-toolbar relative" ng-init="pasteScreenShot = {value: false}" ng-class="{'padtop70': pasteScreenShot.value}">
+        <div ng-if="discus.current.unid" ng-show="showTags == true" ng-init="doc = discus.current">
+          <div style="margin-bottom: 5px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+        </div>
+        <md-button class="md-ink-ripple md-primary md-raised save-btn" ng-disabled="!discus.saved" type="submit" copy-body log-click="Дискуссии::Кнопка <Сохранить> в окне редактирования сообщения">Сохранить</md-button>
+        <!-- <span popover-placement="right" uib-popover-template="'/bundles/tretoportal/partials/doc_templ/common/textAngularToolBar.html'" class="ico click style-toolbar marside10" title="Панель форматирования"></span> | -->
+        <span ng-if="discus.current.unid">
+          <upload-box upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }" auto="true" multiple="true" model="discus.current.attachments" templ="discus_ico.html"></upload-box>
+        </span>
+        <span id="mytoolbar"></span>
+        <!--<span class="ico click picture"></span>
+        <span class="ico click dark-tag"></span>-->
+      </div>
+    </form>
+  </div>
+</div>

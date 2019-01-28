@@ -1,0 +1,11 @@
+db.Portal.update({form:"Employer"},{$set:{form:"Empl"}},{multi:true})
+
+db.Portal.update({form:"Empl", $or:[{DtDismiss:''},{DtDismiss:{$exists:false}}], RegionID:{$exists:true, $ne:"Moscow"}}, {$set:{DtDismiss:"20150101"}},{multi:true})
+
+db.Portal.update({form:"Empl", $and:[{$or:[{DtDismiss:''},{DtDismiss:{$exists:false}}]}, {$or:[{onlyMail: "1"},{only1C: "1"}]}]}, {$set:{DtDismiss:'20150101'}},{multi:true})
+
+db.Portal.update({form:"Empl", UNREADED_ID:""}, {$set:{UNREADED_ID:[]}}, {multi:true})
+
+db.Portal.find({SubjectID:{$exists:true}}).snapshot().forEach(function (e) {e.subjectID = e.SubjectID;delete e.SubjectID;db.Portal.save(e);})
+db.Portal.find({Body:{$exists:true}}).snapshot().forEach(function (e) {e.body = e.Body;delete e.Body;db.Portal.save(e);})
+db.Portal.find({Subject:{$exists:true}}).snapshot().forEach(function (e) {e.subject = e.Subject;delete e.Subject;db.Portal.save(e);})

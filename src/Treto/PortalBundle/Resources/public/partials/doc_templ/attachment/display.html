@@ -1,0 +1,13 @@
+<div id="view">
+  <img height="100" ng-if="doc.mimeType.indexOf('image')==0" src="api/fs/src/{{doc.hash}}">
+  <textarea readonly  ng-if="doc.mimeType.indexOf('text')==0" cols="90" rows="12">
+    {{src}}
+  </textarea>
+</div>
+
+<div>
+  <a target="_blank" href="api/fs/src/{{doc.hash}}"
+     log-click="Загрузка файлов::Ссылка на прикреплённый файл>">ссылка на файл</a>
+</div>
+
+<div ng-bind="doc|json"></div>

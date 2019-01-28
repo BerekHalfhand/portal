@@ -1,0 +1,7 @@
+﻿<div class="document">
+  <ul class="menu">
+    <span ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'"></span>
+  </ul>
+  <div ng-show="$parent.discus.expanded[doc.unid] && (doc.status != 'deleted')" ng-bind-html="doc.body | nl2br"></div>
+  <div class="alert alert-warning">Если вы видите это сообщение, нужно передать ссылку на эту страницу разработчикам Трето Портала 2.0.</div>
+</div>

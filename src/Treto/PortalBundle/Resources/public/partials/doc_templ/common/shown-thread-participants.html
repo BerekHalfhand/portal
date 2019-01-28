@@ -1,0 +1,80 @@
+<span ng-init="discus.initDictionaries(doc);">
+  <ul class="list-inline marbot0 text-s11 martop5" ng-show="discus.include.shownThreadParticipants.subscribed.length" ng-init="logSubscribed = discus.main_doc.security.log.subscribed;">
+    <!--<li class="dark-grey">Участники: </li>-->
+    <li class="dark-blue-second" ng-if="discus.include.shownThreadParticipants.shareSubscribed.length > 0"><i>{{selfUrl}}:</i></li>
+    <li class="darker-grey" ng-repeat="subject in discus.include.shownThreadParticipants.subscribed | orderBy:'-name':true">
+      <b ng-cloak ng-init="subscriber = logSubscribed.username[subject.username]">
+        {{subject.name || discus.profile.translateName(subject.username)}}<span ng-if="subscriber && subscriber[subscriber.length-1].by &&
+        subscriber[subscriber.length-1].by != doc.authorLogin &&
+        subscriber[subscriber.length-1].by != subject.username &&
+        subscriber[subscriber.length-1].by[0] != '_'">{{'(добавил(а) '+discus.profile.translateName(subscriber[subscriber.length-1].by)+')'}}</span>
+        <span ng-if="subject.autoNotif && subject.autoNotif.length > 0">{{subject.autoNotif}}</span>
+      </b>
+      <span ng-if="$root.users[subject.username].WorkGroup.length" ng-bind="'('+$root.users[subject.username].WorkGroup.join(', ')+')'"></span>
+      <span ng-if="!$root.users[subject.username]">(Бывший сотрудник)</span>
+      <span ng-if="!discus.isPublic"
+            class="participant-remover"
+            ng-click="discus.removeParticipant(subject.username, 'username', doc, true, true);"
+            log-click="Дискуссии::Кнопка <Удалить участника> в списке участников дискуссии">
+        &times;
+      </span>
+    </li>
+  </ul>
+  <span ng-if="discus.include.shownThreadParticipants.shareSubscribed.length > 0" ng-init="shareParticipants = discus.sortShareByName(discus.include.shownThreadParticipants.shareSubscribed)">
+    <ul class="list-inline marbot0 text-s11 martop5" ng-repeat="(name, parts) in shareParticipants" class="darker-grey">
+      <li class="dark-blue-second"><i>{{name}}:</i></li>
+      <li class="darker-grey" ng-repeat="value in parts">
+        <b ng-cloak>{{discus.findShareDataByLogins('fullName', value.domain, value.username)}}</b>
+        <span>({{discus.findShareDataByLogins('WorkGroup', value.domain, value.username)}})</span>
+        <span ng-hide="$last">,</span>
+      </li>
+    </ul>
+  </span>
+  <ul class="list-inline marbot0 text-s11 martop5" ng-show="!discus.isPublic && discus.include.shownThreadParticipants.unread.length" ng-init="logUnreads = discus.main_doc.security.log.unread">
+    <li class="dark-blue-second"><i>Заблокированные:</i></li>
+    <li class="darker-grey" ng-repeat="subject in discus.include.shownThreadParticipants.unread | orderBy:'-name':true">
+      <b ng-cloak>
+        {{subject.name || discus.profile.translateName(subject.username)}}
+        <span ng-if="logUnreads.username[subject.username]">{{'(доступ закрыл(а) '+discus.profile.translateName(logUnreads.username[subject.username][logUnreads.username[subject.username].length-1].by)+')'}}</span>
+      </b>
+      <span ng-if="$root.users[subject.username].WorkGroup.length" ng-bind="'('+$root.users[subject.username].WorkGroup.join(', ')+')'"></span>
+      <span ng-if="!$root.users[subject.username]">(Бывший сотрудник)</span>
+      <span ng-if="!discus.isPublic"
+            class="participant-adder"
+            ng-click="discus.addParticipant(subject.username, 'username', null, null, true);"
+            log-click="Дискуссии::Кнопка <Добавить участника> в списке участников дискуссии">
+        &#10004;
+      </span>
+      <span ng-hide="$last">,</span>
+    </li>
+  </ul>
+  <ul class="list-inline marbot0 text-s11 martop5" ng-show="discus.include.shownThreadParticipants.unsubscribed.length">
+    <li class="dark-blue-second"><i>Отписанные{{discus.include.shownThreadParticipants.shareSubscribed.length > 0?' '+selfUrl:''}}:</i></li>
+    <li class="darker-grey">
+      <span ng-repeat="subject in discus.include.shownThreadParticipants.unsubscribed | orderBy:'-name':true">
+        <b ng-cloak>
+          {{subject.name || discus.profile.translateName(subject.username)}}
+        </b>
+        <span ng-if="$root.users[subject.username].WorkGroup.length" ng-bind="'('+$root.users[subject.username].WorkGroup.join(', ')+')'"></span>
+        <span ng-if="!$root.users[subject.username]">(Бывший сотрудник)</span>
+        <span ng-if="!discus.isPublic"
+              class="participant-adder"
+              ng-click="discus.addParticipant(subject.username, 'username', null, null, true);"
+              log-click="Дискуссии::Кнопка <Добавить участника> в списке отписанных участников дискуссии">
+          &#10004;
+        </span>
+        <span ng-hide="$last">,</span>
+      </span>
+    </li>
+  </ul>
+  <span ng-if="discus.include.shownThreadParticipants.shareUnsubscribed.length > 0" ng-init="shareParticipants = discus.sortShareByName(discus.include.shownThreadParticipants.shareUnsubscribed)">
+    <ul class="list-inline marbot0 text-s11 martop5" ng-repeat="(name, parts) in shareParticipants" class="darker-grey">
+      <li class="dark-blue-second"><i>Отписаные {{name}}:</i></li>
+      <li class="darker-grey" ng-repeat="value in parts">
+        <b ng-cloak>{{discus.findShareDataByLogins('fullName', value.domain, value.username)}}</b>
+        <span>({{discus.findShareDataByLogins('WorkGroup', value.domain, value.username)}})</span>
+        <span ng-hide="$last">,</span>
+      </li>
+    </ul>
+  </span>
+</span>

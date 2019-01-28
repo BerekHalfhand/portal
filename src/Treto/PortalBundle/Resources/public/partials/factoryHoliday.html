@@ -1,0 +1,89 @@
+<!--ng-controller="factoryHolidayCtrl"-->
+<div class="container white-background" style="min-height: 85vh">
+    <div class="row marbot10">
+        <div class="col-lg-23 martop15 bordbot_d3 padbot15 padleft0 marleft20 marright20">
+            <div class="select-block" style="width: 100%">
+                <div layout-align="space-between center">
+                    <span class="sorting_title text-s20 darkest-blue padleft0">Каникулы фабрик</span>
+                    <md-select ng-model="selectedBm"
+                               ng-change="getBmFactories()"
+                               class="sorting-select"
+                               class="md-no-underline"
+                               aria-label="select"
+                               log-click="Контакты::Выбор БМа в окне каникулы фабрик">
+                        <md-option value="{{bm.login}}" ng-model="selectedBm" ng-repeat="bm in bms">{{bm.name}}</md-option>
+                    </md-select>
+                    <i class="spinner marleft10" ng-show="loading"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-show="!loading">
+        <div class="col-md-24 padleft0 padright0 marright20">
+            <ul class="padleft0 padbot10">
+                <li ng-repeat="factory in factories"
+                    ng-init="factory.active = false; factory.addShow = false"
+                    class="padtop10 padbot10 marleft10 padleft10 marright20 dark-grey relative holiday-string"
+                    style="list-style-type: none;">
+                    <span class="pointer padright10" ng-click="factory.active = !factory.active">
+                        <span  class="caret factory-caret black" ng-class="{'active':factory.active}"></span>
+                    </span>
+                    <a target="_blank" class="factory-link dark-grey-44" ui-sref="body.discus({id: factory.unid, type: 'contact'})">{{factory.contactName}}</a>
+                    <span ng-click="factory.active = !factory.active" style="display: inline-block; position: relative;">
+                      <span class="grey-75">
+                          {{!factory.error&&factory.holiday.length>0?'('+factory.holiday[factory.holiday.length-1]+')':factory.error}}
+                      </span>
+                      <div ng-if="factory.addShow" class="container text-s12 panel marbot0 pad0force select-command" style="left:160px; top:-23px; width: 230px;">
+                          <div class="row">
+                              <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                                  <div class="modal-header" ng-init="from = ''; to = '';">
+                                      <b class="black-1b">Новый период каникул</b>
+                                      <md-datepicker
+                                              style="margin-top: 10px"
+                                              md-min-date="today"
+                                              ng-model="from"
+                                              md-open-on-focus
+                                              md-placeholder="от"
+                                              md-hide-icons="all">
+                                      </md-datepicker>
+                                      <md-datepicker
+                                              style="margin-top: 10px"
+                                              md-min-date="today"
+                                              ng-model="to"
+                                              md-open-on-focus
+                                              md-placeholder="до"
+                                              md-hide-icons="all">
+                                      </md-datepicker>
+                                      <md-button  href
+                                                  style="margin-bottom: -5px;"
+                                                  class="btn btn-blue martop10"
+                                                  ng-click="factory.addShow = false; createNewHoliday(factory.unid, from, to)">
+                                          Добавить
+                                      </md-button>
+                                  </div>
+                              </div>
+                          </div>
+                          <a class="close pull-right marright5"
+                             style="position: absolute;top: 5px;right: 0;z-index: 13"
+                             title="Закрыть"
+                             ng-click="factory.addShow = false"
+                             log-click="Контакты::Кнопка <Закрыть> в окне каникулы фабрик">
+                              <i class="material-icons">close</i>
+                          </a>
+                      </div>
+                    </span>
+
+                    <a class="add-holiday-link" ng-click="factory.addShow = true">
+                        <md-icon class="material-icons dark-blue-4b">add</md-icon>
+                        <span class="grey-21">Добавить</span>
+                    </a>
+                    <ul ng-show="factory.active">
+                        <li ng-repeat="holiday in factory.holiday" class="dark-grey" style="list-style-type: none">{{holiday}}</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <ul>
+    </ul>
+</div>

@@ -1,0 +1,54 @@
+<title>Темы</title>
+<div id="discus-list">
+  <div class="container martop10">
+    <div class="row">
+      <div class="col-lg-24 panel pad0force">
+        <div class="pad0_15">
+          <h5 class="martop20" ng-init="revSort=true;" ng-click="revSort=!revSort"
+              log-click="Дискуссии::Сортировка таблицы дискуссий по возрастанию\убыванию на странице со списком дискуссий">{{category}}:</h5>
+        </div>
+        <div infinite-scroll="addHistory()" infinite-scroll-distance="1" infinite-scroll-disabled="busy">
+          <!-- <p class="pad0_15 padbot15 text-s11">Количество тем на странице: {{page}}</p> -->
+          <div class ="table-responsive">
+          <table class="table table-striped table-bordered marbot0 bordtop_ed valign-middle no-bord-left no-bord-right">
+            <thead>
+              <tr>
+                <th class="bold bgwhite pad15">Название</th>
+                <th class="bold bgwhite pad15">Отв.</th>
+                <th class="bold bgwhite pad15">Пр.</th>
+                <th class="bold bgwhite pad15">Посл. сообщение</th>
+                <th class="bold bgwhite pad15">Дата создания</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="doc in docs">
+                <td class="pad15" ng-show="category!='Запрос с сайта'">
+                  <img ng-if="doc.form=='formProcess'" src="/public/images/discus/task.png" title="Тема"/>
+                  <img ng-if="doc.form=='formTask'" src="/public/images/discus/theme.png" title="Просьба"/>
+                  <img ng-if="doc.form=='formVoting'" src="/public/images/discus/vote.png" title="Опрос"/>
+                  <a class="light-green2"
+                     ui-sref="body.discus({id: doc.unid, type: discusType})"
+                     log-click="Дискуссии::Ссылка на дискуссию на странице со списком дискуссий">{{doc.subject || 'Без названия'}}</a>
+                </td>
+                <td class="text-center pad15">{{doc.countMess}}</td>
+                <td class="text-center pad15">{{doc.countOpen || doc.countMess}}</td>
+                <td class="pad15 narrow"><span ng-if="doc.authorLastMess"> {{doc.modified | datetime}}<br> {{doc.authorLastMess | shortName}}</span></td>
+                <td class="pad15 narrow">{{doc.created | datetime}}
+                  <br>
+                  <span ng-show="category != 'Блоги'">{{doc.author | shortName}}</span>
+                  <a ui-sref="body.profileDisplay({ id: doc.authorLogin || doc.Author, force:'force-display', blogs:true})"
+                     title="Все блоги автора" style="padding-top: 2px;"  ng-show="category == 'Блоги'"
+                     log-click="Дискуссии::Ссылка на автора дискуссии на странице со списком дискуссий">
+                    {{doc.author | shortName}}
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+            </div>
+          {{status}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

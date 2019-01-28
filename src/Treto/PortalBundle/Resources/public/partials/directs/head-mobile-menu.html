@@ -1,0 +1,122 @@
+<nav  ng-init="bodyLeft();">
+  <md-button class="icon-btn mobile-menu-btn white"
+             title="Меню"
+             aria-label="Меню"
+             ng-click="bodyRight(); $root.show.mobileMenu = !$root.show.mobileMenu;"
+             log-click="Главное меню::Кнопка <Меню> в мобильном главном меню">
+    <md-icon class="material-icons">menu</md-icon>
+  </md-button>
+  <div id="mobile-menu-container" >
+    <!--<div id="mobile-menu-container" ng-show="$root.show.mobileMenu">-->
+    <div id="mobile-blur" ng-click="$root.show.mobileMenu = false; bodyLeft();" ng-show="$root.show.mobileMenu"></div>
+    <div id="mobile-menu" ng-class="{'mobile-menu-container-show':$root.show.mobileMenu}">
+      <div class="exit-mobile-menu"
+           ng-click="$root.show.mobileMenu = false;"
+           log-click="Главное меню::Кнопка <Закрыть> в мобильном главном меню">
+        <i class="material-icons">chevron_left</i>
+      </div>
+      <div class="row">
+
+          <div class="moblie-menu-profile" ng-show="$root.show.menuUser" ng-include=" '/bundles/tretouser/partials/profile/menu.html' "></div>
+
+      </div>
+      <div class="divider" style="margin: 5px 0 25px 0"></div>
+        <span style="color: #c9c9c9; padding-left: 15px;">Добавить</span>
+            <ul class="list-unstyled mobile-menu-list">
+              <li ng-show="$state.params.category && ($state.params.category.indexOf('HR') > -1)">
+                <a href ng-click="close(); showForm('formProcess', null, ['HR отдел', 'Вакансии'])"
+                   log-click="Главное меню::Кнопка <Новая вакансия> в мобильном главном меню">
+                  <i class="material-icons dark-grey">create_new_folder</i><span>Новая вакансия</span>
+                </a>
+              </li>
+              <li ng-show="$state.current.name.indexOf('body.adaptation') == -1">
+                <a ng-if="$state.current.name.indexOf('body.discus') == 0 && !$root.isBlog && $state.params.category != 'Blog'"
+                   href
+                   ng-click="close(); showForm('formProcess', null, $state.params.category.split(',') || categoryToNewDiscus.split(','))"
+                   log-click="Главное меню::Кнопка <Новая тема> в мобильном главном меню">
+                  <i class="material-icons dark-grey">create_new_folder</i><span>Новая тема</span>
+                </a>
+                <a ng-if="$state.current.name.indexOf('body.discus') == 0 && $root.isBlog || $state.current.name.indexOf('body.discus') == 0 && $state.params.category == 'Blog'"
+                   href ng-click="close(); showForm('formProcess', 'Blog')"
+                   log-click="Главное меню::Кнопка <Новая тема> в мобильном главном меню">
+                  <i class="material-icons dark-grey">create_new_folder</i><span>Новая тема</span>
+                </a>
+                <a ng-if="$state.current.name.indexOf('body.discus') == -1"
+                   href ng-click="close(); showForm('formProcess')"
+                   log-click="Главное меню::Кнопка <Новая тема> в мобильном главном меню">
+                  <i class="material-icons dark-grey">create_new_folder</i><span>Новая тема</span>
+                </a>
+              </li>
+              <li ng-show="$state.current.name.indexOf('body.adaptation') == 0">
+                <a href ng-click="close(); showForm('createAdapt')"
+                   log-click="Главное меню::Кнопка <Новый сотрудник> в мобильном главном меню">
+                <i class="material-icons dark-grey">folder_shared</i><span>Новый сотрудник</span></a>
+              </li>
+              <li>
+                <a href ng-click="close(); showForm('createVote', 'regular');"
+                   log-click="Главное меню::Кнопка <Добавить: Голосование> в мобильном главном меню">
+                  <i class="material-icons dark-grey">sort</i><span>Голосование</span>
+                </a>
+              </li>
+              <li>
+                <a ng-if="$state.current.name.indexOf('body.discus') == -1" href 
+                   ng-click="close(); showForm('formTask')"
+                   title="Создать новую просьбу"
+                   log-click="Главное меню::Кнопка <Добавить: Просьбу> в мобильном главном меню">
+                  <i class="material-icons dark-grey">assignment</i><span>Просьба</span></a>
+                  <!-- ui-sref="body.createInDiscus({ type: 'formTask', parentId: mainDiscus.main_doc.unid })" -->
+                <a ng-if="$state.current.name.indexOf('body.discus') == 0" href
+                   ng-click="close(); showForm('formTask')"
+                   title="Добавить просьбу в текущее обсуждение"
+                   log-click="Главное меню::Кнопка <Добавить: Просьбу> в мобильном главном меню">
+                  <i class="material-icons dark-grey">assignment</i><span>Просьба</span></a>
+              </li>
+              <li>
+                <a href ng-click="close(); showForm('person')"
+                   log-click="Главное меню::Кнопка <Добавить: Человека> в мобильном главном меню">
+                  <i class="material-icons dark-grey">folder_shared</i><span>Человек</span>
+                </a>
+              </li>
+              <li>
+                <a href ng-click="close(); showForm('organization')"
+                   log-click="Главное меню::Кнопка <Добавить: Компанию> в мобильном главном меню">
+                  <i class="material-icons dark-grey">business</i><span>Компания</span>
+                </a>
+              </li>
+              <li ng-if="$state.current.name.indexOf('body.contacts') == 0">
+                <a href ng-click="close(); showForm('formCreatePersonAuto')"
+                   title="Авторазбор"
+                   log-click="Главное меню::Кнопка <Добавить: Авторазбор> в мобильном главном меню">
+                <i class="material-icons dark-grey">folder_shared</i><span>Авторазбор</span></a>
+              </li>              
+            </ul>
+      <div class="divider" style="margin: 25px 0 20px 0"></div>
+      <ul class="list-unstyled mobile-menu-list">
+        <li>
+          <a href ui-sref="body.links"
+             log-click="Главное меню::Ссылка <Ссылки> в мобильном главном меню">Ссылки</a>
+        </li>
+        <li>
+          <a href ui-sref="body.contacts"
+             log-click="Главное меню::Ссылка <Контакты> в мобильном главном меню">Контакты</a>
+        </li>
+        <li>
+          <a href ui-sref="body.tags"
+             log-click="Главное меню::Ссылка <Теги> в мобильном главном меню">Теги</a>
+        </li>
+        <li>
+          <a href ui-sref="body.tasks"
+             log-click="Главное меню::Ссылка <Просьбы> в мобильном главном меню">Просьбы</a>
+        </li>
+        <li>
+          <a href ui-sref="body.favorites"
+             log-click="Главное меню::Ссылка <Избранное> в мобильном главном меню">Избранное</a>
+        </li>
+        <li>
+          <a href ui-sref="body.logList"
+             log-click="Главное меню::Ссылка <Посещения> в мобильном главном меню">Посещения</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,89 @@
+<title>{{company_name}}</title>
+<div class="container-fluid">
+  <div class="row martop15">
+    <div class="col-sm-5">
+      <div class="panel">
+      
+        <sidebar-block ng-if="blocksSettings.news == 1" title="'Новости компании'" upperbtn="'поделиться'" category="'Новости'" state="'collapseNews'" index="'46'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.goods == 1" title="'Товароведения'" upperbtn="'создать'" category="'Салон,Товароведение'" state="'collapseTowar'" index="'72'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.it == 1"  title="'ИТ'" upperbtn="'создать'" category="'ИТ отдел,Портал,News'" state="'collapseIt'" index="'64'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-collections ng-if="blocksSettings.collections == 1"></sidebar-collections>
+        
+        <sidebar-block ng-if="blocksSettings.collDiscus == 1" title="'Обсуждение коллекций'" upperbtn="false" category="'Коллекция'" state="'collapseCol'" withcomments="true" index="'3'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.blogs == 1" title="'Блоги'" upperbtn="'написать'" category="'Blog'" state="'collapseBlog'" index="'2'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.smoke == 1" title="'Курилка'" upperbtn="'прикурить'" category="'Курилка'" state="'collapseSmoke'" index="'16'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.quest == 1" title="'Вопросы и ответы'" upperbtn="'спросить'" category="'Вопросы и ответы'" state="'collapseQuest'" index="'62'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.idea == 1" title="'Биржа идей'" upperbtn="'предложить'" category="'Биржа идей'" state="'collapseIdea'" index="'38'" lowerbtn="true" lowerbtnfn="subscriber(subscribeID)" upperbtnfn="showForm(form, type, cats)"></sidebar-block>
+
+        <sidebar-block ng-if="blocksSettings.waitTask == 1" title="'Подвешенные просьбы'" upperbtn="false" category="'Подвешанные просьбы'" state="'collapseWaitTask'" lowerbtn="false"></sidebar-block>
+        
+      </div>
+    </div>
+    <div class="col-sm-14">
+      <div class="row">
+        <div class="panel col-lg-24">
+          <votings ng-if="blocksSettings.votings == 1"></votings>
+        </div>
+      </div>
+      <div class="row">
+        <div class="panel col-lg-24">
+          <top-likes ng-if="blocksSettings.topLikes == 1"></top-likes>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-24 panel">
+          <div class="row  martop10">
+            <div class="col-lg-8" ng-if="blocksSettings.gallery1 == 1 || blocksSettings.anicom == 1">
+              <gallery ng-if="blocksSettings.gallery1 == 1"
+                       titletext="'Фотоальбом'" titlelink="'body.discusList({category: \'Фотоальбом\'})'" titlesidetext="'все фотографии'"
+                       link="'body.discus({id:\'4E2000EC-FBE8-464A-38A8-D8702FCA9515\', type:\'\'})'" description="'TE Дни 2016'"
+                       source="'https://te.remote.team/api/fs/src/b71a84d339d383b1c2eb3e700ab5ceef'"></gallery>
+              <gallery ng-if="blocksSettings.anicom == 1"
+                       titletext="'Фотоальбом'" titlelink="'body.discusList({category: \'Фотоальбом\'})'" titlesidetext="'все фотографии'"
+                       source="'https://anicom.remote.team/api/fs/thumbnail/f56dbb68208d0a190caa3b5f4e371364'"></gallery>
+            </div>
+            <div class="col-lg-8" ng-if="blocksSettings.informers == 1">
+              <informers></informers>
+            </div>
+            <div class="col-lg-8" ng-if="blocksSettings.gallery2 == 1">
+              <gallery titlesidetext="'подробнее'" titlelink="'body.discus({id:\'ECBB9F930B21E93244257A5500339911\', type:\'\'})'" titletext="'Шоп-Жор тур в Италию'" description="'Билеты ШЖТ TE-1:<br><br><span class=\'green\'>Филинкова Даша - 1</span><br>Каменская Татьяна - 1/3<br> Кройшнер Алия - 1/3<br>Обухов Игорь - 1/3<br>  Конюхова Татьяна - 1/3'"></gallery>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-5">
+      <div class="panel">
+
+        <sidebar-tasks ng-if="blocksSettings.tasks == 1"></sidebar-tasks>
+
+        <sidebar-block ng-if="blocksSettings.newDiscus == 1" title="'Новые темы'" upperbtn="false" category="'Новые темы'" state="'collapseTheme'" lowerbtn="false"></sidebar-block>
+
+        <sidebar-organizations ng-if="blocksSettings.organizations == 1"></sidebar-organizations>
+
+        <!-- <sidebar-block title="'Запросы с сайта'" upperbtn="false" category="'Запрос с сайта'" state="'collapseSite'" lowerbtn="false"></sidebar-block> -->
+
+        <sidebar-pop-discus ng-if="blocksSettings.popDiscus == 1"></sidebar-pop-discus>
+
+        <sidebar-block ng-if="blocksSettings.vacancies == 1" title="'Вакансии (обсуждения)'" upperbtn="false" category="'HR отдел,Вакансии'" state="'collapseVac'" lowerbtn="false"></sidebar-block>
+
+        <sidebar-main-stat ng-if="blocksSettings.stat == 1"></sidebar-main-stat>
+
+      </div>
+    </div>
+  </div>
+</div>
+<index-tasks ng-if="$root.expiredPopup.show && $root.expiredPopup.ready"></index-tasks>
+
+<script type="text/ng-template" id="vote.html">
+  <div ng-controller="voteCtrl">
+    <document ng-if="vote" doc="vote" nomenu="true"></document>
+  </div>
+</script>

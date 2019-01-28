@@ -1,0 +1,13 @@
+<span class="material-icons text-s16 black va-middle public-theme-icon">assignment</span>
+<!--<span ng-if="doc.linked.Parent.isPublic" class="material-icons text-s16 black va-middle public-theme-icon">assignment</span>-->
+<!--<span ng-if="!doc.linked.Parent.isPublic" class="material-icons text-s16 black va-middle private-theme-icon">lock</span>-->
+<a ng-if="child.self.unid != discus.main_doc.unid"
+   href="#/discus/{{child.self.unid}}/"
+   class="blue va-middle"
+   log-click="Дискуссии::Ссылка на тему в связанных документах в дискуссии">
+  {{child.self.subject || 'Без темы'}} ({{child.self.messages || '0'}})
+</a>
+<span ng-if="child.self.unid == discus.main_doc.unid" class="va-middle">{{child.self.subject || 'Без темы'}} ({{child.self.messages || '0'}})</span>
+<ul class="tree-view-ul">
+  <li ng-repeat="child in child.children" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/tree-item.html'"></li>
+</ul>

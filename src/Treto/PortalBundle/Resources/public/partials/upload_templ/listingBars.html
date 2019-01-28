@@ -1,0 +1,64 @@
+<div ng-init="discus=$parent.$parent.discus; $root.uploader.filesizes = [];">
+  <ul class="list-inline marbot0" style="font-size: 10px;">
+    <!--<li style="position:relative; margin: 0 15px;">
+      <div class="row" style="height:28px;min-width:220px;background-color:lightgray;padding:6px;border: solid 1px gray;">
+        <span class="col-lg-15 pad0force">
+          <a class="blue" ng-href="{{item[0].link}}" target="_blank">
+            {{0123456789 | limitTo:10}}
+          </a>
+          <span> ({{1234567 | bytes}})</span>
+        </span>
+        <div class="progress col-lg-6 pad0force">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': 70 + '%' }"></div>
+        </div>
+        <div class="close col-lg-2 pad0force" style="font-size: 18px;">&times;</div>
+      </div>
+    </li>-->
+    
+    <li ng-repeat="item in $root.uploader.queue" style="position:relative; margin: 0 15px;">
+      <div class="row file-bar">
+        <span class="col-lg-15 pad0force text-s11">
+          <a title="{{item._file.name}}"
+             class="short-filename"
+             style="width: 70px;"
+             ng-href="{{item[0].link}}"
+             target="_blank"
+             log-click="Загрузка файлов::Ссылка на прикреплённый для загрузки файл">
+            {{item._file.name}}
+          </a>
+          <span ng-init="$root.uploader.filesizes[item._file.name] = item._file.size" style="position: absolute;"> ({{item._file.size | bytes}})</span>
+        </span>
+        <div ng-if="$root.uploader.queue[$index]" class="progress-thin col-lg-6 pad0force">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': $root.uploader.queue[$index].progress + '%' }"></div>
+        </div>
+        <a class="col-lg-2 pad0force black_70"
+           ng-click="item.remove()"
+           log-click="Загрузка файлов::Кнопка <Отменить загрузку файла>">
+           <i class="material-icons text-s16  touch">close</i>
+        </a>
+      </div>
+    </li>
+    
+    <li ng-repeat="item in model" style="position:relative; margin: 0 15px;">
+      <div class="row file-bar">
+        <span class="col-lg-22 pad0force text-s11">
+          <a title="{{item._file.name}}"
+             class="blue short-filename"
+             style="width: 135px;"
+             ng-href="{{item[0].link}}"
+             target="_blank"
+             log-click="Загрузка файлов::Ссылка на прикреплённый файл">
+            {{item[0].doc.originalFilename}}
+          </a>
+          <span ng-if="$root.uploader.filesizes[item[0].doc.originalFilename]" style="position: absolute;"> ({{$root.uploader.filesizes[item[0].doc.originalFilename] | bytes}})</span>
+        </span>
+        <a ng-if="discus.current._meta.write"
+           class="black_70 col-lg-2 pad0force"
+           ng-click="deleteFile(discus.current, $index, discus)"
+           log-click="Загрузка файлов::Кнопка <Удалить на прикреплённый файл>">
+           <i class="material-icons text-s16 touch">close</i>
+        </a>
+      </div>
+    </li>
+  </ul>
+</div>

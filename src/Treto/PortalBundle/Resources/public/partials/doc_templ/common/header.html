@@ -1,0 +1,14 @@
+<div class="document-header col-md-12">
+    <!--<div class="controls" ng-if="discus.main_doc && discus.main_doc._id != doc._id">
+      <input id="set_parent_for_{{doc._id}}" type="checkbox"
+           ng-checked="doc.parentID && doc.parentID != doc.unid" ng-click="discus.toggleParent(doc)">
+      <label for="set_parent_for_{{doc._id}}">Прикрепить к обсуждению "{{discus.main_doc.subject}}"</label>
+    </div>-->
+
+    <p></p>
+    <input ng-required="!doc.subjectID" type="text" class="input form-control"
+           placeholder="{{ $root.localize(doc.form, 'discus.header.title.placeholder') }}" ng-model="doc.subject">
+    <p></p>
+    <textarea ck-editor class="{{discus.maximized ? 'maximized' : ''}}" ng-model="doc.body"></textarea>
+    <p></p>
+</div>

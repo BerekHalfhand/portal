@@ -1,0 +1,864 @@
+_index:
+    path:     /
+    defaults: { _controller: TretoPortalBundle:Portal:Index }
+
+get_task:
+    path:     /api/get_task
+    defaults: { _controller: TretoPortalBundle:Portal:get_task }
+    requirements:
+      _format: json
+      methods: GET
+
+get_votings:
+    path:     /api/portal/voting
+    defaults: { _controller: TretoPortalBundle:Portal:getVoting }
+    requirements:
+      _format: json
+      methods: GET
+
+#autocomplete method
+get_users:
+    path:     /api/portal/users
+    defaults: { _controller: TretoPortalBundle:Portal:getUsers }
+    requirements:
+      _format: json
+      methods: GET
+
+#autocomplete method
+get_contact_companies:
+    path:     /api/contact/companies
+    defaults: { _controller: TretoPortalBundle:Contact:getCompanies }
+    requirements:
+      _format: json
+      methods: GET
+
+#autocomplete method
+get_contact_persons:
+    path:     /api/contact/persons
+    defaults: { _controller: TretoPortalBundle:Contact:getPersons }
+    requirements:
+      _format: json
+      methods: GET
+
+get_contact_bm_factories:
+    path:     /api/contact/getBmFactories
+    defaults: { _controller: TretoPortalBundle:Contact:getBmFactories }
+    requirements:
+      _format: json
+      methods: POST
+
+set_contact_add_holiday:
+    path:     /api/contact/addHoliday
+    defaults: { _controller: TretoPortalBundle:Contact:addHoliday }
+    requirements:
+      _format: json
+      methods: POST
+
+get_contact_collections:
+    path:     /api/contact/collections
+    defaults: { _controller: TretoPortalBundle:Contact:getCollections }
+    requirements:
+      _format: json
+      methods: GET
+
+my_favorites:
+    path:     /api/portal/my-favorites
+    defaults: { _controller: TretoPortalBundle:Portal:myFavorites }
+    requirements:
+      _format: json
+      methods: GET
+
+add_favorites:
+    path:     /api/portal/add-favorites/{unid}
+    defaults: { _controller: TretoPortalBundle:Portal:addFavorites }
+    requirements:
+      _format: json
+      methods: GET
+
+del_favorites:
+    path:     /api/portal/del-favorites/{unid}
+    defaults: { _controller: TretoPortalBundle:Portal:delFavorites }
+    requirements:
+      _format: json
+      methods: POST
+
+api_list_tasks:
+    path:     /api/discussion/tasks/{query}
+    defaults: { _controller: TretoPortalBundle:Discussion:tasks, query: '' }
+    requirements:
+      _format: json
+      methods: GET
+
+api_list_discus:
+    path:     /api/discussion/list
+    defaults: { _controller: TretoPortalBundle:Discussion:list }
+    requirements:
+      _format: json
+      methods: GET
+      
+api_item_discus_exists:
+    pattern:     /api/discussion/exists/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:exists }
+    requirements:
+      _format: json
+      methods: GET
+
+api_item_discus:
+    path:     /api/discussion/get/chain/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:getChain, _format: json }
+    requirements:
+        id: '[^\?^\&^\^^\=]+'
+
+api_item_discus_get_id:
+    pattern:     /api/discussion/get/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:get }
+    requirements:
+      _format: json
+      methods: GET
+
+api_item_discus_get_unid:
+    pattern:     /api/discussion/get/{id}/unid
+    defaults: { _controller: TretoPortalBundle:Discussion:get }
+    requirements:
+      _format: json
+      methods: GET
+
+api_item_discus_get_id_timestamp:
+    pattern:     /api/discussion/get/{id}/{timestamp}
+    defaults: { _controller: TretoPortalBundle:Discussion:get }
+    requirements:
+      _format: json
+      methods: GET
+      
+api_item_discus_get_id_timestamp_prev:
+    pattern:     /api/discussion/get/{id}/{timestamp}/{prev}
+    defaults: { _controller: TretoPortalBundle:Discussion:get }
+    requirements:
+      _format: json
+      methods: GET
+
+api_item_discus_get_with_unreaded:
+    pattern:     /api/discussion/getWithUnreaded/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:getWithUnreaded }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_load_links:
+    pattern:     /api/discussion/loadLinks/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:loadLinks }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_load_comments_links:
+    pattern:     /api/discussion/loadCommLinks
+    defaults: { _controller: TretoPortalBundle:Discussion:loadCommLinks }
+    requirements:
+      _format: json
+      methods: POST
+
+
+api_item_discus_invite_guest:
+    pattern:     /api/discussion/inviteGuest
+    defaults: { _controller: TretoPortalBundle:Discussion:inviteGuest }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_linked_to:
+    pattern:     /api/discussion/linkedTo
+    defaults: { _controller: TretoPortalBundle:Discussion:linkedTo }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_share_mail:
+    pattern:     /api/discussion/shareMail/{unid}/{status}
+    defaults: { _controller: TretoPortalBundle:Discussion:shareMail }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_set:
+    pattern:     /api/discussion/set/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:set }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_vote:
+    pattern:    /api/discussion/vote/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:vote }
+    requirements:
+      _format: json
+      methods: POST
+      
+api_item_discus_like:
+    pattern:    /api/discussion/like/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:like }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_watch_vote:
+    pattern:    /api/discussion/watchVote/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:watchVote }
+    requirements:
+      _format: json
+      methods: POST
+
+api_task_action:
+    pattern:     /api/task/action/{unid}/{code}
+    defaults: { _controller: TretoPortalBundle:Discussion:task }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_add_tags:
+    pattern:    /api/tags/addTags/{unid}
+    defaults: { _controller: TretoPortalBundle:Tag:addTags }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_get_tags:
+    pattern:    /api/tags/getTags
+    defaults: { _controller: TretoPortalBundle:Tag:getTags }
+    requirements:
+      _format: json
+      methods: GET
+
+api_item_discus_delete_tag:
+    pattern:    /api/tags/deleteTag/{unid}
+    defaults: { _controller: TretoPortalBundle:Tag:deleteTag }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_list_tags:
+    pattern:    /api/tags/tagsList
+    defaults: { _controller: TretoPortalBundle:Tag:tagsList }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_list_my_tags:
+    pattern:    /api/tags/myTagsList
+    defaults: { _controller: TretoPortalBundle:Tag:myTagsList }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_list_popular_tags:
+    pattern:    /api/tags/popularTagsList
+    defaults: { _controller: TretoPortalBundle:Tag:popularTagsList }
+    requirements:
+      _format: json
+      methods: POST
+
+api_item_discus_find_by_tag:
+    pattern:    /api/tags/findByTag
+    defaults: { _controller: TretoPortalBundle:Tag:findByTag }
+    requirements:
+      methods: GET
+
+api_item_discus_delete_tag_completely:
+    pattern:    /api/tags/deleteTagCompletely
+    defaults: { _controller: TretoPortalBundle:Tag:deleteTagCompletely }
+    requirements:
+      _format: json
+      methods: POST
+
+api_doc_diff:
+    pattern:     /api/discussion/diff/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:diff }
+    requirements:
+      _format: json
+      methods: POST
+      
+api_id_to_subject:
+    path: /api/discussion/id-to-subject
+    defaults: { _controller: TretoPortalBundle:Discussion:idToSubject }
+
+api_contact_discus:
+    path:     /api/discussion/contact
+    defaults: { _controller: TretoPortalBundle:Discussion:contact }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_discus_get:
+    pattern:     /api/discussion/contact/get/{id}
+    defaults: { _controller: TretoPortalBundle:Discussion:contact }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_groups:
+    path:     /api/contact/groups
+    defaults: { _controller: TretoPortalBundle:Contact:groups }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_list:
+    path:     /api/contact/list
+    defaults: { _controller: TretoPortalBundle:Contact:list }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_item:
+    pattern:  /api/contact/item/{id}
+    defaults: { _controller: TretoPortalBundle:Contact:item }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_delete:
+    path:     /api/contact/delete
+    defaults: { _controller: TretoPortalBundle:Contact:delete }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_permanentDelete:
+    path:     /api/contact/permanentDelete
+    defaults: { _controller: TretoPortalBundle:Contact:permanentDelete }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_undelete:
+    path:     /api/contact/undelete
+    defaults: { _controller: TretoPortalBundle:Contact:undelete }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_setold:
+    path:     /api/contact/setold
+    defaults: { _controller: TretoPortalBundle:Contact:setOld }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_accepted:
+    path:     /api/contact/accepted
+    defaults: { _controller: TretoPortalBundle:Contact:accepted }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_linkEmplToOrg:
+    path: /api/contact/linkEmplToOrg/{personUnid}/{orgUnid}
+    defaults: { _controller: TretoPortalBundle:Contact:linkEmplToOrg }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_removeLinkEmplToOrg:
+    path: /api/contact/removeEmplFromOrg/{personUnid}/{orgUnid}
+    defaults: { _controller: TretoPortalBundle:Contact:removeEmplFromOrg }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_save:
+    path:     /api/contact/save
+    defaults: { _controller: TretoPortalBundle:Contact:save }
+    requirements:
+      _format: json
+      methods: POST
+
+api_contact_find:
+    path:     /api/contact/find
+    defaults: { _controller: TretoPortalBundle:Contact:find }
+    requirements:
+      _format: json
+      methods: POST
+
+api_history_list:
+    path:     /api/history/list
+    defaults: { _controller: TretoPortalBundle:HistoryLog:list }
+    requirements:
+      _format: json
+      methods: GET
+
+api_history_add:
+    path:     /api/history/add
+    defaults: { _controller: TretoPortalBundle:HistoryLog:addHistory }
+    requirements:
+      _format: json
+      methods: POST
+
+api_history_add_full:
+    path:     /api/history/add_full/{type}/{docid}
+    defaults: { _controller: TretoPortalBundle:HistoryLog:addHistoryFull }
+    requirements:
+      _format: json
+      methods: POST
+
+api_history_get:
+    path:     /api/history/get/{docid}
+    defaults: { _controller: TretoPortalBundle:HistoryLog:getHistory }
+    requirements:
+      _format: json
+      methods: GET
+
+api_dictionaries_get:
+    pattern: /api/dictionaries/get/{type}
+    defaults: { _controller: TretoPortalBundle:Admin:getDictionary }
+    requirements:
+      _format: json
+      methods: GET
+
+api_add_prototype:
+    pattern: /api/dictionaries/add/prototype
+    defaults: { _controller: TretoPortalBundle:Admin:addPrototype }
+    requirements:
+      _format: json
+      methods: GET
+
+api_dictionaries_set:
+    pattern: /api/dictionaries/set/{type}
+    defaults: { _controller: TretoPortalBundle:Admin:setDictionary }
+    requirements:
+      _format: json
+      methods: POST
+
+api_get_usernames_for_section:
+    pattern: /api/get-usernames-for-section
+    defaults: { _controller: TretoPortalBundle:Portal:getUsernamesForSection }
+    requirements:
+      methods: POST
+
+old_reference:
+    pattern: /portal.nsf/{link}
+    defaults: { _controller: TretoPortalBundle:Default:oldReference }
+
+periodic:
+    path: /periodic
+    defaults: { _controller: TretoPortalBundle:Default:periodic }
+
+discounts:
+    path: /discounts
+    defaults: { _controller: TretoPortalBundle:Default:discounts }
+
+exportContactsTo1C:
+    path: /exportcontactsto1c
+    defaults: { _controller: TretoPortalBundle:Default:exportContactsTo1C }
+
+checkTestPeriod:
+    path: /checktestperiod
+    defaults: { _controller: TretoPortalBundle:Default:checkTestPeriod }
+
+getUserUnid:
+    path: /getUsersInfo
+    defaults: { _controller: TretoPortalBundle:Default:getEmplsUnid }
+
+api_batch_request:
+    path: /api/batch-request
+    defaults: { _controller: TretoPortalBundle:Default:batchRequest }
+    requirements:
+      _format: json
+      methods: POST
+
+api_serp_search:
+    path:     /api/serp/search
+    defaults: { _controller: TretoPortalBundle:Serp:search }
+    requirements:
+      methods: GET
+
+api_serp_elasearch:
+    path:     /api/serp/elasearch
+    defaults: { _controller: TretoPortalBundle:Serp:elasearch }
+    requirements:
+      methods: GET
+
+api_autocomplete_contacts_elasearch:
+    path:     /api/serp/contact_auto
+    defaults: { _controller: TretoPortalBundle:Serp:contactAuto }
+    requirements:
+      methods: GET
+
+api_autocomplete_elasearch:
+    path:     /api/serp/autocomplete
+    defaults: { _controller: TretoPortalBundle:Serp:autocomplete }
+    requirements:
+      methods: GET
+
+api_security_set:
+    pattern: /api/security/set/{id}
+    defaults: { _controller: TretoPortalBundle:Admin:setSecurity }
+    requirements:
+      _format: json
+      methods: POST
+
+api_stat_get_likes:
+    path:     /api/stat/getLikes
+    defaults: { _controller: TretoPortalBundle:Stat:getLikes }
+    requirements:
+      _format: json
+      methods: GET
+
+api_stat_get_dislikes:
+    path:     /api/stat/getDislikes
+    defaults: { _controller: TretoPortalBundle:Stat:getDislikes }
+    requirements:
+      _format: json
+      methods: GET
+
+api_stat_get_popular_themes:
+    path:     /api/stat/getPopularThemes
+    defaults: { _controller: TretoPortalBundle:Stat:getPopularThemes }
+    requirements:
+      _format: json
+      methods: GET
+
+api_stat_get_main_stat:
+    path:     /api/stat/getMainStat
+    defaults: { _controller: TretoPortalBundle:Stat:getMainStat }
+    requirements:
+      _format: json
+      methods: GET
+
+api_stat_get_messages_by_user:
+    path:     /api/stat/getMessagesByUser/{query}
+    defaults: { _controller: TretoPortalBundle:Stat:getMessagesByUser, query: '' }
+    requirements:
+      _format: json
+      methods: GET
+
+api_stat_get_stat:
+    path:     /api/stat/get/stat
+    defaults: { _controller: TretoPortalBundle:Stat:stat }
+    requirements:
+      _format: json
+      methods: GET
+      
+api_stat_log_click:
+    path:     /api/stat/logClick
+    defaults: { _controller: TretoPortalBundle:Stat:logClick }
+    requirements:
+      _format: json
+      methods: POST
+
+api_stat_get_click_logs:
+    path:     /api/stat/getClickStat
+    defaults: { _controller: TretoPortalBundle:Stat:getClickStat }
+    requirements:
+      _format: json
+      methods: GET
+
+old_reference:
+    pattern: /portal.nsf/{link}
+    defaults: { _controller: TretoPortalBundle:Default:oldReference }
+
+file_system_list:
+    pattern: /api/fs/list/{clct}/{unid}
+    defaults: { _controller: TretoPortalBundle:FileSystem:list }
+
+file_system_add_record:
+    pattern: /api/fs/addRecord/{clct}/{unid}
+    defaults: { _controller: TretoPortalBundle:FileSystem:addRecord }
+
+file_src:
+    pattern: /api/fs/src/{hash}
+    defaults: { _controller: TretoPortalBundle:FileSystem:src }
+
+file_data:
+    pattern: /api/fs/data/{runid}
+    defaults: { _controller: TretoPortalBundle:FileSystem:display }
+
+thumb_src:
+    pattern: /api/fs/thumbnail/{hash}
+    defaults: { _controller: TretoPortalBundle:FileSystem:thumbnail }
+
+file_system_remove_reference:
+    pattern: /api/fs/remove-reference/{hash}/{runid}
+    defaults: { _controller: TretoPortalBundle:FileSystem:removeReference }
+
+work_plans_request:
+    pattern: /api/wp/section/{tag}/{dateTag}
+    defaults: { _controller: TretoPortalBundle:WorkPlan:section }
+
+work_plans_user_request:
+    pattern: /api/wp/user/{userUnid}/{dateTag}
+    defaults: { _controller: TretoPortalBundle:WorkPlan:user }
+
+work_plan_save:
+    pattern: /api/wp/save/{unid}/{dateTag}
+    defaults: { _controller: TretoPortalBundle:WorkPlan:save }
+    requirements:
+      _format: json
+      methods: POST
+
+api_adaptation_list:
+    path: /api/adaptation/list
+    defaults: { _controller: TretoPortalBundle:Discussion:adaptationList }
+    requirements:
+      _format: json
+
+api_question_get_criterions:
+    path: /api/question/criterions
+    defaults: { _controller: TretoPortalBundle:Question:getCriterions }
+    requirements:
+      _format: json
+      methods: GET
+
+api_question_get_questionaries:
+    path: /api/question/questionaries
+    defaults: { _controller: TretoPortalBundle:Question:getQuestionaries }
+    requirements:
+      _format: json
+      methods: GET
+
+api_question_set:
+    path: /api/question/set
+    defaults: { _controller: TretoPortalBundle:Question:set }
+    requirements:
+      _format: json
+      methods: POST
+
+api_question_del:
+    path: /api/question/del/{unid}
+    defaults: { _controller: TretoPortalBundle:Question:del }
+    requirements:
+      _format: json
+      methods: POST
+
+api_mail_send_questionary:
+    path: /api/mail/send-questionary
+    defaults: { _controller: TretoPortalBundle:Mail:sendQuestionary }
+    requirements:
+      _format: json
+      methods: GET
+
+api_contact_send_profile:
+    path: /api/contact/send-profile/{login}
+    defaults: { _controller: TretoPortalBundle:Contact:sendProfile }
+    requirements:
+      _format: json
+      methods: GET
+
+#robo module routes
+api_1c_reception:
+    path: /api/v1/1c/reception
+    defaults: { _controller: TretoPortalBundle:v1\C1:reception }
+    requirements:
+      methods: POST
+
+mailToContact:
+    path: /mailToContact
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:mailToContact }
+
+api_discuss_set_theme:
+    path: /api/v1/discuss/set/theme
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:setTheme }
+    requirements:
+      methods: POST
+
+api_discuss_full_update:
+    path: /api/v1/discuss/update/full
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:fullUpdate }
+    requirements:
+      methods: POST
+
+api_discuss_set_history:
+    path: /api/v1/discuss/setHistory
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:setHistory }
+    requirements:
+      methods: POST
+
+api_discuss_update_theme:
+    path: /api/v1/discuss/update/theme
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:updateTheme }
+    requirements:
+      methods: POST
+
+api_discuss_checkHash:
+    path: /api/v1/discuss/checkHash
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:checkHash }
+    requirements:
+      methods: POST
+
+api_discuss_get_comment:
+    path: /api/v1/discuss/get/comment
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:getComment }
+    requirements:
+      methods: POST
+
+api_discuss_create_comment:
+    path: /api/v1/discuss/createComment
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:createComment }
+    requirements:
+      methods: POST
+
+api_discuss_get_participants:
+    path: /api/v1/discuss/getParticipants
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:getParticipants }
+    requirements:
+      _format: json
+
+api_check_document:
+    path: /api/v1/discuss/check/document
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:checkDocument }
+    requirements:
+      _format: json
+
+api_questionary_get:
+    path: /api/v1/questionary/get
+    defaults: { _controller: TretoPortalBundle:Question:getQuestionary }
+    requirements:
+      _format: json
+      methods: GET
+
+api_questionary_set:
+    path:     /api/v1/questionary/set
+    defaults: { _controller: TretoPortalBundle:v1\Question:set }
+    requirements:
+      _format: json
+      methods: POST
+
+api_discuss_set_task:
+    path: /api/v1/discuss/set/task
+    defaults: { _controller: TretoPortalBundle:v1\Discuss:setTask }
+    requirements:
+      methods: POST
+
+api_contact_set:
+    path: /api/v1/contact/set
+    defaults: { _controller: TretoPortalBundle:v1\Contact:set }
+    requirements:
+      methods: POST
+
+api_contacts_get:
+    path: /api/v1/contacts/get
+    defaults: { _controller: TretoPortalBundle:v1\Contact:get }
+    requirements:
+      methods: POST
+
+api_contact_v1_update:
+    path: /api/v1/contact/update
+    defaults: { _controller: TretoPortalBundle:v1\Contact:update }
+    requirements:
+      methods: POST
+
+api_contact_v1_remove:
+    path: /api/v1/contact/remove/{unid}
+    defaults: { _controller: TretoPortalBundle:Contact:remove }
+    requirements:
+          _format: json
+
+api_taskHistory_set:
+    path: /api/taskHistory/set/{id}
+    defaults: { _controller: TretoPortalBundle:TaskHistory:set }
+    requirements:
+      methods: POST
+
+api_notif_load:
+    pattern: /api/notif/load/{login}
+    defaults: { _controller: TretoPortalBundle:Notif:notifLoad }
+      
+api_notif_add_to users:
+    pattern: /api/notif/addNotifToUsers
+    defaults: { _controller: TretoPortalBundle:Discussion:addNotifToUsers }
+    requirements:
+      _format: json
+      methods: POST
+
+api_notif_delay:
+    pattern: /api/notif/delay/{id}/{time}
+    defaults: { _controller: TretoPortalBundle:Notif:notifDelay, id: '', time: 30 }
+    requirements:
+      _format: json
+
+api_notif_mark_as_read:
+    pattern:     /api/notif/markAsRead
+    defaults: { _controller: TretoPortalBundle:Notif:markAsRead }
+    requirements:
+      _format: json
+      methods: POST
+
+api_mark_as_read_forced:
+    pattern:     /api/notif/markAsReadForced/{login}/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:markAsReadForced }
+    requirements:
+      _format: json
+      methods: POST
+
+api_mark_as_read_mail:
+    pattern:     /api/unreaded/removeMailNotify
+    defaults: { _controller: TretoPortalBundle:Discussion:removeMailNotify }
+    requirements:
+      _format: json
+      methods: POST
+      
+api_notif_unurge:
+    pattern:     /api/notif/unurgeNotif/{login}/{unid}
+    defaults: { _controller: TretoPortalBundle:Discussion:unurgeForced }
+    requirements:
+      _format: json
+      methods: POST
+
+api_c1logs_get:
+    pattern: /api/c1logs
+    defaults: { _controller: TretoPortalBundle:Admin:getC1Logs }
+    requirements:
+        methods: POST
+
+set_mail_access:
+    path: /mailAccessSet
+    defaults: { _controller: TretoUserBundle:User:mailAccessSet }
+
+get_site_auth_config:
+    path: /getSiteAuthConfig
+    defaults: { _controller: TretoUserBundle:User:getSiteAuthConfig }
+
+api_jivosite_webhook:
+    path: /jivosite/webhook
+    defaults: { _controller: TretoPortalBundle:JivoSite:webhook }
+
+api_collection_get_last_three:
+    path: /api/teCollection/getLastThree
+    defaults: { _controller: TretoPortalBundle:TECollection:getLastThree }
+    requirements:
+      _format: json
+      methods: GET
+
+api_collection_get_collections:
+    path: /api/teCollection/getCollections
+    defaults: { _controller: TretoPortalBundle:TECollection:getCollections }
+    requirements:
+      _format: json
+      methods: GET
+
+api_get_all_portal_settings:
+    path: /api/portalSettings/get
+    defaults: { _controller: TretoPortalBundle:PortalSettings:get }
+    requirements:
+      _format: json
+      methods: GET
+
+api_set_all_portal_settings:
+    path: /api/portalSettings/set
+    defaults: { _controller: TretoPortalBundle:PortalSettings:set }
+    requirements:
+      _format: json
+      methods: GET
+
+api_check_portal_settings:
+    path: /api/portalSettings/check
+    defaults: { _controller: TretoPortalBundle:PortalSettings:check }
+    requirements:
+      _format: json
+      methods: POST
+
+api_get_all_share_users:
+    path: /api/portalSettings/getShareUsers
+    defaults: { _controller: TretoPortalBundle:PortalSettings:getAllActiveShareUsers }
+    requirements:
+      _format: json
+      methods: GET

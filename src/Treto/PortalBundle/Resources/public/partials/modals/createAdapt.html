@@ -1,0 +1,568 @@
+<div class="edit-doc center">
+  <div id="adapt-modal" class="container text-s12 panel marbot0 pad0force" ng-controller="modalCreateAdaptCtrl" style="position: relative;">
+    <a class="close pull-right marright5"
+       ng-click="close()"
+       style="position: absolute;top: 5px;right: 0;z-index: 1001"
+       title="Закрыть"
+       log-click="Адаптационный лист::Кнопка <Закрыть> в окне создания адаптационного листа">
+      <i class="material-icons">close</i>
+    </a>
+    <section class="modal-body padbot0">
+      <div class="text-s16">
+        Адаптационный лист
+      </div>
+    </section>
+    <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+      <input type="text" style="display:none">
+      <input type="password" style="display:none">
+      <div style="overflow-y:auto;overflow-x:hidden;">
+        <section class="modal-body padtop0 pos-static">
+          <article class="row">
+            <div class="col-lg-12">
+              <input name="inputLastName"
+                     class="form-control input-sm padleft0 text-s13 martop10"
+                     type="text"
+                     placeholder="Фамилия"
+                     ng-model="doc.LastName"
+                     required
+                     ng-change="doc._meta.adaptation.fillNames()"
+                     log-click="Адаптационный лист::Поле <Фамилия> в окне создания адаптационного листа"/>
+              <ng-messages ng-show="submitted" for="modalForm.inputLastName.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Фамилия должна быть указана.</ng-message>
+              </ng-messages>
+              <input name="inputMiddleName"
+                     class="form-control input-sm padleft0 text-s13 martop10"
+                     type="text"
+                     placeholder="Отчество"
+                     ng-model="doc.MiddleName"
+                     required
+                     ng-change="doc._meta.adaptation.fillNames()"
+                     log-click="Адаптационный лист::Поле <Отчество> в окне создания адаптационного листа"/>
+              <ng-messages ng-show="submitted" for="modalForm.inputMiddleName.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Отчество должно быть указано.</ng-message>
+              </ng-messages>
+              <div class="input-group martop10">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Дата рождения:</label>
+                <p class="p-underlined bgr-calendar">
+                  <new-datepicker date-min-limit="1900/01/01">
+                    <input prevent-keyboard-input
+                           ng-model="DtBirth"
+                           type="text"
+                           ng-change="doc.Birthday=$root.convertObjDateToStr(DtBirth); DtBirth=$root.localizeDate(DtBirth);"
+                           log-click="Адаптационный лист::Выбор даты <Дата рождения> в окне создания адаптационного листа"/>
+                  </new-datepicker>
+                </p>
+                <ng-messages ng-show="submitted" for="modalForm.inputDtBirth.$error" class="required-warning" ng-click="submitted = false">
+                  <ng-message when="required">Дата рождения должна быть указана.</ng-message>
+                </ng-messages>
+              </div>
+              <div class="input-group underlined height47">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Подразделение:</label>
+                <div class="width100per height27 btn-group" uib-dropdown>
+                <button type="button"
+                        class="btn btn-default dropdown-toggle dropdown-style"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        log-click="Адаптационный лист::Меню <Подразделение> в окне создания адаптационного листа">
+                  {{ doc._meta.adaptation.departmentDict.getRecordValue(doc.Department) }} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu text-s11">
+                  <li ng-repeat="d in doc._meta.adaptation.departmentDict.records">
+                    <a title="d.key" href ng-click="doc.Department = d.key">{{ d.value }}</a>
+                  </li>
+                  <li class="divider"></li>
+                  <li ng-show="role('PM')">
+                    <a target="_blank"
+                       href ui-sref="body.adminDictionary({ type: 'Department' })"
+                       log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Подразделение> в окне создания адаптационного листа">Администрирование словаря</a>
+                  </li>
+                </ul>
+                </div>
+              </div>
+              <div class="input-group underlined height47">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Имя компании:</label>
+                <div class="width100per height27 btn-group" uib-dropdown>
+                  <button id="companyName"
+                          type="button"
+                          class="btn btn-default dropdown-toggle dropdown-style"
+                          data-toggle="dropdown"
+                          uib-dropdown-toggle
+                          log-click="Адаптационный лист::Меню <Имя компании> в окне создания адаптационного листа">
+                    {{ doc._meta.adaptation.companyNameDict.getRecordValue(doc.companyName) }} <span class="caret"></span>
+                  </button>
+
+                  <ul class="dropdown-menu text-s11">
+                    <li ng-repeat="d in doc._meta.adaptation.companyNameDict.records">
+                      <a title="{{d.value}}" href ng-click="doc.companyName = d.key">{{ d.value }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                      <a target="_blank"
+                         href ui-sref="body.adminDictionary({ type: 'companyName' })"
+                         log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Имя компании> в окне создания адаптационного листа">Администрирование словаря</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="input-group martop10">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Дата приёма на работу:</label>
+                <p class="p-underlined bgr-calendar">
+                  <new-datepicker date-min-limit="1990/01/01">
+                    <input prevent-keyboard-input
+                           ng-model="DtWork"
+                           type="text"
+                           ng-change="doc.DtWork=$root.convertObjDateToStr(DtWork); DtWork=$root.localizeDate(DtWork);"
+                           log-click="Адаптационный лист::Выбор даты <Дата приёма на работу> в окне создания адаптационного листа"/>
+                  </new-datepicker>
+                </p>
+              </div>
+              <div class="input-group underlined">
+                <label for="inputLogin" class="input-group-addon no-border no-background text-s12 padleft0">Логин:</label>
+                <input type="text"
+                       required
+                       ng-model="doc.Login"
+                       id="inputLogin"
+                       name="inputLogin"
+                       class="form-control text-s12 no-border"
+                       log-click="Адаптационный лист::Поле <Логин> в окне создания адаптационного листа"/>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.inputLogin.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Логин должен быть указан.</ng-message>
+              </ng-messages>
+              <div class="input-group underlined">
+                <label for="inputPass" class="input-group-addon no-border no-background text-s12 padleft0">Пароль:</label>
+                <input type="text"
+                       required
+                       ng-model="doc.Password"
+                       id="inputPass"
+                       name="inputPass"
+                       class="form-control text-s12 no-border"
+                       log-click="Адаптационный лист::Поле <Пароль> в окне создания адаптационного листа"/>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.inputPass.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Пароль должен быть указан.</ng-message>
+              </ng-messages>
+              <div class="input-group underlined">
+                <label for="last-name" class="input-group-addon no-border no-background text-s12 padleft0">E-mail:</label>
+                <input type="email"
+                       ng-model="doc.Email"
+                       id="last-name"
+                       class="form-control text-s12 no-border"
+                       log-click="Адаптационный лист::Поле <E-mail> в окне создания адаптационного листа"/>
+              </div>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span title="Перенаправлять почту на:" ng-if="doc.redirectMailTo">
+                  <span class="participant-element">
+                    <span>{{doc.redirectMailToTemp}}</span>
+                    <a href ng-click="doc.redirectMailTo = undefined;">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.redirectMailTo"
+                         type="text"
+                         ng-init="doc.redirectMailToTemp"
+                         ng-model="doc.redirectMailToTemp"
+                         id="redirectMailTo"
+                         placeholder="Перенаправлять почту на"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.redirectMailTo = $item.id; doc.redirectMailToTemp = $item.name;"
+                         autocomplete="off"
+                         name="inputManager"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Перенаправлять почту на> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <div class="input-group underlined">
+                <label for="privateEmail" class="input-group-addon no-border no-background text-s12 padleft0">Личный E-mail:</label>
+                <input type="text"
+                       required
+                       ng-model="doc.PrivateEmail"
+                       id="privateEmail"
+                       name="privateEmail"
+                       class="form-control text-s12 no-border"
+                       log-click="Адаптационный лист::Поле <Личный E-mail> в окне создания адаптационного листа"/>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.privateEmail.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Личный E-mail должен быть указан.</ng-message>
+              </ng-messages>
+            </div>
+            <div class="col-lg-12">
+              <input name="inputFirstName"
+                     class="form-control input-sm padleft0 text-s13 martop10"
+                     type="text"
+                     placeholder="Имя"
+                     ng-model="doc.name"
+                     required
+                     ng-change="doc._meta.adaptation.fillNames()"
+                     log-click="Адаптационный лист::Поле <Имя> в окне создания адаптационного листа"/>
+              <ng-messages ng-show="submitted" for="modalForm.inputFirstName.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Имя должно быть указано.</ng-message>
+              </ng-messages>
+              <div class="martop10" ng-init="doc.Sex = doc.Sex?doc.Sex:0">
+                <span>Пол</span>
+                <input type="radio" name="sex" id="sex-men" value="1" ng-model="doc.Sex"
+                       log-click="Адаптационный лист::Переключатель <Пол> в окне создания адаптационного листа"/>
+                <label for="sex-men">Мужской</label>
+                <input type="radio" name="sex" id="sex-women" value="2" ng-model="doc.Sex"
+                       log-click="Адаптационный лист::Переключатель <Пол> в окне создания адаптационного листа"/>
+                <label for="sex-women">Женский</label>
+              </div>
+              <div class="input-group underlined height47">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Должность:</label>
+                <div class="width100per height27 btn-group" uib-dropdown auto-close="outsideClick">
+                  <button type="button"
+                          uib-tooltip="Минимум одна должность должна быть выбрана."
+                          tooltip-trigger="none"
+                          tooltip-is-open="WorkGroupTooltip"
+                          tooltip-placement="top-left"
+                          class="btn btn-default dropdown-toggle dropdown-style"
+                          data-toggle="dropdown"
+                          uib-dropdown-toggle
+                          log-click="Адаптационный лист::Меню <Должность> в окне создания адаптационного листа">
+                    {{ doc.WorkGroup.join(', ') }} <span class="caret"></span>
+                  </button>
+
+                  <ul class="dropdown-menu text-s11 left-inherit maxheight600 minwidth250 overflow-auto" uib-dropdown-menu>
+                    <li ng-repeat="s in doc._meta.adaptation.positionsDict.records">
+                      <md-checkbox ng-click="multiselectHelper.selectCheckbox(doc, 'WorkGroup', s)"
+                             ng-checked="doc.WorkGroup.indexOf(s.value) !== -1">{{ s.value }}</md-checkbox>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                      <a target="_blank"
+                         href ui-sref="body.adminDictionary({ type: 'Positions' })"
+                         log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Должность> в окне создания адаптационного листа">Администрирование словаря</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="workGroup">Должность должна быть выбрана.</ng-message>
+              </ng-messages>
+
+              <div class="input-group underlined height47 martop6">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Отдел:</label>
+                <div ng-show="submitted && doc.section.length == 0" class="required-warning" ng-click="submitted = false">
+                  <span>Отдел должен быть указан.</span>
+                </div>
+                <div class="width100per height27 btn-group" uib-dropdown auto-close="outsideClick">
+                  <button ng-init="doc.section = [];"
+                          type="button"
+                          class="btn btn-default dropdown-toggle dropdown-style"
+                          data-toggle="dropdown"
+                          uib-dropdown-toggle
+                          log-click="Адаптационный лист::Меню <Отдел> в окне создания адаптационного листа">
+                    {{ doc.section.join(', ') }} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu text-s11" uib-dropdown-menu>
+                    <li ng-repeat="s in doc._meta.adaptation.sectionDict.records">
+                      <md-checkbox ng-click="multiselectHelper.selectCheckbox(doc, 'section', s.value)"
+                                   ng-checked="doc.section.indexOf(s.value) !== -1">{{ s.value }}</md-checkbox>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                      <a target="_blank"
+                         href ui-sref="body.adminDictionary({ type: 'Section' })"
+                         log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Отдел> в окне создания адаптационного листа">Администрирование словаря</a>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+              <div class="input-group martop10">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Окончание испытательного срока:</label>
+                <p class="p-underlined bgr-calendar">
+                  <new-datepicker date-min-limit="1990/01/01">
+                    <input prevent-keyboard-input
+                           ng-model="DtTest"
+                           type="text"
+                           ng-change="doc.TestPeriod=$root.convertObjDateToStr(DtTest); DtTest=$root.localizeDate(DtTest);"
+                           log-click="Адаптационный лист::Выбор даты <Окончание испытательного срока> в окне создания адаптационного листа"/>
+                  </new-datepicker>
+                </p>
+              </div>
+              <div class="input-group underlined">
+                <label for="inputLogin" class="input-group-addon no-border no-background text-s12 padleft0">Оклад:</label>
+                <input type="text"
+                       required
+                       ng-model="doc.Salary"
+                       id="inputSalary"
+                       name="inputSalary"
+                       class="form-control text-s12 no-border"
+                       log-click="Адаптационный лист::Поле <Оклад> в окне создания адаптационного листа"/>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.inputSalary.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Оклад должен быть указан.</ng-message>
+              </ng-messages>
+              <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="Salary">Оклад должен быть числом.</ng-message>
+              </ng-messages>
+              <div class="input-group underlined height47">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Валюта:</label>
+                <div class="width100per height27 btn-group" uib-dropdown>
+                  <button type="button"
+                          class="btn btn-default dropdown-toggle dropdown-style"
+                          data-toggle="dropdown"
+                          uib-dropdown-toggle
+                          log-click="Адаптационный лист::Меню <Валюта> в окне создания адаптационного листа">
+                    {{ doc._meta.adaptation.currencyDict.getRecordValue(doc.currency) }} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu text-s11">
+                    <li ng-repeat="d in doc._meta.adaptation.currencyDict.records">
+                      <a title="d.key" href ng-click="doc.currency = d.key">{{ d.value }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                      <a target="_blank"
+                         href ui-sref="body.adminDictionary({ type: 'Currency' })"
+                         log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Валюта> в окне создания адаптационного листа">Администрирование словаря</a>
+                    </li>
+                  </ul>
+                </div>
+                <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false">
+                  <ng-message when="Currency">Выберите валюту.</ng-message>
+                </ng-messages>
+              </div>
+              <div class="input-group underlined height47">
+                <label class="input-group-addon no-border no-background text-s12 padleft0">Страна:</label>
+                <div class="width100per height27 btn-group" uib-dropdown>
+                  <button type="button"
+                          class="btn btn-default dropdown-toggle dropdown-style"
+                          data-toggle="dropdown"
+                          uib-dropdown-toggle
+                          log-click="Адаптационный лист::Меню <Страна> в окне создания адаптационного листа">
+                    {{ doc._meta.adaptation.countries.getRecordValue(doc.Country) }} <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu text-s11" style="height:300px; overflow-y: auto; width: 200px;">
+                    <li ng-repeat="d in doc._meta.adaptation.countries.records">
+                      <a title="d.key" href ng-click="doc.Country = d.key">{{ d.value }}</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li ng-show="role('PM')">
+                      <a target="_blank"
+                         href ui-sref="body.adminDictionary({ type: 'Country' })"
+                         log-click="Адаптационный лист::Пункт <Администрирование словаря> в меню <Страна> в окне создания адаптационного листа">Администрирование словаря</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="Country">Страна должна быть указана.</ng-message>
+              </ng-messages>
+            </div>
+          </article>
+          <article class="row">
+            <div class="col-lg-12 pos-static">
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.Manager" title="Руководитель">
+                  <span class="participant-element">
+                    <span>{{doc.TempManager}}</span>
+                    <a href ng-click="doc.Manager = undefined; doc.TempManager = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить руководителя> в окне создания адаптационного листа">
+                       &times;
+                    </a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.Manager"
+                         required
+                         type="text"
+                         ng-model="doc.TempManager"
+                         id="manager"
+                         placeholder="Руководитель"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.Manager = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempManager = $item.name;"
+                         autocomplete="off"
+                         name="inputManager"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Руководитель> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <ng-messages ng-show="submitted" for="modalForm.inputManager.$error" class="required-warning" ng-click="submitted = false">
+                <ng-message when="required">Руководитель должен быть указан.</ng-message>
+                <ng-message when="parse">Руководитель должен быть указан.</ng-message>
+              </ng-messages>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.Coucher" title="Коучер">
+                <span class="participant-element">
+                  <span>{{doc.TempCoucher}}</span>
+                  <a href ng-click="doc.Coucher = undefined; doc.TempCoucher = undefined;"
+                     log-click="Адаптационный лист::Кнопка <Удалить коучера> в окне создания адаптационного листа">&times;</a>
+                </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.Coucher"
+                         type="text"
+                         ng-model="doc.TempCoucher"
+                         id="coucher"
+                         placeholder="Коучер"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.Coucher = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempCoucher = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Коучер> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.Recruter" title="Рекрутер">
+                  <span class="participant-element">
+                    <span>{{doc.TempRecruter}}</span>
+                    <a href ng-click="doc.Recruter = undefined; doc.TempRecruter = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить рекрутера> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.Recruter"
+                         required type="text"
+                         ng-model="doc.TempRecruter"
+                         id="recruter"
+                         placeholder="Рекрутер"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.Recruter = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempRecruter = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Рекрутер> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.Reference" title="Рекомендатель">
+                  <span class="participant-element">
+                    <span>{{doc.TempReference}}</span>
+                    <a href ng-click="doc.Reference = undefined; doc.TempReference = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить рекомендателя> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.Reference"
+                         type="text"
+                         ng-model="doc.TempReference"
+                         id="reference"
+                         placeholder="Рекомендатель"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.Reference = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempReference = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Рекомендатель> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12 pos-static">
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.HeadIT" title="Начальник IT отдела">
+                  <span class="participant-element">
+                    <span>{{doc.TempHeadIT}}</span>
+                    <a href ng-click="doc.HeadIT = undefined; doc.TempHeadIT = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить начальника IT отдела> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.HeadIT"
+                         required
+                         type="text"
+                         ng-model="doc.TempHeadIT"
+                         id="headIT"
+                         placeholder="Начальник IT отдела"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.HeadIT = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempHeadIT = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Начальник IT отдела> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.ManagerHR" title="Специалист по кадровому делопроизводству">
+                  <span class="participant-element">
+                    <span>{{doc.TempManagerHR}}</span>
+                    <a href ng-click="doc.ManagerHR = undefined; doc.TempManagerHR = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить специалиста по кадровому делопроизводству> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.ManagerHR"
+                         required type="text"
+                         ng-model="doc.TempManagerHR"
+                         id="managerHR"
+                         placeholder="Специалист по кадровому делопроизводству"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.ManagerHR = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempManagerHR = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Специалист по кадровому делопроизводству> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.HeadFin" title="Главный бухгалтер">
+                  <span class="participant-element">
+                    <span>{{doc.TempHeadFin}}</span>
+                    <a href ng-click="doc.HeadFin = undefined; doc.TempHeadFin = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить главного бухгалтера> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.HeadFin"
+                         required
+                         type="text"
+                         ng-model="doc.TempHeadFin"
+                         id="headFin"
+                         placeholder="Главный бухгалтер"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.HeadFin = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempHeadFin = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Главный бухгалтера> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+              <div class="input-group underlined height35 width100per pos-static">
+                <span ng-if="doc.HeadHR" title="Директор по персоналу">
+                  <span class="participant-element">
+                    <span>{{doc.TempHeadHR}}</span>
+                    <a href ng-click="doc.HeadHR = undefined; doc.TempHeadHR = undefined;"
+                       log-click="Адаптационный лист::Кнопка <Удалить директора по персоналу> в окне создания адаптационного листа">&times;</a>
+                  </span>
+                </span>
+                <div class="typeahead-style">
+                  <input ng-if="!doc.HeadHR"
+                         type="text"
+                         ng-model="doc.TempHeadHR"
+                         id="headHR"
+                         placeholder="Директор по персоналу"
+                         uib-typeahead="user.name for user in $root.usersArr | filter:$viewValue"
+                         typeahead-loading="loadingNames"
+                         typeahead-wait-ms="500"
+                         typeahead-on-select="doc.HeadHR = $item.id; discus.addParticipant($item.id, 'username', doc, true); doc.TempHeadHR = $item.name;"
+                         autocomplete="off"
+                         class="input input-sm form-control padleft0 text-s13 no-border"
+                         log-click="Адаптационный лист::Поле <Директор по персоналу> в окне создания адаптационного листа"/>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+        <section class="modal-footer no-border">
+          <md-button type="submit"
+                     ng-click="submitted = true;"
+                     class="btn btn-blue"
+                     value="Сохранить"
+                     log-click="Адаптационный лист::Кнопка <Сохранить> в окне создания адаптационного листа">Сохранить</md-button>
+        </section>
+      </div>
+    </form>
+  </div>
+</div>

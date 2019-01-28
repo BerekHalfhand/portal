@@ -1,0 +1,39 @@
+opm_groupToDictionaries:
+    path: /opm/group-to-dictionaries
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:groupToDictionaries }
+    
+opm_classificatorToDictionaries:
+    path: /opm/classificator-to-dictionaries
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:classificatorToDictionaries }
+    
+opm_emplToUsers:
+    path: /opm/empl-to-users
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:emplToUsers }
+
+opm_attachments:
+    path: /opm/attachments
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:importAttachments }
+    
+opm_propagateManagers:
+    path: /opm/propagate-managers
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:propagateManagers }
+
+opm_changeUsersPassword:
+    path: /opm/change-passwords
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:changePasswordUser }
+    
+opm_taskHistory:
+    path: /opm/taskHistory
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:taskHistory }
+    
+opm_subscribeConvert:
+    path: /opm/subscribeConvert
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:subscribeConvert }
+    
+opm_addDelPartConcert:
+    path: /opm/addDelHistoryPartConvert
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:addDelHistoryPartConvert }
+
+opm_convertContacts:
+    path: /opm/convertcontacts
+    defaults: { _controller: TretoPortalBundle:OldPortalMigration:convertContats }

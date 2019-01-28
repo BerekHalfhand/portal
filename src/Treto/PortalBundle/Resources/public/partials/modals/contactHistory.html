@@ -1,0 +1,28 @@
+<div class="edit-doc center" ng-controller="changeLogCtrl">
+  <div class="container panel">
+  <div class="modal-body">
+    <p class="text-s14">История изменений</p>
+    <ul>
+      <li ng-repeat="item in changeLog">
+        <span>{{item._Date}}</span>
+        <span>{{item._UserShortName || item._UserName}}</span>
+        <ul>
+          <li ng-repeat="(key, val) in item" ng-if="isTypeOf(val)">
+            <span>
+              Изменил значение поля: <span ng-bind="val._Title"></span><br/>
+              <span>Старое значение:</span> "{{val._OldValue}}"<br/>
+              <span>Новое значение:</span> "{{val._NewValue}}"
+            </span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p>
+      <span class="pull-right">
+        <a href class="black" ng-click="$parent.$parent.$parent.showhistoryPopup=false"
+           log-click="Контакты::Кнопка <ОК> в окне создания <История изменений> контакта">OK</a>
+      </span>
+    </p>
+  </div>
+</div>
+</div>

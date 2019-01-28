@@ -1,0 +1,66 @@
+<a href ui-sref="body.criterions.criterion({unid:critUnid})"
+   class="btn btn-default btn-sm"
+   log-click="Банк вопросов::Кнопка <Назад> на странице вопроса">
+   Назад
+</a>
+<div class="pull-right">
+  <a href class="btn btn-default btn-sm"
+     ng-click="save()"
+     ng-show="changeQuest"
+     ng-disabled="!(question.name&&question.Criterions.length > 0)"
+     log-click="Банк вопросов::Кнопка <Сохранить> на странице вопроса">
+     Сохранить
+  </a>
+  <a href class="btn btn-default btn-sm"
+     ng-click="changeQuest=!chagngeQuest"
+     ng-hide="changeQuest"
+     log-click="Банк вопросов::Кнопка <Изменить> на странице вопроса">
+     Изменить
+  </a>
+  <a href class="btn btn-default btn-sm"
+     ng-click="delete()"
+     ng-hide="changeQuest"
+     log-click="Банк вопросов::Кнопка <Удалить> на странице вопроса">
+     Удалить
+  </a>
+</div>
+
+<div ng-hide="changeQuest">
+<h3>Вопрос: <span ng-bind-html="question.name | break2br | nl2br"></span></h3>
+<div>Критерии: <ul class="menu separate">
+  <li ng-repeat="unid in question.Criterions" >
+    <a href ui-sref="body.criterions.criterion({unid:unid})"
+       ng-bind="$parent.criterions[unid].name"
+       log-click="Банк вопросов::Ссылка на критерий на странице вопроса">
+    </a>
+  </li></ul></div>
+<div>Описание: <span ng-bind-html="question.Description | break2br | nl2br"></span></div>
+
+</div>
+
+<div ng-show="changeQuest">
+  <div ng-repeat="crit in criterionsAry()">
+    <md-checkbox
+      id="input_{{crit.unid}}"
+      ng-checked="criterionsForCheck.indexOf(crit.unid)!==-1"
+      ng-bind="crit.name"
+      ng-click="addCriterion(crit.unid)"
+      log-click="Банк вопросов::Галка у критерия в режиме изменения вопроса">
+    </md-checkbox>
+  </div>
+  <div class="row">
+    <div class="col-md-2">Вопрос:</div>
+    <div class="col-md-3">
+      <input type="text" class="form-control input-sm" ng-model="question.name"
+             log-click="Банк вопросов::Поле <Вопрос> в режиме изменения вопроса"/>
+    </div>
+  </div>
+  <div class="row content">
+    <div class="col-md-2">Описание</div>
+    <div class="col-md-10">
+      <textarea rows="3" class="form-control input-sm" ng-model="question.Description"
+                log-click="Банк вопросов::Поле <Описание> в режиме изменения вопроса">
+      </textarea>
+    </div>
+  </div>
+</div>

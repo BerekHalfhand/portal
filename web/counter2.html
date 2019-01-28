@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><meta name="viewport" content="width=device-width"><title>https://ethereum.nyc/web3/index.html</title><link rel="stylesheet" type="text/css" href="counter2_files/viewsource.css"></head><body id="viewsource" class="highlight" style="-moz-tab-size: 4" contextmenu="actions"><pre id="line1"><span></span><span class="doctype">&lt;!DOCTYPE html&gt;</span><span>
+<span id="line2"></span></span><span>&lt;<span class="start-tag">html</span> <span class="attribute-name">lang</span>="<a class="attribute-value">en</a>"&gt;</span><span>
+<span id="line3"></span>  </span><span>&lt;<span class="start-tag">head</span>&gt;</span><span>
+<span id="line4"></span>    </span><span>&lt;<span class="start-tag">title</span>&gt;</span><span>Ethereum Account Explorer built on INFURA</span><span>&lt;/<span class="end-tag">title</span>&gt;</span><span>
+<span id="line5"></span>	</span><span>&lt;<span class="start-tag">script</span> <span class="attribute-name">src</span>="<a class="attribute-value" href="view-source:http://raw.githubusercontent.com/ethereum/web3.js/0.16.0/dist/web3.min.js">http://raw.githubusercontent.com/ethereum/web3.js/0.16.0/dist/web3.min.js</a>"&gt;</span><span></span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line6"></span>	</span><span>&lt;<span class="start-tag">script</span>&gt;</span><span>
+<span id="line7"></span>		web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/MEDIUMTUTORIAL"));
+<span id="line8"></span>
+<span id="line9"></span>		function printAccountBalance() {
+<span id="line10"></span>				var GET = {};
+<span id="line11"></span>				var query = window.location.search.substring(1).split("&amp;");
+<span id="line12"></span>				for (var i = 0, max = query.length; i </span><span>&lt; </span><span>max; i++)
+<span id="line13"></span>				{
+<span id="line14"></span>					if (query[i] === "") // check for trailing &amp; with no param
+<span id="line15"></span>						continue;
+<span id="line16"></span>					var param = query[i].split("=");
+<span id="line17"></span>					GET[decodeURIComponent(param[0])] = decodeURIComponent(param[1] || "");
+<span id="line18"></span>				}
+<span id="line19"></span>				var account = GET.account;
+<span id="line20"></span>
+<span id="line21"></span>				var balanceWei = web3.eth.getBalance(account).toNumber();
+<span id="line22"></span>				var balance = web3.fromWei(balanceWei, 'ether');
+<span id="line23"></span>
+<span id="line24"></span>				document.write('[' + account + ']</span><span>&lt;b</span><span>r&gt;</span><span>&lt;b</span><span>r&gt;')
+<span id="line25"></span>				document.write(balance + ' Ether');			
+<span id="line26"></span>		}
+<span id="line27"></span>	</span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line28"></span>  </span><span>&lt;/<span class="end-tag">head</span>&gt;</span><span>
+<span id="line29"></span>
+<span id="line30"></span>  </span><span>&lt;<span class="start-tag">body</span>&gt;</span><span>
+<span id="line31"></span>  	</span><span>&lt;<span class="start-tag">h2</span>&gt;</span><span>Ethereum Account Explorer built on INFURA</span><span>&lt;/<span class="end-tag">h2</span>&gt;</span><span>
+<span id="line32"></span>	</span><span>&lt;<span class="start-tag">form</span> <span class="attribute-name">method</span>=<a class="attribute-value">GET</a> <span class="attribute-name">action</span>="<a class="attribute-value" href="view-source:https://ethereum.nyc/web3/index.html">index.html</a>"&gt;</span><span>
+<span id="line33"></span>		Enter an account: </span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">type</span>=<a class="attribute-value">text</a> <span class="attribute-name">size</span>=<a class="attribute-value">50</a> <span class="attribute-name">name</span>=<a class="attribute-value">account</a>&gt;</span><span></span><span>&lt;<span class="start-tag">input</span> <span class="attribute-name">type</span>=<a class="attribute-value">submit</a>&gt;</span><span>
+<span id="line34"></span>	</span><span>&lt;/<span class="end-tag">form</span>&gt;</span><span>
+<span id="line35"></span>		</span><span>&lt;<span class="start-tag">br</span>&gt;</span><span>
+<span id="line36"></span>		</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Latest Block: 
+<span id="line37"></span>		</span><span>&lt;<span class="start-tag">script</span>&gt;</span><span>
+<span id="line38"></span>			document.write(web3.eth.blockNumber + "</span><span>&lt;b</span><span>r&gt;</span><span>&lt;b</span><span>r&gt;");	
+<span id="line39"></span>		</span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line40"></span>		</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line41"></span>		</span><span>&lt;<span class="start-tag">p</span>&gt;</span><span>Account Balance:
+<span id="line42"></span>		</span><span>&lt;<span class="start-tag">script</span>&gt;</span><span>
+<span id="line43"></span>			printAccountBalance();
+<span id="line44"></span>		</span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line45"></span>		</span><span>&lt;/<span class="end-tag">p</span>&gt;</span><span>
+<span id="line46"></span>
+<span id="line47"></span>  </span><span>&lt;<span class="start-tag">script</span>&gt;</span><span>
+<span id="line48"></span>  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+<span id="line49"></span>  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+<span id="line50"></span>  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+<span id="line51"></span>  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<span id="line52"></span>
+<span id="line53"></span>  ga('create', 'UA-55627494-1', 'auto');
+<span id="line54"></span>  ga('send', 'pageview');
+<span id="line55"></span>
+<span id="line56"></span>  </span><span>&lt;/<span class="end-tag">script</span>&gt;</span><span>
+<span id="line57"></span>
+<span id="line58"></span>  </span><span>&lt;/<span class="end-tag">body</span>&gt;</span><span>
+<span id="line59"></span></span><span>&lt;/<span class="end-tag">html</span>&gt;</span><span>
+<span id="line60"></span>
+<span id="line61"></span>
+<span id="line62"></span>
+<span id="line63"></span>
+<span id="line64"></span>
+<span id="line65"></span>
+<span id="line66"></span>
+<span id="line67"></span>
+<span id="line68"></span>
+<span id="line69"></span>
+<span id="line70"></span>
+<span id="line71"></span>
+<span id="line72"></span></span></pre><menu type="context" id="actions"><menuitem id="goToLine" label="Go to Line…" accesskey="L"></menuitem><menuitem id="wrapLongLines" label="Wrap Long Lines" type="checkbox"></menuitem><menuitem id="highlightSyntax" label="Syntax Highlighting" type="checkbox" checked="true"></menuitem></menu></body></html>

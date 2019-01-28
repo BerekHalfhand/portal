@@ -1,0 +1,74 @@
+<div class="notif-thread">
+
+  <div ng-if="!discus.progress && discus.main_doc"
+       ng-class="{'theme-highlight': discus.main_doc.form == 'formTask'}"
+       class="msg">
+    <div highlighting-quote
+         id="{{::discus.main_doc.unid}}"
+         ng-click="discus.removeNewPostLabel(doc);"
+         class="cursor-initial main-doc">
+      <document doc="discus.main_doc"></document>
+      <div ng-init="discus.lastComment = doc; doc._meta.lastFullComment = doc;"></div>
+    </div>
+  </div>
+
+  <div ng-repeat="doc in discus.comments | orderBy:'created'"
+       ng-cloak>
+    <div class="divider-text relative"
+         ng-if="discus.archived[doc.unid].count>0">
+      <md-progress-linear ng-show="discus.archived[doc.unid].fetchingProgress > 0" md-mode="determinate" value="{{discus.archived[doc.unid].fetchingProgress}}" style="position: absolute;"></md-progress-linear>
+
+      <span ng-hide="discus.archived[doc.unid].fetchingProgress > 0"
+            ng-click="discus.loadArchive(doc.unid);"
+            class="btn"
+            title="Показать архив сообщений"
+            style="z-index: 0"
+            log-click="Дискуссии::Кнопка <Показать архив сообщений> в дискуссии">
+        В архиве: {{discus.archived[doc.unid]['count']}}
+      </span>
+      <span ng-show="discus.archived[doc.unid].fetchingProgress > 0">Загрузка...</span>
+    </div>
+    <div highlighting-quote
+         from-socket="{{doc.fromSocket}}"
+         id="{{::doc.unid}}"
+         class="msg cursor-initial"
+         ng-click="discus.removeNewPostLabel(doc);"
+         ng-init="previousComment = doc._meta.loadedAsPreviousComment ? doc : discus.lastComment;
+                  doc._meta.timeSinceLastComment = discus.tretoDateTime.iso8601.toDateTime(doc.created)
+                                                 - discus.tretoDateTime.iso8601.toDateTime(previousComment.created);
+                  doc._meta.sameAuthor = previousComment.authorLogin == doc.authorLogin &&
+                                         discus.main_doc.ToSite !== '1';
+                  doc._meta.lastFullComment = doc._meta.loadedAsPreviousComment ||
+                                              previousComment._meta.lastFullComment.form !== 'message' ||
+                                              doc.form !== 'message' ||
+                                              !doc._meta.sameAuthor ||
+                                              doc._meta.timeSinceLastComment > 59999 ?
+                                                doc : previousComment._meta.lastFullComment;
+                  discus.lastComment = doc._meta.loadedAsPreviousComment ? discus.lastComment : doc;"
+         ng-class="{'message-highlight': ($root.$state.params.id == doc.unid || $root.$state.params.id == doc._id),
+                    'theme-highlight': (doc.form!='message' && doc.form!='messagebb' && doc.form!='subTotal'),
+                    'light-message': !doc._meta.loadedAsPreviousComment && doc._meta.lastFullComment.unid !== doc.unid && !doc.shareAuthorLogin,
+                    'full-message': doc._meta.loadedAsPreviousComment || doc._meta.lastFullComment.unid === doc.unid || doc.shareAuthorLogin}"
+         ng-show="doc._meta.lastFullComment.unid === doc.unid ||
+                  discus.expanded[doc._meta.lastFullComment.unid] === true || 
+                  discus.expanded[doc._meta.lastFullComment.unid] === 'attached' ||
+                  discus.expanded[doc._meta.lastFullComment.unid] === 'shown'">
+      <refresher condition="doc.modified">
+        <div ng-if="::(discus.main_doc.ToSite === '1')">
+          <div class="bold red-db4437 padtop10">Внимание! Публичный блог!</div>
+        </div>
+        <div ng-if="::(discus.main_doc.unid != doc.unid) && !discus.progress">
+          <div ng-if="doc.form!='message'&&doc.form!='messagebb'&&doc.form!='subTotal'">
+            <div ng-include="'/bundles/tretoportal/partials/doc_templ/menu/subj-menu.html'"></div>
+          </div>
+          <document doc="::doc"></document>
+        </div>
+      </refresher>
+    </div>
+  </div>
+
+  <div class="fast-reply-wrap">
+    <fast-reply ng-if="!discus.progress && discus.main_doc && !discus.private"></fast-reply>
+  </div>
+
+</div>

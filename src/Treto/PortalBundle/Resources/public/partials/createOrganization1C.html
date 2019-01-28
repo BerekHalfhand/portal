@@ -1,0 +1,13 @@
+<title>Создание организации</title>
+<div class="col-lg-24 panel pad0force container martop10" ng-controller="contactNewOrganizationCtrl">
+    <div class="modal-body padbot0">
+        <div class="row">
+            <div class="col-lg-24">
+                <span class="text-s16">Организация</span>
+            </div>
+        </div>
+    </div>
+    <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+            <div ng-init="isModal = false" ng-include="'/bundles/tretoportal/partials/createOrganizationTempl.html'"></div>
+    </form>
+</div>

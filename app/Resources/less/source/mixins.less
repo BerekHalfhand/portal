@@ -1,0 +1,59 @@
+.animate(@duration: 0.3s){
+	transition: all @duration ease-out;
+}
+
+.translate3d(@x: 0, @y: 0, @z: 0) {
+	transform: translate3d(@x,@y,@z);
+}
+
+.translate(@x: 0, @y: 0) {
+	.translate3d(@x,@y,0);
+}
+
+.rotate(@angle: 0) {
+	transform: rotate(@angle);
+}
+
+.scale(@ratioX: 1, @ratioY: @ratioX) {
+	transform: scale(@ratioX, @ratioY);
+}
+
+.v-align(@align: baseline){
+	display: inline-block;
+	vertical-align: @align;
+}
+
+.pos-cover(){
+	bottom: 0;
+	display: block;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.columns(@count: 2, @width: auto, @gap: 50px){
+	column-count: @count;
+	column-gap: @gap;
+	column-width: @width;
+}
+
+.grabbable{
+	cursor: move;
+	cursor: -webkit-grab;
+	cursor: -o-grab;
+	cursor: -ms-grab;
+	cursor: grab;
+}
+
+.grabbed{
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor: -o-grabbing;
+	cursor: -ms-grabbing;
+	cursor: grabbing;
+}
+
+.circle(){
+	border-radius: 50%;
+}

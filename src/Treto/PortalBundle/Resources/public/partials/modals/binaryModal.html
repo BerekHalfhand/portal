@@ -1,0 +1,20 @@
+<div ctrl-enter="yesfunc()" class ='styledModal likes-modal'>
+    <div class="modal-body">
+      Поставить {{doc._meta.confirmIsLike ? 'лайк' : 'дислайк'}}?
+    </div>
+    <div class="modal-footer">
+        <md-button class="btn btn-blue"
+                   copy-body
+                   ng-click="discus.iLikeThis(doc,doc._meta.confirmIsLike)"
+                   style="color: white;"
+                   log-click="Лайки::Кнопка <Да> во всплывающем окне <Поставить лайк\дизлайк>">
+            Да
+        </md-button>
+        <md-button class="btn btn-gray"
+                   copy-body
+                   ng-click="doc._meta.confirmLike = false;"
+                   log-click="Лайки::Кнопка <Нет> во всплывающем окне <Поставить лайк\дизлайк>">
+            Нет
+        </md-button>
+    </div>
+</div>

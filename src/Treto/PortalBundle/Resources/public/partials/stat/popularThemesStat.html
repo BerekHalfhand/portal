@@ -1,0 +1,90 @@
+<section class="full-page-container">
+    <form class="stat-controlls">
+        <div class="thumbler">
+            <span class="dark-grey">Показать: </span>
+            <a href ui-sref="body.stat({tab: 'popular-themes'})"
+                ng-class="{active: !popularThemesMy}"
+                class="blue radio-link"
+                log-click="Статистика::Переключатель читаемых тем на <общие> на странице статистики">
+                общие
+            </a>,
+            <a href ui-sref="body.stat({tab: 'my-popular-themes'})"
+                ng-class="{active: popularThemesMy}"
+                class="blue radio-link"
+                log-click="Статистика::Переключатель читаемых тем на <мои> на странице статистики">
+                мои
+            </a>
+        </div>
+    </form>
+    <div ng-show="!loadingDailyStat">
+        <table class="modern-table table-fixed popular-themes-stat-table"
+               ng-init="sort.property !== 'countOpenDuringPeriod' ? sortBy('countOpenDuringPeriod') : ''">
+            <thead>
+                <tr>
+                    <th ng-click="sortBy('parsedSubject')"
+                        log-click="Статистика::Сортировка таблицы <топ за неделю> на странице статистики по заголовку темы">
+                        Название
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='parsedSubject'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('countMessDuringPeriod')"
+                        log-click="Статистика::Сортировка таблицы <топ за неделю> на странице статистики по количеству ответов">
+                        Ответы
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='countMessDuringPeriod'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('countOpenDuringPeriod')"
+                        log-click="Статистика::Сортировка таблицы <топ за неделю> на странице статистики по количеству просмотров">
+                        Просмотры
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='countOpenDuringPeriod'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('modified')"
+                        log-click="Статистика::Сортировка таблицы <топ за неделю> на странице статистики по дате последнего сообщения">
+                        Последнее сообщение
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='modified'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                    <th ng-click="sortBy('created')"
+                        log-click="Статистика::Сортировка таблицы <топ за неделю> на странице статистики по дате создания темы">
+                        Дата создания
+                        <md-icon class="sort-toggler"
+                                 ng-if="sort.property==='created'">
+                            {{sort.reverse?'arrow_downward':'arrow_upward'}}
+                        </md-icon>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="theme in popularThemes | orderBy: sort.property : sort.reverse">
+                    <td>
+                        <a href ui-sref="body.discus({ id: theme.unid, type:''  })"
+                            class="blue"
+                            title="{{::($root.usersAll[theme.authorLogin].name || theme.authorLogin)}} ({{theme.created | datetime}})&#010;{{ theme.body }}"
+                            log-click="Статистика::Ссылка на тему в таблице <топ за неделю> на странице статистики">
+                            {{::(theme.parsedSubject === '' ? '[без текста]' : theme.parsedSubject)}}
+                        </a>
+                    </td>
+                    <td>{{::theme.countMessDuringPeriod}}</td>
+                    <td>{{::theme.countOpenDuringPeriod}}</td>
+                    <td>
+                        {{::theme.dateLastMess | datetime}}<br>
+                        <span class="test-s10">{{::theme.authorLastMess}}</span>
+                    </td>
+                    <td>
+                        {{::theme.created | datetime}}<br>
+                        <span class="test-s10">{{::($root.usersAll[theme.authorLogin].name || theme.authorLogin)}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

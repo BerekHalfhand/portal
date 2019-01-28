@@ -1,0 +1,45 @@
+<div ng-if="username==planLogin||override" uib-dropdown is-open="isopen" class="cell-dropdown"><!--ng-if="username==planLogin||override"-->
+  <div class="touch text-center dropdown-toggle wp-cell-default {{classFn(day.label)}}" uib-dropdown-toggle ng-click="$parent.isopen=true" ng-bind="day.label" title="{{day.deputyLogin?'Заместитель '+$root.users[day.deputyLogin].name:''}}" log-click="График работы::Ячейка в таблице графика работы">
+  </div>
+
+  <div class="dropdown-menu list-unstyled wp-menu" role="menu">
+    <li><a class="btn text-left" ng-click="changeStatus('р');$parent.isopen=false;updateFn($parent)">Рабочий</a></li>
+    <li><a class="btn text-left" ng-click="changeStatus('к');$parent.isopen=false;updateFn($parent)">Командировка</a></li>
+    <li><a class="btn text-left" ng-click="changeStatus('в');$parent.isopen=false;updateFn($parent)">Выходной</a></li>
+    <li><a class="btn text-left" ng-click="changeStatus('н');$parent.isopen=false;updateFn($parent)">Не в штате</a></li>
+    <li><a class="btn text-left" ng-click="$parent.isopen=false;selectResponsibleEmpl($event, 'б')">Больничный</a></li>
+    <li><a class="btn text-left" ng-click="$parent.isopen=false;selectResponsibleEmpl($event, 'о')">Отпуск</a></li>
+  </div>
+</div>
+<div uib-dropdown is-open="responsibleEmplMenu" auto-close="disabled" >
+  <ul class="dropdown-menu" style="width: 250px; padding-left: 10px;" uib-dropdown-menu="" role="menu" aria-labelledby="single-button">
+    <form ng-submit="submitted = true;" name="modalForm" ng-init="submitted = false;">
+      <li class="text-s18">{{resType=='б'?'Больничный':'Отпуск'}}</li>
+      <li class="divider"></li>
+      <li>
+        <md-checkbox ng-model="useDeputy" id="deputy-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$parent.$parent.$parent.$index}}" class="in-dropdown" log-click="График работы::Галка <Назначить заместителя> во всплывающем окне в таблице графика работы">Назначить заместителя</md-checkbox>
+      </li>
+      <li ng-show="useDeputy">
+        <md-checkbox ng-checked="deputySal" id="deputySal-{{$parent.$parent.$index}}-{{$parent.$index}}-{{$parent.$parent.$parent.$index}}" class="in-dropdown" log-click="График работы::Галка <С отчислением дохода> во всплывающем окне в таблице графика работы">С отчислением дохода</md-checkbox>
+      </li>
+      <li ng-show="useDeputy">
+        <input date-range-picker style="margin-left: 4px;" type="text" ng-model="datePicker" placeholder="Выбрать период" options="dateOptions" log-click="График работы::Поле <Выбрать период> во всплывающем окне в таблице графика работы"/>
+        <add-participants addhandler="delEmpl = item.id;" removehandler="delEmpl = '';" ngmodel="selEmpl" placeholder="'Сотрудник'"  multiple="false" typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'" hideinfo="true"></add-participants>
+        <ng-messages ng-show="submitted" for="modalForm.$error" class="required-warning" ng-click="submitted = false" style="display: block;">
+          <ng-message when="responsibleEmpl">Заместитель не выбран.</ng-message>
+          <ng-message when="coincidenceNames">Невозможно назначить замещаемого сотрудника заместителем.</ng-message>
+        </ng-messages>
+      </li>
+      <li class="divider"></li>
+      <li role="menuitem" style="text-align: right; padding-right: 10px">
+        <span>
+          <a href="#" ng-click="saveResponsibleEmpl($event, useDeputy, deputySal);" log-click="График работы::Кнопка <Сохранить> во всплывающем окне в таблице графика работы">Сохранить</a>
+          <a href="#" ng-click="cancelResponsibleEmpl($event);" log-click="График работы::Кнопка <Отменить> во всплывающем окне в таблице графика работы">Отменить</a>
+        </span>
+      </li>
+    </form>
+  </ul>
+</div>
+<div ng-if="username!=planLogin&&!override" class="cell-dropdown">
+  <div class="touch text-center {{classFn(day.label)}}" ng-bind="day.label"></div>
+</div>

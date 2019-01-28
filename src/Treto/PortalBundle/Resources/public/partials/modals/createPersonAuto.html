@@ -1,0 +1,130 @@
+<div class="edit-doc center">
+  <div class="container text-s12 panel marbot0 pad0force relative" ng-controller="contactNewPersonAutoCtrl">
+    <button type="button" class="close pull-right marright5"
+            ng-click="close()"
+            style="position: absolute;top: 0;right: 0;z-index: 1001"
+            title="Закрыть"
+            log-click="Контакты::Кнопка <Закрыть> в окне создания авторазбора">&times;</button>
+    <section class="modal-body padbot0 text-s16">
+      Персона
+    </section>
+    <form ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+      <section style="overflow-y:auto;overflow-x:hidden;">
+        <section class="modal-header padbot0">
+          <article class="row form-group levelrow">
+            <div class="col-lg-3 blue martop10">Тип контакта</div>
+            <div class="col-lg-21">
+              <div class="treto-multiselect underlined" uib-dropdown style="position: initial;">
+                <label class="control-label sr-only">Hidden</label>
+                <span class="dropdown-toggle btn-block" style="padding-left: 35px;min-height:29px;width:100%;">
+                  <div ng-show="submitted && !contact.ContactStatus[0]" class="required-warning" ng-click="submitted = false">
+                    <span>Тип контакта должен быть указан.</span>
+                  </div>
+                  <div class="btn-group" ng-repeat="c in contact.ContactStatus">
+                    <div class="btn btn-xs padtop5">{{statusListDict.getRecordValue(c)}}</div>
+                    <div class="btn btn-xs autocreate-clear"
+                         ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', c)"
+                         log-click="Контакты::Кнопка <Удалить тип контакта> в окне создания авторазбора">
+                      &times;
+                    </div>
+                  </div>
+                  <span class="green touch padtop8 positionabsolute"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        log-click="Контакты::Меню <Выбрать тип контакта> в окне создания авторазбора">выбрать</span>
+                </span>
+                <div class="dropdown-menu" role="menu" class="treto-dropdown-menu"
+                style="padding:12px;height:200px;width:auto;overflow:auto">
+                  <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value'" ng-if="record.subtype.person && record.subtype.show === '1' && !record.parentKey">
+                    <md-checkbox ng-click="multiselectHelper.selectCheckbox(contact, 'ContactStatus', record.key)" ng-checked="contact.ContactStatus.indexOf(record.key)!=-1">
+                      {{ record.value }}
+                    </md-checkbox>
+                  </div>
+                </div>
+                <span class="form-control-feedback autocreate-folder"><i class="material-icons">note_add</i></span>
+              </div>
+            </div>
+          </article>
+          <article class="row form-group levelrow">
+            <div class="col-lg-3 blue">Профиль деятельности</div>
+            <div class="col-lg-21">
+              <div class="treto-multiselect underlined" uib-dropdown style="position: initial;">
+                <label class="control-label sr-only">Hidden</label>
+                <span class="dropdown-toggle btn-block" style="padding-left: 35px;">
+                  <div class="btn-group" ng-repeat="g in contact.Group">
+                    <div class="btn btn-xs padtop5">{{g}}</div>
+                    <div class="btn btn-xs autocreate-clear"
+                         ng-click="multiselectHelper.selectCheckbox(contact, 'Group', g)"
+                         log-click="Контакты::Кнопка <Удалить профиль деятельности> в окне создания авторазбора">
+                      &times;
+                    </div>
+                  </div>
+                  <span class="green touch padtop8 positionabsolute"
+                        data-toggle="dropdown"
+                        uib-dropdown-toggle
+                        log-click="Контакты::Меню <Выбрать профиль деятельности> в окне создания авторазбора">выбрать</span>
+                </span>
+                <div class="dropdown-menu" role="menu" class="treto-dropdown-menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                  <div ng-repeat="(key,record) in statusListDict.records | orderObjectBy:'value' " ng-if="contact.ContactStatus.length ? contact.ContactStatus.indexOf(record.parentKey) > -1 : true">
+                    <md-checkbox ng-click="multiselectHelper.selectCheckbox(contact, 'Group', record.value)" ng-checked="contact.Group.indexOf(record.key)!=-1">
+                      {{ record.value }}
+                    </md-checkbox>
+                  </div>
+                </div>
+                <span class="form-control-feedback autocreate-folder"><i class="material-icons">note_add</i></span>
+              </div>
+            </div>
+          </article>
+          <article class="row form-group martop10 levelrow">
+            <article class="row form-group levelrow">
+              <div class="col-lg-3 blue martop10">Страна</div>
+              <div class="col-lg-21">
+                <div class="treto-multiselect underlined">
+                  <div class="col-lg-20 padbot10" style="padding-left: 35px;">
+                    <div class="bord-bot martop10" uib-dropdown>
+                      <a href class="green"
+                         uib-dropdown-toggle
+                         log-click="Контакты::Меню <Выбрать страну> в окне создания авторазбора">
+                        {{organizationCountries.getRecordValue(contact.Country)?organizationCountries.getRecordValue(contact.Country[0]):"Выбрать"}}
+                      </a>
+                      <ul class="dropdown-menu" role="menu" style="padding:12px;height:200px;width:auto;overflow:auto">
+                          <li ng-repeat="(key,record) in organizationCountries.records | orderObjectBy:'value'">
+                              <a href ng-click="contact.Country = [record.key]"> {{ record.value }} </a>
+                          </li>
+                      </ul>
+                      <div ng-show="submitted && contact.ContactStatus[0] &&!contact.Country" class="required-warning" ng-click="submitted = false">
+                          <span>Страна должна быть указана.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <span class="form-control-feedback autocreate-folder"><i class="material-icons">note_add</i></span>
+                </div>
+              </div>
+            </article>
+            <div class="col-lg-24">
+              <t-mce toolbar="off"
+                     model="contact.textAuto"
+                     log-click="Дискуссии::Поле <Введите текст> в окне создания авторазбора"></t-mce>
+            </div>
+          </article>
+        </section>
+        <section class="modal-header" ng-if="contact && contact.DocumentType">
+          <div ng-init="partDoc = contact"
+               ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+        </section>
+        <section class="modal-footer no-border">
+          <input type="submit"
+                 class="blue"
+                 style="width: initial; background-color: transparent;"
+                 value="СОХРАНИТЬ"
+                 ng-click="submitted = true"
+                 log-click="Контакты::Кнопка <Сохранить> в окне создания авторазбора"/>
+          <a href class="black marright15" ng-click="close();"
+             log-click="Контакты::Кнопка <Отмена> в окне создания авторазбора">
+            ОТМЕНА
+          </a>
+        </section>
+      </section>
+    </form>
+  </div>
+</div>

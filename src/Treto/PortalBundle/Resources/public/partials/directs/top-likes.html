@@ -1,0 +1,139 @@
+  <div class="top-like-dislike" ng-if="topList.likes.length || loadingStat.topLikes || topList.dislikes.length || loadingStat.topDislikes">
+    <div class="top-likes" ng-init="show20likes=false;" ng-if="topList.likes.length || loadingStat.topLikes">
+      <div class="title-wrap">
+        <span class="title">Топ Лайк</span>
+        <i ng-if="loadingStat.topLikes" class="spinner"></i></span>
+      </div>
+      <div ng-if="!topList.likes.length && !loadingStat.topLikes">
+        Нет лайков за последние 7 дней
+      </div>
+      <div ng-if="topList.likes.length" class="like-list">
+        <div ng-repeat="like in topList.likes track by like.unid" ng-hide="!show20likes && $index > 9" class="like-wrap">
+          <span class="arrow green material-icons md-18" ng-class="{'no-arrow': like.change === 0}">
+            {{like.change < 0 ? 'arrow_downward' : 'arrow_upward'}}
+          </span>
+          <span class="count">{{like.likes}}</span>
+          <span class="author-avatar-wrap"
+                ng-init="environment = discus.getShareEnvironment(like.sendShareFrom)||$root.environment;
+                         avatarLogin = discus.getShareEnvironment(like.sendShareFrom)?
+                            like.shareAuthorLogin : like.author;
+                         avatarDomain = doc.sendShareFrom?'http://'+doc.sendShareFrom:''">
+            <span class="author-avatar" ng-style="{'background-image': 'url({{::avatarDomain}}/public/img_site/{{::environment}}/thumb_{{::avatarLogin}}.jpeg)'}"></span>
+          </span>
+          <div>
+
+            <a ng-if="!like.shareAuthorLogin"
+               href ui-sref="body.profileDisplay({id: like.author})"
+               class="author-name user-name-link"
+               title="{{$root.usersAll[like.author].name}}"
+               log-click="Статистика::Ссылка на профиль сотрудника из топа лайков">
+              {{like.shortName}}
+            </a>
+
+            <!-- Same as below, but uses shareAuthorLogin to render user's name -->
+            <!--<span ng-if="like.shareAuthorLogin"
+                  class="author-name user-name-link"
+                  title="{{like.shareAuthorLogin|getShareUserName:like.sendShareFrom}}">
+              {{like.shareAuthorLogin|getShareUserName:like.sendShareFrom:true}}
+            </span>-->
+
+            <span ng-if="like.shareAuthorLogin"
+                  class="author-name user-name-link"
+                  title="{{like.AuthorRus}}">
+              {{like.shortName}}
+            </span>
+
+          </div>
+          <div>
+            <a href ui-sref="body.discus({ id: like.unid, type:''  })"
+               class="comment"
+               title="{{$root.usersAll[like.author].name || profile.translateName(like.author)}} {{like.created | datetime}}&#010;{{like.subject!=''?like.subject+'&#010;':''}}{{like.body}}"
+               log-click="Статистика::Ссылка на сообщение из топа лайков">
+              {{like.parsedSubject === '' ? '[без текста]' : like.parsedSubject}}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="more-link-wrap">
+        <a href ng-click="show20likes=true"
+           ng-hide="show20likes || topList.likes.length <= 10" class="more-link"
+           log-click="Статистика::Кнопка <Ещё> в топе лайков">
+          ещё
+        </a>
+        <a href ui-sref="body.stat({ tab: 'likes' })"
+           ng-show="show20likes || topList.likes.length <= 10" class="more-link"
+           log-click="Статистика::Ссылка <Ещё> в топе лайков">
+          ещё
+        </a>
+      </div>
+    </div>
+    <div class="top-likes" ng-init="show20dislikes=false;" ng-if="topList.dislikes.length || loadingStat.topDislikes">
+      <div class="title-wrap">
+        <span class="title">Топ Дизлайк</span>
+        <i ng-if="loadingStat.topDislikes" class="spinner"></i></span>
+      </div>
+      <div ng-if="!topList.dislikes.length && !loadingStat.topDislikes">
+        Нет дизлайков за последние 7 дней
+      </div>
+      <div ng-if="topList.dislikes.length" ng-hide="!show20dislikes && $index > 9" class="like-list">
+        <div ng-repeat="like in topList.dislikes track by like.unid" class="like-wrap">
+          <span class="arrow red material-icons md-18" ng-class="{'no-arrow': like.change === 0}">
+            {{like.change < 0 ? 'arrow_downward' : 'arrow_upward'}}
+          </span>
+          <span class="count">{{like.dislikes}}</span>
+          <span class="author-avatar-wrap"
+                ng-init="environment = discus.getShareEnvironment(like.sendShareFrom)||$root.environment;
+                         avatarLogin = discus.getShareEnvironment(like.sendShareFrom)?
+                            like.shareAuthorLogin : like.author;
+                         avatarDomain = doc.sendShareFrom?'http://'+doc.sendShareFrom:''">
+            <span class="author-avatar" ng-style="{'background-image': 'url({{::avatarDomain}}/public/img_site/{{::environment}}/thumb_{{::avatarLogin}}.jpeg)'}"></span>
+          </span>
+          <div>
+
+            <a ng-if="!like.shareAuthorLogin"
+               href ui-sref="body.profileDisplay({id: like.author})"
+               class="author-name user-name-link"
+               title="{{$root.usersAll[like.author].name}}"
+               log-click="Статистика::Ссылка на профиль сотрудника из топа дизлайков">
+              {{like.shortName}}
+            </a>
+
+            <!-- Same as below, but uses shareAuthorLogin to render user's name -->
+            <!--<span ng-if="like.shareAuthorLogin"
+                  class="author-name user-name-link"
+                  title="{{like.shareAuthorLogin|getShareUserName:like.sendShareFrom}}">
+              {{like.shareAuthorLogin|getShareUserName:like.sendShareFrom:true}}
+            </span>-->
+
+            <span ng-if="like.shareAuthorLogin"
+                  class="author-name user-name-link"
+                  title="{{like.AuthorRus}}">
+              {{like.shortName}}
+            </span>
+
+          </div>
+          <div>
+            <a href ui-sref="body.discus({ id: like.unid, type:''  })"
+               class="comment"
+               title="{{$root.usersAll[like.author].name || profile.translateName(like.author)}} {{like.created | datetime}}&#010;{{like.subject!=''?like.subject+'&#010;':''}}{{like.body}}"
+               log-click="Статистика::Ссылка на сообщение из топа дизлайков">
+                {{like.parsedSubject === '' ? '[без текста]' : like.parsedSubject}}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="more-link-wrap">
+        <a href ng-click="show20dislikes=true" ng-hide="show20dislikes || topList.dislikes.length <= 10"
+           class="more-link"
+           log-click="Статистика::Кнопка <Ещё> в топе лайков">
+          ещё
+        </a>
+        <a href ui-sref="body.stat({ tab: 'dislikes' })"
+           ng-show="show20dislikes || topList.dislikes.length <= 10"
+           class="more-link"
+           log-click="Статистика::Ссылка <Ещё> в топе лайков">
+          ещё
+        </a>
+      </div>
+    </div>
+  </div>

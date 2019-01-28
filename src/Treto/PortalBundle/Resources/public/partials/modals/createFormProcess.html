@@ -1,0 +1,204 @@
+<div class="edit-doc center">
+  <div class="container text-s12 panel marbot0 pad0force relative" ng-controller="modalCreateProcess" ctrl-enter="discus.saved?ok():false">
+    <div class="row" ng-show="linkedTo">
+      <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+        <div class="modal-header" style="padding-right: 30px">
+          <span>Создать на основании темы{{parentSubject?' "'+parentSubject+'"':''}}</span>
+        </div>
+      </div>
+    </div>
+    <a class="close pull-right marright5"
+       ng-click="close()"
+       style="position: absolute;top: 5px;right: 0;z-index: 1001"
+       title="Закрыть"
+       log-click="Дискуссии::Кнопка <Закрыть> в окне создания темы">
+         <i class="material-icons">close</i>
+    </a>
+    <div ng-include="'/bundles/tretoportal/partials/doc_templ/common/sections.html'"></div>
+    <div class="row">
+      <form id="form_modal" ng-submit="submitted = true; ok();" novalidate name="modalForm" ng-init="submitted = false;">
+        <div class="row">
+          <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+            <div class="container pad0force">
+              <div class="row" ng-if="discus.current.C2=='Вакансии'">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header martop5">
+                    <md-checkbox
+                      id="checkIsPublic"
+                      ng-model="discus.current.ToSite"
+                      ng-true-value="'1'"
+                      ng-false-value="'0'"
+                      log-click="Дискуссии::Галка <Опубликовать на сайте> в окне создания темы">
+                      Опубликовать на сайте
+                    </md-checkbox>
+                    <md-checkbox
+                      id="isArchive"
+                      ng-init="discus.current.isArchive = discus.current.isArchive?discus.current.isArchive:'0'"
+                      ng-model="discus.current.isArchive"
+                      ng-true-value="'1'"
+                      ng-false-value="'0'"
+                      log-click="Дискуссии::Галка <Архивная вакансия> в окне создания темы">
+                     Архивная вакансия</md-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="row" ng-if="discus.current.C2=='Вакансии'">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header martop5">
+                    <span ng-repeat="record in discus.vacancyRegionDict.records" class="padright10">
+                     <md-checkbox
+                      class="from-control"
+                      ng-click="discus.toggleArrayElement(discus.current,'SelectRegion',record.key);"
+                      ng-class="(discus.current.SelectRegion && discus.current.SelectRegion.indexOf(record.key)) > -1 ? 'checked' : ''"
+                      log-click="Дискуссии::Галка <{{record.value}}> в окне создания темы">
+                      {{record.value}}
+                    </md-checkbox>
+                    </span>
+                  </div>
+                  <div class="modal-header">
+                    <input class="text-s16"
+                           type="text"
+                           ng-model="discus.current.archiveVacUnid"
+                           placeholder="unid архивной вакансии"
+                           id="unidArchive"
+                           log-click="Дискуссии::Поле <unid архивной вакансии> в окне создания темы"/>
+                  </div>
+                </div>
+              </div>
+              <div class="row" ng-if="discus.current.C2=='Вакансии'">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header">
+                    <table class="width100per">
+                      <tr>
+                        <td>
+                          <input type="text"
+                                 ng-model="discus.current.SEOTitle"
+                                 placeholder="{{$root.localize('title','seo')}}"
+                                 title="{{$root.localize('title','seo')}}"
+                                 log-click="Дискуссии::Поле <SEO заголовок для продвижения> в окне создания темы"/>
+                        </td>
+                        <td class="pad0_15">
+                          <input type="text"
+                                 ng-model="discus.current.SEODescription" 
+                                 placeholder="{{$root.localize('description','seo')}}"
+                                 title="{{$root.localize('description','seo')}}"
+                                 log-click="Дискуссии::Поле <SEO описание для продвижения> в окне создания темы"/>
+                        </td>
+                        <td>
+                          <input type="text"
+                                 ng-model="discus.current.SEOKeywords"
+                                 placeholder="{{$root.localize('keywords','seo')}}"
+                                 title="{{$root.localize('keywords','seo')}}"
+                                 log-click="Дискуссии::Поле <SEO ключевые слова для продвижения> в окне создания темы"/>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row" ng-if="discus.current.C2=='Вакансии'">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header">
+                    <div class="row">
+                      <div class="col-lg-12"  ng-init="discus.initQuestionaries();" uib-dropdown>
+                        <input type="text"
+                               placeholder="Опросник"
+                               ng-value="discus.questionariesList[discus.current.QuestionaryID]" uib-dropdown-toggle
+                               log-click="Дискуссии::Поле <Опросник> в окне создания темы"/>
+                        <ul class="dropdown-menu" role="menu" style="overflow-y:auto;max-height:200px">
+                          <li ng-repeat="(unid, name) in discus.questionariesList">
+                            <a class="text-s11" href ng-click="discus.current.QuestionaryID = unid">{{ name }}</a>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-lg-12">
+                        <add-participants ngmodel="person.login" placeholder="'Менеджер'"
+                                          multiple="true" section="false"
+                                          addhandler="discus.addVacManager(item.name, discus.current);"
+                                          removehandler="discus.delVacManager(name, discus.current)"
+                                          typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'">
+                        </add-participants>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" ng-if="discus.current.C2=='Вакансии'">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header" ng-if="discus.current.C2=='Вакансии'">
+                    <textarea class="input-sm form-control pad0force"
+                              ng-model="doc.VacAnnotation"
+                              placeholder="Аннотация к вакансии"
+                              style="border-bottom: none;box-shadow: none;resize:none;"
+                              log-click="Дискуссии::Поле <Аннотация к вакансии> в окне создания темы">
+                              {{doc.VacAnnotation}}
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+                  <div class="modal-header" style="overflow-y:initial;"  ng-init="discus.current.quote = QuoteSubject?QuoteSubject:''">
+                    <input name="inputSubject"
+                           class="text-s16"
+                           autofocus
+                           required
+                           type="text"
+                           ng-attr-placeholder="{{discus.current.type=='Blog' ? 'Блог: название' : 'Тема: название'}}"
+                           ng-model="discus.current.subject"
+                           log-click="Дискуссии::Поле <Название> в окне создания темы"/>
+                    <ng-messages ng-show="submitted" for="modalForm.inputSubject.$error" class="required-warning" ng-click="submitted = false">
+                      <ng-message when="required">Название должно быть указано.</ng-message>
+                    </ng-messages>
+                    <t-mce ng-if="discus.current.unid"
+                           ng-init="discus.current.body = CreateBody && linkedTo?CreateBody:''"
+                           model="discus.current.body"
+                           mentions="discus.current.mentions"
+                           log-click="Дискуссии::Поле <Введите текст> в окне создания темы"></t-mce>
+                    <div ng-if="!discus.current.unid">Подождите...</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24" style="position: static;">
+                  <div class="modal-header" ng-if="partDoc=discus.current">
+                    <div ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-participants.html'"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="row modal-header" ng-if="discus.current.attachments.length > 0 || $root.uploader.isUploading" style="margin-right: 0px; margin-left: 0px;">
+                <div ng-if="$root.uploader.progress > 0 && $root.uploader.isUploading" class="progress-thin pad0force">
+                  <div class="progress-bar" role="progressbar" ng-style="{ 'width': $root.uploader.progress + '%' }"></div>
+                </div>
+                <upload-list model="discus.current.attachments" template-url="listing"></upload-list>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+          <div class="modal-body custom-toolbar marbot10 relative modal-body-service" ng-init="pasteScreenShot = {value: false}"
+                    ng-class="{'padtop70': pasteScreenShot.value}">
+            <div ng-show="showTags == true" ng-init="doc=discus.current">
+              <div style="margin-bottom: 5px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+            </div>
+            <span id="mytoolbar" class="pull-right"></span>
+            <div class="modal-body-service-wrap">
+              <md-button type="submit"
+                         class="btn btn-blue"
+                         ng-disabled="!discus.saved"
+                         copy-body
+                         log-click="Дискуссии::Кнопка <Сохранить> в окне создания темы">
+                Сохранить
+              </md-button>
+              <!-- <span popover-placement="right" uib-popover-template="'/bundles/tretoportal/partials/doc_templ/common/textAngularToolBar.html'" class="ico click style-toolbar marside10" title="Панель форматирования"></span> | -->
+              <upload-box model="discus.current.attachments"
+                          upload-options="{ collection: discus.getDatabaseCollection(discus.current), unid: discus.current.unid }"
+                          auto="true" multiple="true" templ="discus_ico.html">
+              </upload-box>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<div id="chatHistory" class="container-fluid">
+  <div class="row bgwhite">
+    <div class="col-xs-24">
+      <ul class="list-inline pink-bottom padtop10 marbot0" ng-init="menu.n=0">
+        <li ng-repeat="itemMenu in menuList" 
+            ng-class="menu.n==$index?'active':''" 
+            class="padbot10">
+          <a href ng-class="menu.n==$index?'black':'grey'"
+                  ng-click="menu.n=$index; getHistory(itemMenu.days)">
+            {{itemMenu.name}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row messages">
+    <div class="col-xs-24">
+      <div class="row marbot10" ng-repeat="message in messages | orderBy:'date' track by $index">
+        <div ng-if="message.user.id!=$chatWindow.user.portalData.Login">
+          <div class="col-xs-24 dark-grey">{{message.user.name | shortNameFilter}}</div>
+          <div class="col-xs-offset-2 col-xs-14 left block">
+            <span ng-bind-html="message.message"></span>
+          </div>
+          <div class="col-xs-offset-2 col-xs-6">
+            <span class="pull-right dark-grey">{{message.date | date:"dd.MM.yy HH:mm"}}</span>
+          </div>
+        </div>
+        <div ng-if="message.user.id==$chatWindow.user.portalData.Login">
+          <div class="col-xs-offset-4 col-xs-14 right block">
+            <span ng-bind-html="message.message"></span>
+          </div>
+          <div class="col-xs-6">
+            <span class="pull-right dark-grey">{{message.date | date:"dd.MM.yy HH:mm"}}</span>
+          </div>
+        </div>
+        <div ng-if="$last" ng-init="scrollBottom();"></div>
+      </div>
+    </div>
+  </div>
+</div>

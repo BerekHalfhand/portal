@@ -1,0 +1,114 @@
+<article style="display: inline-block; position: relative;">
+  <ul id="header-user-buttons" class="list-inline">
+    <li>
+      <md-button class="icon-btn" title="Добавить" aria-label="Добавить"
+                 ng-click="$root.show.menuCreate = !$root.show.menuCreate; $root.show.Search = false; $root.show.menuUser = false;"
+                 log-click="Главное меню::Меню <Добавить> в главном меню">
+              <md-icon class="material-icon">add_circle</md-icon>
+      </md-button>
+    </li>
+  </ul>
+<div id="header-create-doc" class="panel" ng-show="$root.show.menuCreate">
+  <div class="modal-body" style="padding: 13px 10px 7px 20px;">
+  <div id="add-div">Создать</div>
+      <ul id="top-menu" class="nav nav-pills">
+        <li ng-show="$state.params.category && ($state.params.category.indexOf('HR') > -1)">
+          <a href ng-click="close(); showForm('formProcess', null, ['HR отдел', 'Вакансии'])"
+             title="Создать новую вакансию"
+             log-click="Главное меню::Пункт <Создать: Новую вакансию> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">create_new_folder</span>
+            <small>Вакансия</small>
+          </a>
+        </li>
+        <li ng-show="$state.current.name.indexOf('body.adaptation') == -1">
+          <a ng-if="$state.current.name.indexOf('body.discus') == 0 && !$root.isBlog && $state.params.category != 'Blog'"
+             href title="Создать новую тему"
+             ng-click="close(); showForm('formProcess', null, $state.params.category.split(',') || categoryToNewDiscus.split(','))"
+             log-click="Главное меню::Пункт <Создать: Новую тему> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">create_new_folder</span>
+            <small>Новая тема</small>
+          </a>
+          <a ng-if="$state.current.name.indexOf('body.discus') == 0 && $root.isBlog || $state.current.name.indexOf('body.discus') == 0 && $state.params.category == 'Blog'"
+             href title="Создать новую тему"
+             ng-click="close(); showForm('formProcess', 'Blog')"
+             log-click="Главное меню::Пункт <Создать: Новую тему> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">create_new_folder</span>
+            <small>Новая тема</small>
+          </a>
+          <a ng-if="$state.current.name.indexOf('body.discus') == -1"
+             href ng-click="close(); showForm('formProcess')"
+             title="Создать новую тему"
+             log-click="Главное меню::Пункт <Создать: Новую тему> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">create_new_folder</span>
+            <small>Новая тема</small>
+          </a>
+        </li>
+        <li ng-show="$state.current.name.indexOf('body.adaptation') == 0">
+          <a href ng-click="close(); showForm('createAdapt')"
+             title="Создать адаптационный лист"
+             log-click="Главное меню::Пункт <Создать: Сотрудника> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">folder_shared</span>
+            <small>Сотрудник</small>
+          </a>
+        </li>
+        <li>
+          <a href ng-click="close(); showForm('createVote', 'regular');"
+             title="Создать голосование"
+             log-click="Главное меню::Пункт <Создать: Голосование> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">sort</span>
+            <small>Голосование</small>
+          </a>
+        </li>
+        <li>
+          <a ng-if="$state.current.name.indexOf('body.discus') == -1"
+             href ng-click="close(); showForm('formTask')"
+             title="Создать новую просьбу"
+             log-click="Главное меню::Пункт <Создать: Просьбу> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">folder_special</span>
+            <small>Просьба</small>
+          </a>
+          <a ng-if="$state.current.name.indexOf('body.discus') == 0"
+             href ng-click="close(); showForm('formTask')"
+             title="Добавить просьбу в текущее обсуждение"
+             log-click="Главное меню::Пункт <Создать: Просьбу> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">folder_special</span>
+            <small>Просьба</small>
+          </a>
+        </li>
+        <li>
+          <a href ng-click="close(); showForm('person')"
+             title="Создать новый контакт"
+             log-click="Главное меню::Пункт <Создать: Человека> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">folder_shared</span>
+            <small>Человек</small>
+          </a>
+        </li>
+        <li>
+          <a href ng-click="close(); showForm('organization')"
+             title="Создать новый контакт"
+             log-click="Главное меню::Пункт <Создать: Компанию> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">business</span>
+            <small>Компания</small>
+          </a>
+        </li>
+        <li ng-if="$state.current.name.indexOf('body.contacts') == 0">
+          <a href ng-click="close(); showForm('formCreatePersonAuto')"
+             title="Создать авторазбор"
+             log-click="Главное меню::Пункт <Создать: Авторазбор> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">folder_shared</span>
+            <small>Авторазбор</small>
+          </a>
+        </li>
+        <li ng-if="$state.current.name.indexOf('body.discus') == 0">
+          <a href ng-click="close(); showForm('subTotal')"
+             title="Создать подытог"
+             log-click="Главное меню::Пункт <Создать: Подытог> в меню <Добавить> в главном меню">
+            <span class="material-icons top-menu-icon">functions</span>
+            <small>Подытог</small>
+          </a>
+        </li>
+      </ul>
+  </div>
+</div>
+
+</article>

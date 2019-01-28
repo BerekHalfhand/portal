@@ -1,0 +1,278 @@
+<title ng-if="!theUser.portalData">Загрузка профиля...</title>
+<title ng-if="theUser.portalData">{{theUser.portalData.FullNameInRus}}</title>
+<section class="user-container mar4 panel no-border" ng-if="theUser" ng-init="activeTab = activeTab?activeTab:1">
+  <article ng-show="!listSubscribtion" class="pad20">Профиль загружается...</article>
+  <section ng-show="listSubscribtion.length > 0">
+    <header>
+      <div class="row">
+        <div class="col-lg-24 col-md-24 col-sm-24 col-xs-24">
+          <div class="inline-block relative" ng-include="'/bundles/tretouser/partials/profile/send-sms-form.html'"></div>
+          <a ng-show="role('PM')" class="white marright5 inline-block"
+             ui-sref="body.profileManagerEdit({ id: theUser.username })"
+             title="Редактировать"
+             log-click="Профиль пользователя::Кнопка <Редактировать> в профиле пользователя">
+            <i class="material-icons">mode_edit</i>
+          </a>
+          <a ng-show="!role('PM')&&theUser.username == $root.user.username"
+             class="white marright5 inline-block"
+             ui-sref="body.profileEdit({ id: theUser.username })"
+             title="Редактировать"
+             log-click="Профиль пользователя::Кнопка <Редактировать> в профиле пользователя">
+            <i class="material-icons">mode_edit</i>
+          </a>
+          <a ui-sref="logout"
+             class="white marright5 inline-block"
+             title="Выйти"
+             log-click="Профиль пользователя::Кнопка <Выйти> в профиле пользователя">
+            <i class="material-icons">power_settings_new</i>
+          </a>
+          <div class="header-photo round-photo-48 pull-left">
+            <img ng-init="discus['lgImageVisible'] = false"
+                ng-click="discus['lgImageVisible'] = !discus['lgImageVisible']"
+                class="round-photo-48"
+                ng-src='/public/img_site/{{$root.environment}}/thumb_{{theUser.username}}.jpeg'
+                title="Если после загрузки нового фото отображется старое, нажмите Ctrl+F5 или очистите кэш браузера"
+                log-click="Профиль пользователя::Аватар в профиле пользователя">
+          <div ng-click="discus['lgImageVisible'] = false;"
+              ng-if="discus['lgImageVisible']"
+              class="user-lg-image"
+              log-click="Профиль пользователя::Аватар в профиле пользователя">
+            <div ng-style="{'background-image': 'url(/public/img_site/{{$root.environment}}/b_'+theUser.username+'.jpeg)'}"></div>
+          </div>
+          </div>
+          <div class="pull-left marright5">
+            <big class="white">{{ theUser.portalData.FullNameInRus }}</big>&nbsp;<span ng-show="theUser.portalData.DtDismiss" class="white label label-danger">Уволен</span><br/>
+            <p class="white text-s16">{{ theUser.portalData.FullNameRaw }}</p>
+          </div>
+          <i ng-if="security && theUser.username != $root.user.username"
+             ng-click="subscribe();"
+             class="material-icons pull-right white touch"
+             log-click="Профиль пользователя::Кнопка <Следить\не следить> в профиле пользователя">
+            {{userSubscribed?'visibility_off':'visibility'}}
+          </i>
+        </div>
+      </div>
+      <nav class="row">
+        <ul class="nav nav-tabs text-uppercase pink-bottom">
+          <li ng-class="{active : activeTab == 1}"
+              ng-click="activeTab = 1"
+              style="padding-left: 10px;"
+              log-click="Профиль пользователя::Вкладка <Информация> в профиле пользователя">
+            <a href class="white">Информация</a>
+          </li>
+          <li ng-class="{active : activeTab == 2}"
+              ng-click="activeTab = 2"
+              log-click="Профиль пользователя::Вкладка <Блог> в профиле пользователя">
+            <a href class="white">Блог</a>
+          </li>
+          <li ng-show="theUser.username === $root.user.username"
+              ng-class="{active : activeTab == 3}"
+              ng-click="activeTab = 3"
+              log-click="Профиль пользователя::Вкладка <Настройки> в профиле пользователя">
+            <a href class="white">Настройки</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="row mar0 bgwhite">
+      <section id="info-tab" ng-show="activeTab === 1">
+        <div class="col-lg-24">
+          <involvement ng-if="$root.users" username="theUser.username" profile-mode></involvement>
+          <div class="row">
+            <article class="col-lg-12">
+                <ul class="list-unstyled list-underlined">
+                  <li><span class="dark-grey">Должность:</span>
+                    {{ theUser.portalData.WorkGroup | arrOrStrOutput }}
+                  </li>
+                  <li><span class="dark-grey">Место работы (город):</span> {{ RegionIDDict.getRecordValue(theUser.portalData.RegionID) }}</li>
+                  <li><span class="dark-grey">Подразделение:</span> {{ departmentDict.getRecordValue(theUser.portalData.Department) }}</li>
+                  <li><span class="dark-grey">Отдел:</span> {{ sectionDict.getRecordValues(theUser.portalData.section).join(', ') }}</li>
+                  <li><span class="dark-grey">Зона отвественности:</span> {{ sectionSiteDict.getRecordValues(theUser.portalData.DepSubmiss).join(', ')}}</li>
+                  <li><span class="dark-grey">Стаж:</span> <span ng-repeat="i in theUser.portalData.experience" class="marright3 glyphicon glyphicon-star"/>
+                      <span ng-show="theUser.portalData.half_experience" class="glyphicon glyphicon-star-empty"/>
+                  </li>
+                  <li><span class="dark-grey">Дата приема на работу:</span> {{ theUser.portalData.DtWork | datetime }}</li>
+                  <li><span class="dark-grey">Дата увольнения:</span> {{ theUser.portalData.DtDismiss | datetime }}</li>
+                  <li><span class="dark-grey">Отдел сайта:</span> {{ sectionSiteDict.getRecordValue(theUser.portalData.SectionSite[0]) }}</li>
+                  <li>
+                    <span class="dark-grey">Руководитель:</span>
+                    <span ng-repeat="(key, boss) in theUser.portalData.bosses">
+                      <span class="glyphicon glyphicon-arrow-right" aria-hidden="true" ng-show="key>0"></span>
+                      <a href ui-sref="body.profileDisplay({ id: boss})"
+                         log-click="Профиль пользователя::Ссылка на профиль руководителя пользователя в профиле пользователя">
+                        {{ profile.translateName(boss)}}
+                      </a>
+                    </span>
+                  </li>
+                  <li><span class="dark-grey">Загрн. паспорт:</span> {{ theUser.portalData.ForeignPassport }}</li>
+                <ul class="list-unstyled">
+            </article>
+            <article class="col-lg-12">
+                <ul class="list-unstyled list-underlined">
+                  <li><span class="dark-grey">Рабочий адрес:</span> {{ theUser.portalData.ContactWithWorkAddress[0] }}</li><!-- || '<span class="dark-grey">Нет записи</span>'-->
+                  <li><span class="dark-grey">Рабочий телефон:</span> {{ theUser.portalData.ContactWithWorkFhone[0] }}</li>
+                  <li><span class="dark-grey">Домашний телефон:</span> {{ theUser.portalData.ContactWithWorkFhone[1] }}</li>
+                  <li><span class="dark-grey">Основной мобильный телефон:</span> {{ theUser.portalData.ContactWithMobileFhone[0] }}</li>
+                  <li><span class="dark-grey">Дополнительный мобильный телефон:</span> {{ theUser.portalData.ContactWithMobileFhone_1[0] }}
+                      <span ng-if="theUser.portalData.ContactWithMobileFhone_1[0].length>0 && theUser.portalData.ContactWithMobileFhone_2[0].length>0">, </span>
+                      {{ theUser.portalData.ContactWithMobileFhone_2[0] }}
+                  </li>
+                  <li><span class="dark-grey">E-Mail:
+                    <a href="mailto:{{ theUser.portalData.Email }}"
+                       log-click="Профиль пользователя::Ссылка на <e-mail> пользователя в профиле пользователя">
+                      <b>{{ theUser.portalData.Email.split('@')[0] }}</b>
+                      {{ (a = theUser.portalData.Email.split('@')[1]) ? '@'+a : '' }}
+                    </a>
+                  </li>
+                  <li><span class="dark-grey">ICQ:</span> {{ theUser.portalData.ICQ }}</li>
+                  <li><span class="dark-grey">Skype:</span> {{ theUser.portalData.Skype }}</li>
+                  <li><span class="dark-grey">Имя компании:</span> {{companyNameDict.getRecordValue(theUser.portalData.companyName)}}</li>
+                  <li><span class="dark-grey">Дата последнего входа на портал: </span><span ng-bind="theUser.lastLogin | getMskDateTime"></span></li>
+                </ul>
+            </article>
+          </div>
+          <div class="row">
+          <article class="col-lg-12">
+            <big>Краткое резюме</big>
+          </article>
+          </div>
+          <div class="row">
+              <article class="col-lg-12">
+                <ul class="list-unstyled list-underlined">
+                  <li><span class="dark-grey">Пол:</span> {{ theUser.portalData.Sex | sex }}</li>
+                  <li class="no-border"><p ng-bind-html="theUser.portalData.About.join('<br>') | nl2br"></p></li>
+                  <!--<li><span class="dark-grey">Резюме: <p class="well well-xs"  ng-bind-html="theUser.portalData.Resume.join('<br>') | nl2br"></p></li>-->
+                </ul>
+              </article>
+              <article class="col-lg-12">
+                <ul class="list-unstyled list-underlined">
+                  <li><span class="dark-grey">Дата рождения:</span> {{ theUser.portalData.Birthday | datetime }}</li>
+                  <li class="no-border"><p ng-bind-html="theUser.portalData.Resume.join('<br>') | nl2br"></p></li>
+                </ul>
+              </article>
+          </div>
+          <div class="row">
+            <hr class="divider-profile">
+            <article class="col-lg-12">
+              <ul class="list-unstyled list-underlined">
+                <!--<li><span class="dark-grey">Последнее посещение:</span> {{ theUser.lastLogin.date }}</li>-->
+                <li><span class="dark-grey">Лайк/нелайк: 
+                  <a href ng-click="loadLikes(1, theUser.username, theUser.portalData.FullName);"
+                     class="green"
+                     log-click="Профиль пользователя::Кнопка <Лайк> в профиле пользователя">лайк</a> | 
+                  <a href ng-click="loadLikes(0, theUser.username, theUser.portalData.FullName);"
+                     class="green"
+                     log-click="Профиль пользователя::Кнопка <Нелайк> в профиле пользователя">нелайк</a>
+                </span></li>
+              </ul>
+            </article>
+            <!--<article class="col-lg-12">
+              <ul class="list-unstyled list-underlined">
+                <li><span class="dark-grey">Последний IP адрес:</span> </li>
+              </ul>
+            </article>-->
+          </div>
+          <div class="row">
+            <article class="col-lg-14">
+              <div ng-show="loadingLikes" style="margin: 15px 0px 20px 25px;">Загрузка...</div>
+              <table ng-show="listLikes.length" id="likes-table">
+                <tr class="dark-grey">
+                  <td>
+                    <span ng-click="sortBy('body')" class="touch"
+                          log-click="Профиль пользователя::Сортировка таблицы <Лайк\нелайк> в профиле пользователя">Сообщение</span>
+                    <span class="sortorder" ng-show="predicate === 'body'" ng-class="{reverse:reverse}"></span>
+                  </td>
+                  <td style="width: 100px;">
+                    <span ng-click="sortBy('date')" class="touch"
+                          log-click="Профиль пользователя::Сортировка таблицы <Лайк\нелайк> в профиле пользователя">Дата</span>
+                    <span class="sortorder" ng-show="predicate === 'date'" ng-class="{reverse:reverse}"></span>
+                  </td>
+                  <td style="width: 75px;">
+                    <span ng-click="sortBy('count')" class="touch"
+                          log-click="Профиль пользователя::Сортировка таблицы <Лайк\нелайк> в профиле пользователя">{{likeType ? 'Лайк' : 'Нелайк'}}</span>
+                    <span class="sortorder" ng-show="predicate === 'count'" ng-class="{reverse:reverse}"></span>
+                  </td>
+                </tr>
+                <tr ng-repeat="like in listLikes | orderBy: predicate : reverse">
+                  <td>
+                    <a href ui-sref="body.discus({ id: like.unid, type:'' })"
+                       title="{{like.body}}"
+                       class="green"
+                       log-click="Профиль пользователя::Ссылка на сообщение из таблицы <Лайк\нелайк> в профиле пользователя">
+                      {{like.body | limitTo: 100}}
+                    </a>
+                  </td>
+                  <td>{{like.date | datetime | limitTo: 10}}</td>
+                  <td>{{like.count}}</td>
+                </tr>
+              </table>
+            </article>
+          </div>
+          <div class="row">
+            <article class="col-lg-12">
+              <big>Подписки</big>
+              <div class="martop10">
+                <p ng-repeat="item in listSubscribtion">
+                  <md-checkbox onclick="return false"
+                               id="check_sub{{item.key}}"
+                               ng-model="subscribes[item.key]"
+                               class="marleft20"
+                               title="{{item.key}}"
+                               log-click="Профиль пользователя::Галка <Подписки: {{item.subtype.subscription}}> в профиле пользователя">
+                    {{item.subtype.subscription}}
+                  </md-checkbox>
+                </p>
+              </div>
+            </article>
+            <article class="col-lg-12">
+              <big>Мои места</big>
+              <ya-map ya-zoom="4" ya-center="[37.64,55.76]" ya-controls="smallMapDefaultSet" style="height:400px;width:100%;display:block;">
+                <ya-geo-object ng-repeat="object in geoObjects" ya-source="object" ya-options="{preset: 'islands#icon',iconColor: '#0095b6'}"></ya-geo-object>
+              </ya-map>
+            </article>
+          </div>
+      </section>
+      <section id="blog-tab" ng-show="activeTab === 2">
+            <article class="col-lg-24">
+                <div ng-if="theUser._meta.blogs">
+                  <div infinite-scroll="profile.loadMetaForUser(theUser, theUser._meta.loaded)" infinite-scroll-distance="1" infinite-scroll-disabled="theUser._meta.busy">
+                    <div class="mar10" ng-repeat="record in theUser._meta.blogs">
+                      <div><span class="dark-grey">{{record.created | datetime}}</span> <a class="bold black" ui-sref="body.discus({ id: record.unid, type:''  })">{{record.subject}}</a></div>
+                      <div ng-show="record.body" ng-bind-html="record.body | htmlToPlaintext | shorten:512"></div>
+                    </div>
+                  </div>
+                </div>
+            </article>
+      </section>
+      <section id="options-tab" ng-show="activeTab === 3">
+        <div class="col-lg-24">
+          <div class="row">
+            <div class="col-lg-12">
+              <ul class="list-unstyled">
+                <li><b>Уведомления:</b></li>
+                <li>
+                  <md-checkbox id="check_soundNotify"
+                               type="checkbox"
+                               ng-model="theUser.settings.soundNotify"
+                               ng-change="saveOptions();"
+                               log-click="Профиль пользователя::Галка <Звуковое оповещение о появлении новых сообщений> в профиле пользователя">
+                      Звуковое оповещение о появлении новых сообщений
+                  </md-checkbox>
+                <li>
+                <li>
+                  <md-checkbox ng-model="theUser.settings.notifHistory"
+                               ng-change="saveOptions();"
+                               title="При отмеченном чекбоксе в посещениях будут отображаться все попавшие в информатор темы. При не отмеченном - только те, в которые был заход или какое-то действие из информатора."
+                               log-click="Профиль пользователя::Галка <В посещениях показывать все темы из информатора> в профиле пользователя">
+                      В посещениях показывать все темы из информатора
+                  </md-checkbox>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </section>
+</section>

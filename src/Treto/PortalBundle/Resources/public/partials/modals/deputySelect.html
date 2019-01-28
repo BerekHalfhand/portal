@@ -1,0 +1,41 @@
+<div class="styledModal">
+    <div class="modal-header">У сотрудника <b>{{userName}}</b> выходной (отпуск) до {{terms}}. Заместитель <b>{{deputyName}}</b></div>
+    <div class="modal-body">
+        <div ng-if="!isParticipants">
+            <input id="radio_user"
+                   type="radio"
+                   ng-model="$parent.result"
+                   value="{{user}}"
+                   log-click="Сотрудник или заместитель::Переключатель <Исполнитель: Сотрудник> в окне выбора исполнителя, когда у сотрудника выходной"/>
+            <label for="radio_user">{{userName}}</label>
+            <input id="radio_deb"
+                   type="radio"
+                   ng-model="$parent.result"
+                   value="{{deputy}}"
+                   log-click="Сотрудник или заместитель::Переключатель <Исполнитель: Заместитель> в окне выбора исполнителя, когда у сотрудника выходной"/>
+            <label style="margin-left: 20px" for="radio_deb">{{deputyName}}</label>
+        </div>
+        <div ng-if="isParticipants">
+            <md-checkbox
+                ng-click="checkClick(user)"
+                ng-checked="result.indexOf(user) !== -1"
+                log-click="Сотрудник или заместитель::Галка <Участник: Сотрудник> в окне выбора участников, когда у сотрудника выходной">
+                {{userName}}
+            </md-checkbox>
+            <md-checkbox
+                ng-click="checkClick(deputy)"
+                ng-checked="result.indexOf(deputy) !== -1"
+                style="margin-left: 20px"
+                log-click="Сотрудник или заместитель::Галка <Участник: Заместитель> в окне выбора участников, когда у сотрудника выходной">
+                {{deputyName}}
+            </md-checkbox>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="ok()"
+                log-click="Сотрудник или заместитель::Кнопка <Подтвердить> в окне выбора исполнителя\участника, когда у сотрудника выходной">ПОДТВЕРДИТЬ</button>
+        <button class="btn btn-warning cancel" ng-click="cancel()"
+                log-click="Сотрудник или заместитель::Кнопка <Отмена> в окне выбора исполнителя\участника, когда у сотрудника выходной">ОТМЕНА</button>
+    </div>
+</div>
+

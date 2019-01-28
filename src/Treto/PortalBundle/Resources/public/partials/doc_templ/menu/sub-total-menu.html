@@ -1,0 +1,76 @@
+<section ng-init="show = {}; show.Tags = false; show.Linked = (doc.isLinked == 1 || doc.linkedUNID.length > 0); show.pageLoad = true">
+  <div class="row">
+    <span ng-init="discus = discus || $parent.$parent.$parent.discus;"></span>
+    <div ng-class="'col-lg-13'">
+      <span><span class="blue new-post" ng-if="discus.isNew(doc)">(NEW)</span></span>
+      <span class="blue doc-subject">Подытог: {{doc.subject}}</span>
+    </div>
+    <div class="col-lg-11">
+      <ul class="list-inline text-right dark-grey" style="margin-bottom: 0px;" ng-mouseleave="doc._meta.mOverDoc=false">
+        <li ng-show="doc && doc.status == 'deleted'"><span class="label label-danger"
+            title="Документ поставлен в очередь на удаление">подлежит удалению</span></li>
+        <li>
+          <strong>
+            <a href target="_blank" class="black"
+               ui-sref="body.profileDisplay({ id: doc.authorLogin || doc.Author || doc.taskPerformerLat[0] })"
+               title="{{$root.users[doc.authorLogin].WorkGroup.join(', ') || doc.Author || doc.taskPerformerLat[0]}}"
+               log-click="Дискуссии::Ссылка на профиль автора сообщения в дискуссии">
+              {{doc.AuthorRus || doc.Author}}
+            </a>
+          </strong>
+        </li>
+        <li>
+          <span>{{doc.created | datetime}}
+            <span ng-if="doc.dateModified && (doc.dateModified && doc.dateModified | datetime) != (doc.created | datetime)"> (ред. {{doc.dateModified | datetime}})</span>
+          </span>
+        </li>
+        <li ng-if="doc.isLinked == 1 || doc.linkedUNID.length > 0" ng-hide="(discus.main_doc.unid == doc.unid && $root.$state.current.name!=='body.notifications') || !doc._meta.mOverDoc">
+          <a href ng-click="show.pageLoad = false; show.Linked = !show.Linked;"
+             log-click="Дискуссии::Кнопка <Связанные документы> в меню сообщения в дискуссии">
+            <i ng-class="{active:show.Linked && doc.linked}" class="ico click conn" title="Связанные документы"></i>
+          </a>
+        </li>
+        <li ng-if="discus.main_doc.unid != doc.unid || $root.$state.current.name=='body.notifications'" ng-show="doc._meta.mOverDoc" ng-init="doc.Tags.length>0 ? show.Tags = true : show.Tags = false;">
+          <a href ng-click="show.Tags = !show.Tags"
+             log-click="Дискуссии::Кнопка <Теги> в меню сообщения в дискуссии">
+            <i ng-class="{active:show.Tags}" class="ico click tag" title="Теги"></i>
+          </a>
+        </li>
+        <li ng-if="!doc.mailHash && (discus.main_doc.unid != doc.unid || $root.$state.current.name!=='body.notifications') && (doc._meta.mOverDoc || doc.AttachedDoc.length)">
+          <a href
+             ng-click="doc.AttachedDoc = (doc.AttachedDoc.length ? [] : $root.user.username); discus.update(doc)"
+             log-click="Дискуссии::Кнопка <Прикрепить\открепить документ> в меню сообщения в дискуссии">
+          <i class="ico click fix" ng-class="{active:doc.AttachedDoc.length}" title="{{ doc.AttachedDoc.length ? 'Открепить (документ не будет всегда развёрнут)' : 'Прикрепить (документ будет всегда развёрнут)'}}"></i></a>
+        </li>
+        <li ng-include="'/bundles/tretoportal/partials/doc_templ/menu/drop-menu.html'"></li>
+        <li ng-if="$root.$state.current.name=='body.notifications' && discus.comments[0].unid == doc.unid">
+          <a href ng-click="discus.loadDocuments(null, null, 1, discus.comments.length)"
+             log-click="Дискуссии::Кнопка <Загрузить предыдущее сообщение> в меню сообщения в дискуссии">
+            <i class="material-icons va-bottom grey hover-black" title="Загрузить предыдущее сообщение">eject</i>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+  </div>
+  <div ng-if="show.Tags" class="row">
+    <div style="margin-left: 15px;" ng-include="'/bundles/tretoportal/partials/doc_templ/common/select-tags.html'"></div>
+  </div>
+  <article class="row" ng-if="discus.main_doc.unid != doc.unid && show.Linked && doc.linked" style="padding: 10px;">
+    <div class="col-lg-24" style="margin-top: 3px;">
+      <table>
+        <tr>
+          <td style="vertical-align: top;">
+            <span style="font-style: italic; font-size: 11px; color: #c0c0c0;">На основании ответа создали тему(ы): </span>
+          </td>
+          <td>
+            <ul ng-init="discus.checkScroll(show.pageLoad)" class="tree-view-ul" style="display: inline-block; margin-bottom: 0px;">
+              <li ng-repeat="child in doc.linked.Children" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/tree-item.html'"></li>
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </article>
+</section>
+<div class="divider martop10"></div>

@@ -1,0 +1,43 @@
+<div class="styledModal">
+  <div class="modal-header">
+    <span class="text-s16">
+      Пригласить гостя
+    </span>
+  </div>
+  <div class="modal-body">
+    <div>
+      <input placeholder="Email"
+             ng-model="email"
+             log-click="Пригласить гостя::Поле <Email> в окне приглашения гостя">
+      <div class="required-warning" style="width: 300px" ng-click="error = false" ng-show="error">
+        <span>{{error}}</span>
+      </div>
+    </div>
+    <div>
+      <div class="required-warning" style="width: 300px" ng-click="error = false" ng-show="error">
+        <span>{{error}}</span>
+      </div>
+    </div>
+    
+    <div ng-if="url">{{url}}</div>
+  </div>
+  <div class="modal-footer no-border pad20">
+    <div class="row">
+      <div class="col-lg-24">
+        <a href class="blue"
+           ng-click="ok();"
+           style="display: inline-block; font-size: 14px;"
+           log-click="Пригласить гостя::Кнопка <Подтвердить> в окне приглашения гостя">
+           ПОДТВЕРДИТЬ
+        </a>
+        <a href class="grey"
+           ng-click="cancel();"
+           style="display: inline-block; font-size: 14px; padding-left: 30px;"
+           log-click="Пригласить гостя::Кнопка <Отменить> в окне приглашения гостя">
+           ОТМЕНИТЬ
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,142 @@
+<article ng-init="discus = $parent.discus;discus.initDictionaries(doc);">
+  <div ng-init="discus = $parent.discus;">
+    <div class="msg-wrap clearfix">
+      <div class="msg-head" ng-if="$root.$state.current.name!='body.notifications' || doc.unid != discus.main_doc.unid" ng-include="'/bundles/tretoportal/partials/doc_templ/menu/menu.html'"></div>
+      <div class="msg-main">
+        <tags-list model="doc.Tags"></tags-list>
+        <div ng-show="$root.$state.current.name === 'body.notifications' || discus.expanded[doc.unid] === true || discus.expanded[doc.unid] === 'attached' || discus.expanded[doc.unid] === 'shown'" class="animate-show" quote-selection>
+          <div ng-if="discus.expanded[doc.unid] === 'attached' || discus.comments.length < 5" ng-bind-html="doc.body | linkCreate:doc.locale| quoteAuthor | trustAsHtml" class="text-content"></div>
+          <div ng-if="discus.expanded[doc.unid] !== 'attached' && discus.comments.length > 4" dd-text-collapse dd-text-collapse-max-height="57" class="text-content">
+            <div ng-bind-html="doc.body | linkCreate:doc.locale | quoteAuthor | trustAsHtml" class="ddColl"></div>
+          </div>
+          <upload-list model="doc.attachments"></upload-list>
+        </div>
+
+        <div ng-if="!discus.fastReplyMsg" class="blue martop10">
+          <span class="touch" ng-click="$parent.discus.quote='';$parent.discus.showEditForm('message')" log-click="Дискуссии::Кнопка <Ответить> в сообщении дискуссии">Ответить</span>
+        </div>
+      </div>
+    </div>
+    
+    <article class="task-footer">
+      <div ng-init="doc._meta.programmerSection = doc._meta.tasking.determineSection()">
+      
+        <span class="parent-popup-pointer" ng-init="doc.changePerformer.status=false;doc.changePerformer.perf = [];">
+          <b>Исполнитель: {{doc.taskPerformerLat[0] == 'shareTask'||doc.taskPerformer[0] == 'shareTask'? discus.findShareDataByLogins('fullName', doc.sharePerformers[0].domain, doc.sharePerformers[0].login)+
+            ' ('+$root.shareUsers[doc.sharePerformers[0].domain].name+')':
+            discus.profile.translateName(doc.taskPerformerLat||doc.taskPerformer)}}</b>
+          <a href style="margin: 0 10px;"
+            ng-if="(doc.status=='open' || doc.taskPerformerLat[0] == 'Просьба подвешена')&&($root.can().write(doc)||$root.mynameis(doc.taskPerformerLat)||$root.isEscalManager(doc))"
+            ng-click="doc.changePerformer.status=true; discus.hidenumberinfo=true;"
+            log-click="Дискуссии::Кнопка <Сменить исполнителя> просьбы">
+            сменить
+          </a>
+          
+          <!-- всплывающее окно с выбором исполнителя -->
+          <div class="popup-pointer" ng-if="doc.changePerformer.status" ng-init="doc.changePerformer.perf=[]; doc.changeSharePerformer = {};">
+            <add-participants ngmodel="doc.changePerformer.perf"
+              share-portal="doc.changeSharePerformer"
+              share-enable="true" multiple="false" section="true"
+              placeholder="'ФИО или должность'"
+              typeaheadexpr="'user.name for user in $root.usersArr | filter:$viewValue'"
+              initfocus="true" hideinfo="true">
+            </add-participants>
+            <div class="martop20 wrapper-box">
+              <a class="btn btn-blue md-button md-ink-ripple"
+                ng-show="doc.changePerformer.perf.length>0 || doc._meta.tasking.existSharePerformer(doc.changeSharePerformer)"
+                ng-click="doc.changePerformer.status=false; doc._meta.tasking.changePerformer(doc.changePerformer.perf[0], doc.changeSharePerformer);"
+                log-click="Дискуссии::Кнопка <Сохранить> во всплывающем окне <Сменить исполнителя> просьбы">
+                Сохранить
+              </a>
+              <a class="btn btn-blue md-button md-ink-ripple"
+                ng-show="(!doc.changePerformer.perf||doc.changePerformer.perf.length==0)&&!doc._meta.tasking.existSharePerformer(doc.changeSharePerformer)"
+                ng-click="doc.changePerformer.status=false; discus.hidenumberinfo=false;" 
+                log-click="Дискуссии::Кнопка <Закрыть> во всплывающем окне <Сменить исполнителя> просьбы">
+                Закрыть
+              </a>
+              <other-command></other-command>
+            </div>
+          </div>
+
+        </span>
+        
+        <span class="marleft5" style="display: inline-block;">
+          <span ng-show="doc.taskDateRealEnd" class="marright10">до </b>{{doc.taskDateRealEnd | datetime}} {{doc | taskTimeOld:'taskDateRealEnd'}} <span ng-show="doc.Difficulty">сложность {{doc.Difficulty}}</span></span>
+        </span>
+        
+        <span ng-if="doc.Checker[0] || doc.CheckerLat[0]" class="martop10" style="display: block;">
+          <b>Проверяющий: {{doc.Checker[0] || doc.CheckerLat[0]}}</b>
+        </span>
+        
+        <div class="martop10"><!-- История изменений -->
+
+          <p ng-if="['body.notifications'].indexOf($root.$state.current.name) == -1" class="desktop-only"><b>История изменений</b> ({{doc.taskHistories.length||'0'}}): 
+            <a href class="blue" ng-click="doc._meta.tasking.showHistory = !doc._meta.tasking.showHistory" log-click="Дискуссии::Кнопка <Показать последние\все изменения> в просьбе">{{ doc._meta.tasking.showHistory ? 'Показать последние' : 'Показать все' }}</a>
+          </p>
+          
+          <ul class="list-unstyled marbot5" ng-init="toggleDetails = {}">
+            <li ng-repeat="history in doc._meta.tasking.history track by $index" ng-show="doc._meta.tasking.showHistory || ($index == doc._meta.tasking.history.length-1 || history.new)" class="text-s11">
+              <span ng-bind-html="history.text"> </span> <span ng-show="history.new" class="new-post discus-label">NEW</span>
+              <a href ng-if="history.current.value.messagebbUnid" class="blue" ng-click="$parent.toggleDetails[history.current.value.messagebbUnid] = !$parent.toggleDetails[history.current.value.messagebbUnid]" log-click="Дискуссии::Кнопка <Подробнее\cкрыть> информацию об изменении в просьбе">{{$parent.toggleDetails[history.current.value.messagebbUnid] ? 'Скрыть' : 'Подробнее'}}</a>
+              
+              <div ng-if="$parent.toggleDetails[history.current.value.messagebbUnid]" ng-init="comment = discus.getByUnid(history.current.value.messagebbUnid)">
+                <document ng-if="comment" doc="comment"></document>
+              </div>
+            </li>
+          </ul>
+          
+        </div><!-- История изменений -->
+      </div>
+      
+      <div>
+        <ul class="list-inline task-actions touch">
+          <li ng-if="doc.status == 'open' &&
+                        $root.mynameis(doc.taskPerformerLat) &&
+                        doc.TaskStateCurrent != 10">
+            <span
+                   ng-click="showChangeDates.status=true"
+                   log-click="Дискуссии::Кнопка <{{doc.taskDateRealEnd ? 'Изменить сроки и сложность' : 'Принять просьбу'}}> в теле просьбы">
+              <i class="material-icons">{{doc.taskDateRealEnd ? 'update' : 'play_arrow'}}</i>{{doc.taskDateRealEnd ? 'Изменить сроки и сложность' : 'Назначить срок'}}
+            </span>
+            <task-date-difficulty-modal date-model="doc.taskDateRealEnd || doc.taskDateEnd" difficulty-model="doc.Difficulty" difficulty-options="doc._meta.tasking.difficultySelect" show="showChangeDates.status" on-save="doc._meta.tasking.confirmTimeline(dEndDate)"></task-date-difficulty-modal>
+          </li>
+          <li ng-if="doc.status == 'open' && !doc._meta.tasking.completed() && $root.mynameis(doc.taskPerformerLat)">
+            <span ng-click="doc._meta.tasking.complete();" log-click="Дискуссии::Кнопка <Уведомить об исполнении> в теле просьбы">
+              <i class="material-icons">notifications</i>Уведомить об исполнении
+            </span>
+          </li>
+          <li ng-if="doc._meta.programmerSection && doc.status == 'open' && !doc._meta.tasking.completed() && $root.mynameis(doc.taskPerformerLat) && doc.TaskStateCurrent != 12">
+            <span ng-click="doc._meta.tasking.toApply();" log-click="Дискуссии::Кнопка <Запросить накат> в теле просьбы">
+              <i class="material-icons">playlist_add</i>Запросить накат
+            </span>
+          </li>
+          <li ng-if="doc._meta.programmerSection && doc.status == 'open' && !doc._meta.tasking.completed() && $root.mynameis(doc.responsible)">
+            <span ng-click="doc._meta.tasking.toApplyComplete();" log-click="Дискуссии::Кнопка <Выполнить накат> в теле просьбы">
+              <i class="material-icons">playlist_add_check</i>Выполнить накат
+            </span>
+          </li>
+          <li ng-if="doc.status == 'open' && (!$root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.CheckerLat)) && ($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.role('PM')||$root.isEscalManager(doc))">
+            <span ng-click="doc._meta.tasking.close();" log-click="Дискуссии::Кнопка <Принять исполнение> в теле просьбы">
+              <i class="material-icons">check</i>Принять исполнение
+            </span>
+          </li>
+          <li ng-if="doc.status == 'open' && doc._meta.tasking.completed() && ($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc))">
+            <span ng-click="discus.showEditForm('messagebb', null, doc.unid, 'CHECK')" log-click="Дискуссии::Кнопка <Отдать на проверку> в теле просьбы">
+              <i class="material-icons">person_pin</i>Отдать на проверку
+            </span>
+          </li>
+          <li ng-if="doc.taskPerformerLat && doc.taskPerformerLat[0] != 'Просьба подвешена' && (doc._meta.tasking.completed() || doc.taskDateCompleted || doc.TaskStateCurrent == 35) && ($root.mynameis(doc.taskPerformerLat)||$root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.isEscalManager(doc)||$root.role('PM'))">
+            <span ng-click="discus.showEditForm('messagebb', null, doc.unid, 'REJECT')" title="В исполнении есть ошибки. Вернем просьбу на доработку исполнителю" log-click="Дискуссии::Кнопка <Вернуть на доработку> в теле просьбы">
+              <i class="material-icons">replay</i>Вернуть на доработку
+            </span>
+          </li>
+          <li ng-if="doc.status == 'open'&&($root.mynameis(doc.authorLogin)||$root.mynameis(doc.CheckerLat)||$root.role('PM')||$root.isEscalManager(doc))">
+            <span ng-click="doc._meta.tasking.cancel();" title="Отменить исполнение просьбы" log-click="Дискуссии::Кнопка <Отменить> в теле просьбы">
+              <i class="material-icons">close</i>Отменить
+            </span>
+          </li>
+        </ul>
+      </div>
+    </article>
+  </div>
+</article>

@@ -1,0 +1,163 @@
+<div class="main-stat">
+    <div ng-if="loading" class="text-center">
+        <i class="spinner"></i>
+    </div>
+    <div ng-if="!loading && mainStat === null" class="text-center">Статистика недоступна</div>
+    <div ng-if="!loading && mainStat !== null" class="main-stat-blocks">
+        <div ng-if="::showBlock.employers" class="employers">
+            Нас {{::mainStat.users.count|pluralize:'human'}},
+            <span ng-if="mainStat.users.averageAge"> в среднем {{::mainStat.users.averageAge|pluralize:'year'}}</span>
+            <br/>
+            {{::mainStat.users.femaleCount|pluralize:'female'}} и
+            {{::mainStat.users.maleCount|pluralize:'male'}}
+            <span ng-if="mainStat.users.notMaleNotFemaleCount">, и
+                {{::mainStat.users.notMaleNotFemaleCount|pluralize:'notMaleNotFemale'}}
+            </span>
+        </div>
+        <div ng-if="::showBlock.employedFired" class="employed-fired">
+            <table class="employed">
+            <tr ng-show="mainStat.users.employedByDate[employedLastDate].length">
+                <td valign="top">+{{::mainStat.users.employedByDate[employedLastDate].length}}</td>
+                <td valign="top" class="padleft5">
+                    <span ng-repeat="employed in mainStat.users.employedByDate[employedLastDate] | orderBy: $root.usersAll[employed.Login].name : false">
+                        <a href ui-sref="body.profileDisplay({id:employed.Login})"
+                           class="blue"
+                           title="Посмотреть профиль сотрудника"
+                           log-click="Статистика::Ссылка на профиль нового сотрудника из сводки статистики">
+                           {{::($root.usersAll[employed.Login].name || employed.Login)}} ({{::$root.usersAll[employed.Login].WorkGroup|join}})
+                        </a><br/>
+                    </span>
+                </td>
+            </tr>
+            <tr class="padtop5" ng-show="mainStat.users.firedByDate[firedLastDate].length">
+                <td valign="top">-{{::mainStat.users.firedByDate[firedLastDate].length}}</td>
+                <td valign="top" class="padleft5">
+                <span ng-repeat="fired in mainStat.users.firedByDate[firedLastDate] | orderBy: $root.usersAll[employed.Login].name : false">
+                    <a href ui-sref="body.profileDisplay({id:fired.Login})"
+                       class="blue"
+                       title="Посмотреть профиль сотрудника"
+                       log-click="Статистика::Ссылка на профиль уволенного сотрудника из сводки статистики">
+                       {{::($root.usersAll[fired.Login].name || fired.Login)}} ({{::$root.usersAll[fired.Login].WorkGroup|join}})
+                    </a><br/>
+                </span>
+                </td>
+            </tr>
+            </table>
+            <div class="text-right martop5">
+                <a href ui-sref="body.stat({ tab: 'users' })"
+                   class="blue"
+                   log-click="Статистика::Ссылка <Ещё> на вкладку <Сотрудники> в статистике из сводки статистики">
+                   ещё
+                </a>
+            </div>
+        </div>
+        <div ng-if="::showBlock.messagesTotalCount" class="messages-total-count">
+            Пользователи оставили {{::mainStat.messagesTotalCount|pluralize:'message'}} на портале
+        </div>
+        <div ng-if="::showBlock.loggedTodayCount" class="logged-today-count">
+            <b>Сегодня на портале:</b> {{::mainStat.users.loggedTodayCount|pluralize:'user'}}
+        </div>
+        <div ng-if="::(showBlock.topChatterboxes || showBlock.topSilent || showBlock.topInTime || showBlock.topOverdue || showBlock.topFast || showBlock.topSlow)" class="bold text-s14" class="top-lists-title" style="margin-top: 20px">
+            <a href ui-sref="body.stat({ tab: 'messages' })"
+               title="Смотреть активность на портале"
+               log-click="Статистика::Ссылка <Статистика активности> на вкладку с графиком активности из сводки статистики">
+               Статистика активности:
+            </a>
+        </div>
+        <div ng-if="::(showBlock.topChatterboxes || showBlock.topSilent)" class="chatterboxes">
+            <div ng-if="::showBlock.topChatterboxes" class="top-chatterboxes">
+                <div class="bold">ТОП3 Болтуны (за последние 7 дней):</div>
+                <div class="stat-list-wrap martop5">
+                    <div ng-repeat="user in topList.chatterboxes | orderBy: 'msgCount' : true track by user.login" class="clearfix">
+                        <a href ui-sref="body.showMessagesByUser({ query: stat.getQueryForMessagesByUser(user.login) })"
+                           class="pull-right"
+                           title="Посмотреть на сообщения в хронологическом порядке"
+                           log-click="Статистика::Ссылка на страницу всех сообщений пользователя за неделю из сводки статистики">
+                            {{ ::user.msgCount }}
+                        </a>
+                        <a href ui-sref="body.profileDisplay({id:user.login})"
+                           class="blue"
+                           title="{{::($root.usersAll[user.login].name || user.login)}}"
+                           log-click="Статистика::Ссылка на профиль сотрудника из сводки статистики">
+                           {{::($root.usersAll[user.login].name || user.login)}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div ng-if="::showBlock.topSilent" class="top-silent">
+                <div class="bold">ТОП3 Молчуны (за последние 7 дней):</div>
+                <div class="stat-list-wrap martop5">
+                    <div ng-repeat="user in topList.silent | orderBy: 'msgCount' : false track by user.login" class="clearfix">
+                        <a href ui-sref="body.showMessagesByUser({ query: stat.getQueryForMessagesByUser(user.login) })"
+                           class="pull-right"
+                           title="Посмотреть на сообщения в хронологическом порядке"
+                           log-click="Статистика::Ссылка на страницу всех сообщений пользователя за неделю из сводки статистики">
+                            {{ ::user.msgCount }}
+                        </a>
+                        <a href ui-sref="body.profileDisplay({id:user.login})"
+                           class="blue"
+                           title="{{::($root.usersAll[user.login].name || user.login)}}"
+                           log-click="Статистика::Ссылка на профиль сотрудника из сводки статистики">
+                           {{::($root.usersAll[user.login].name || user.login)}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right martop5">
+                <a href ui-sref="body.stat({ tab: 'messages' })"
+                   class="blue"
+                   log-click="Статистика::Ссылка <Ещё> на вкладку <Болтуны\Молчуны> из сводки статистики">
+                   ещё
+                </a>
+            </div>
+        </div>
+        <div ng-if="::showBlock.bmometer" class="bmometer mar0force">
+            <a href="https://adm.tile.expert/import/report/bm-metr"
+               title="БМометр"
+               class="blue"
+               log-click="Статистика::Ссылка на <БМометр> на сайт из сводки статистики">
+               БМометр
+            </a>
+        </div>
+        <div ng-if="::showBlock.topInTime" class="top-in-time">
+            <div class="bold text-s14">ТОП5 Точно в срок:</div>
+            <div ng-if="!topList.inTime.length"> Нет данных </div>
+            <div class="stat-list-wrap martop5" ng-if="topList.inTime.length">
+                <div ng-repeat="user in topList.inTime | orderBy: 'count' : false track by user.login" class="clearfix">
+                    <span class="pull-right">{{::user.count}}</span>
+                    <span>{{::($root.usersAll[user.login].name || user.login)}}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-if="::showBlock.topOverdue" class="top-overdue">
+            <div class="bold text-s14">ТОП5 Просрочки:</div>
+            <div ng-if="!topList.overdue.length">Нет данных</div>
+            <div class="stat-list-wrap martop5" ng-if="topList.overdue.length">
+                <div ng-repeat="user in topList.overdue | orderBy: 'count' : true track by user.login" class="clearfix">
+                    <span class="pull-right">{{::user.count}}</span>
+                    <span>{{::($root.usersAll[user.login].name || user.login)}}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-if="::showBlock.topFastWorkers" class="top-fast-workers">
+            <div class="bold text-s14">ТОП5 быстрые:</div>
+            <div ng-if="!topList.fastWorkers.length">Нет данных</div>
+            <div class="stat-list-wrap martop5" ng-if="topList.fastWorkers.length">
+                <div ng-repeat="user in topList.fastWorkers | orderBy: 'avgSolveTime' : false track by user.login" class="clearfix">
+                    <span class="pull-right">{{::user.time}}</span>
+                    <span>{{::($root.usersAll[user.login].name || user.login)}}</span>
+                </div>
+            </div>
+        </div>
+        <div ng-if="::showBlock.topSlowWorkers" class="top-slow-workers">
+            <div class="bold text-s14">ТОП5 медленные:</div>
+            <div ng-if="!topList.slowWorkers.length">Нет данных</div>
+            <div class="stat-list-wrap martop5" ng-if="topList.slowWorkers.length">
+                <div ng-repeat="user in topList.slowWorkers | orderBy: 'avgSolveTime' : true track by user.login" class="clearfix">
+                    <span class="pull-right">{{::user.time}}</span>
+                    <span>{{::($root.usersAll[user.login].name || user.login)}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
